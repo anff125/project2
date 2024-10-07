@@ -22,6 +22,8 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
 
         _playerTransform = Player.Instance.transform;
         _laserCollider = _bossEnemy.laserPrefab.GetComponent<CapsuleCollider>();
+        
+        _bossEnemy.laserPrefab.transform.localRotation = Quaternion.Euler(90, 0, 0);
     }
 
     public override void Update()
