@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator SpawnBossEnemy()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
         Instantiate(bossEnemyPrefabs[0], new Vector3(0, 0, 20), Quaternion.Euler(0, 0, 0));
     }
     private IEnumerator SpawnEnemy()

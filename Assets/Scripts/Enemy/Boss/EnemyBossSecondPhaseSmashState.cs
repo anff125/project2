@@ -63,7 +63,7 @@ public class EnemyBossSecondPhaseSmashState : EnemyState
     }
     private void DealDamage()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(_lastPlayerPosition, CIRCLE_RADIUS * _bossEnemy.transform.localScale.x,
+        Collider[] hitColliders = Physics.OverlapSphere(_lastPlayerPosition, CIRCLE_RADIUS * _bossEnemy.transform.localScale.x * 0.5f,
             LayerMask.GetMask("Enemy", "Player"));
         foreach (var hitCollider in hitColliders)
         {
