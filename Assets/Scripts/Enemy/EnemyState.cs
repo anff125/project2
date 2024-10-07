@@ -7,14 +7,16 @@ public class EnemyState
     protected EnemyStateMachine EnemyStateMachine;
     protected EnemyState(EnemyStateMachine enemyStateMachine)
     {
-
         EnemyStateMachine = enemyStateMachine;
     }
     private float _stateChangeCooldownTimer = 0f; // Cooldown timer
     public bool CanExit => _stateChangeCooldownTimer <= 0;
 
 
-    public virtual void Enter() { }
+    public virtual void Enter()
+    {
+        //Debug.Log("Entered state: " + this);
+    }
 
     public virtual void Update()
     {

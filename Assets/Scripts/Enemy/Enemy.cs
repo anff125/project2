@@ -7,10 +7,10 @@ using UnityEngine.Serialization;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] public float speed = 5f;
-    [SerializeField] protected int maxHealth = 100;
+    [SerializeField] public int maxHealth = 100;
     [SerializeField] public Transform bulletPrefab;
     protected int WeaponIndex = 0;
-    public int currentHealth;
+    public float currentHealth;
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     #region States
@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         EnemyStateMachine.CurrentEnemyState.Update();
     }
-    public virtual void TakeDamage(int damage)
+    public virtual void TakeDamage(float damage)
     {
         currentHealth -= damage;
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs

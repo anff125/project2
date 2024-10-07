@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     //Spawn Enemy every 5 seconds
     [SerializeField] private List<GameObject> enemyPrefabs;
+    [SerializeField] private List<GameObject> bossEnemyPrefabs;
     private void Awake()
     {
         Instance = this;
@@ -16,6 +17,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(SpawnEnemy());
+        //spawn boss enemy after 10 seconds
+        StartCoroutine(SpawnBossEnemy());
+    }
+    private IEnumerator SpawnBossEnemy()
+    {
+        yield return new WaitForSeconds(10);
+        Instantiate(bossEnemyPrefabs[0], new Vector3(0, 0, 20), Quaternion.Euler(0, 0, 0));
     }
     private IEnumerator SpawnEnemy()
     {

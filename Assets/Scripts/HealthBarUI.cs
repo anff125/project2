@@ -16,7 +16,7 @@ public class HealthBarUI : MonoBehaviour
         _hasHealth = hasProgressGameObject.GetComponent<IDamageable>();
         if (_hasHealth == null)
         {
-            Debug.LogError("hasProgress is null");
+            Debug.Log("hasProgress is null");
             return;
         }
         _hasHealth.OnHealthChange += HasHealth_OnHealthChanged;

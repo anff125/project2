@@ -13,7 +13,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private Weapon currentWeapon;
     [SerializeField] private WeaponHolder weaponHolder;
     [SerializeField] private int startingWeaponIndex = 0;
-    private int _currentHealth;
+    private float _currentHealth;
     public static Player Instance { get; private set; }
     // private float _currentMana;
     private bool _isMoving;
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour, IDamageable
     //     _currentMana -= amount;
     // }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
@@ -171,6 +171,7 @@ public class Player : MonoBehaviour, IDamageable
         if (_currentHealth <= 0)
         {
             Die();
+            _currentHealth = maxHealth;
         }
     }
     private void Die()

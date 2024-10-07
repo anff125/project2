@@ -17,10 +17,16 @@ public class EnemyStateMachine
         CurrentEnemyState.Enter();
     }
 
-    public void ChangeState(EnemyState newEnemyState)
+    public bool ChangeState(EnemyState newEnemyState)
     {
+        if (!CurrentEnemyState.CanExit)
+        {
+            //Debug.Log("Cannot exit current state" + CurrentEnemyState);
+            return false;
+        }
         CurrentEnemyState.Exit();
         CurrentEnemyState = newEnemyState;
         CurrentEnemyState.Enter();
+        return true;
     }
 }

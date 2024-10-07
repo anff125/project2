@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Rifle : Weapon
 {
-    private Vector3 gizmoCenter;
-    private Vector3 gizmoExtents;
-    private Quaternion gizmoRotation;
-    private bool drawGizmos = false;
+    private Vector3 _gizmoCenter;
+    private Vector3 _gizmoExtents;
+    private Quaternion _gizmoRotation;
 
     public override void MainAttack()
     {

@@ -39,17 +39,15 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("Bullet Hit: " + collision.name);
         // ignore the entity that shoots the bullet
         if (shooterLayerMask == (shooterLayerMask | (1 << collision.gameObject.layer)))
         {
             return;
         }
-        Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
-        if (damageable != null)
-        {
-            damageable.TakeDamage(_damage);
-        }
+        if (damageable == null) return;
+        damageable.TakeDamage(_damage);
         //destroy bullet
         Destroy(gameObject);
     }
