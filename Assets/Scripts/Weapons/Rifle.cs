@@ -36,12 +36,12 @@ public class Rifle : Weapon
             }
         }
 
-        Destroy(VisualSupport.gameObject);
+        VisualSupport.gameObject.SetActive(false);
     }
 
     public override void StartSecondaryAttack()
     {
-        VisualSupport = Instantiate(visualSupportPrefab, GetCursorPointOnGround(), Quaternion.identity);
+        VisualSupport.gameObject.SetActive(true);
     }
 
     public override void DrawVisualSupport()

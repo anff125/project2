@@ -14,7 +14,7 @@ public class Shield : MonoBehaviour
         //set bullet Texture to the player texture
         bullet.SetTextureForPlayer();
         //set bullet direction to the shield forward direction
-        bullet.SetBulletProperty(transform.forward, 10, 0.5f, 1);
+        bullet.SetBulletProperty(transform.forward, 10, 1f, 10);
         bullet.SetShooterLayerMask(playerLayerMask);
     }
     

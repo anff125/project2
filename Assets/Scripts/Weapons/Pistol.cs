@@ -15,12 +15,12 @@ public class Pistol : Weapon
     
     public override void SecondaryAttack()
     {
-        visualSupportPrefab.gameObject.SetActive(false);
+        HideVisualSupport();
     }
 
     public override void StartSecondaryAttack()
     {
-        visualSupportPrefab.gameObject.SetActive(true);
+        ShowVisualSupport();
     }
     
     public override void DrawVisualSupport()
@@ -28,8 +28,8 @@ public class Pistol : Weapon
         //make the visual support rotate around the player(use player as Origin) according to the mouse position
         Vector3 direction = GetDirection();
         Vector3 position = Player.Instance.transform.position + direction * .6f;
-        visualSupportPrefab.position = position;
-        visualSupportPrefab.rotation = Quaternion.LookRotation(direction);
+        VisualSupport.position = position;
+        VisualSupport.rotation = Quaternion.LookRotation(direction);
     }
 
 }

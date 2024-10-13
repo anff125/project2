@@ -76,11 +76,17 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentWeapon != null)
         {
+            currentWeapon.HideVisualSupport();
             currentWeapon.Hide();
         }
         currentWeapon = weaponHolder.GetWeapon(index);
         Debug.Log("Wearing weapon: " + currentWeapon.name);
         currentWeapon.Show();
+        //if secondary attack is being used show visual support
+        if (isAttacking)
+        {
+            currentWeapon.ShowVisualSupport();
+        }
     }
     private void OnMainAttack(object sender, EventArgs e)
     {

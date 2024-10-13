@@ -30,13 +30,13 @@ public class Shotgun : Weapon
         {
             hitCollider.GetComponent<Enemy>().TakeDamage(50);
         }
-        Destroy(VisualSupport.gameObject);
+        VisualSupport.gameObject.SetActive(false);
 
     }
 
     public override void StartSecondaryAttack()
     {
-        VisualSupport = Instantiate(visualSupportPrefab, GetCursorPointOnGround(), Quaternion.identity);
+        VisualSupport.gameObject.SetActive(true);
     }
 
     public override void DrawVisualSupport()
