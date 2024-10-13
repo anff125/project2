@@ -12,8 +12,6 @@ public class EnemyShotgun : Enemy
     public EnemyShotgunShootState ShootState { get; private set; }
 
     #endregion
-
-
     //Awake
     protected override void Awake()
     {

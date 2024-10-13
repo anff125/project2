@@ -4,9 +4,27 @@ public class Bullet : MonoBehaviour
 {
     //set a layer mask to ignore the entity that shoots the bullet
     [SerializeField] private LayerMask shooterLayerMask;
+    [SerializeField] private Texture textureForPlayer;
+    [SerializeField] private Texture textureForEnemy;
+    
+    public void SetTextureForPlayer()
+    {
+        GetComponent<Renderer>().material.mainTexture = textureForPlayer;
+    }
+
+    
     private Vector3 _movingDirection;
+    public Vector3 MovingDirection => _movingDirection;
+    
     private float _speed = 10;
+    public float Speed => _speed;
+    
     private int _damage = 1;
+    public int Damage => _damage;
+    public void SetShooterLayerMask(LayerMask layerMask)
+    {
+        shooterLayerMask = layerMask;
+    }
     private void SetSpeed(float speed)
     {
         _speed = speed;
