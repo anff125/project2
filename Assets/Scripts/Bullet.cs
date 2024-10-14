@@ -29,18 +29,18 @@ public class Bullet : MonoBehaviour
     {
         _speed = speed;
     }
-    private void SetDirection(Vector3 direction)
+    protected void SetDirection(Vector3 direction)
     {
         //set bullet direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
         _movingDirection = direction;
     }
-    private void SetDestroyTime(float time)
+    protected void SetDestroyTime(float time)
     {
         Destroy(gameObject, time);
     }
-    private void SetDamage(int damage)
+    protected void SetDamage(int damage)
     {
         _damage = damage;
     }
@@ -55,14 +55,14 @@ public class Bullet : MonoBehaviour
     {
         transform.position += _movingDirection * (Time.deltaTime * _speed);
     }
-    private void OnTriggerEnter(Collider collision)
+    protected void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Bullet Hit: " + collision.name);
         // ignore the entity that shoots the bullet
         if (shooterLayerMask == (shooterLayerMask | (1 << collision.gameObject.layer)))
         {
             return;
         }
+        Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
         damageable.TakeDamage(_damage);
