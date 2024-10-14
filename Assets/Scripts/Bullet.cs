@@ -51,7 +51,7 @@ public class Bullet : MonoBehaviour
         SetDestroyTime(destroyTime);
         SetDamage(damage);
     }
-    private void Update()
+    protected virtual void Update()
     {
         transform.position += _movingDirection * (Time.deltaTime * _speed);
     }

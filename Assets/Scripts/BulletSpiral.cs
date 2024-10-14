@@ -25,7 +25,7 @@ public class BulletSpiral : Bullet
         _radiusGrowth = radiusGrowth;
 
     }
-    void Update()
+    protected override void Update()
     {
         _center += MovingDirection * (Time.deltaTime * Speed);
         _angle += _rotationSpeed * Time.deltaTime;
@@ -33,7 +33,7 @@ public class BulletSpiral : Bullet
         _radius += _radiusGrowth * Time.deltaTime;
         UpdateBulletPosition();
     }
-    void UpdateBulletPosition()
+    private void UpdateBulletPosition()
     {
         float x = _center.x + _radius * Mathf.Cos(_angle * Mathf.Deg2Rad);
         float z = _center.z + _radius * Mathf.Sin(_angle * Mathf.Deg2Rad);
