@@ -57,6 +57,10 @@ public class Bullet : MonoBehaviour
     }
     protected void OnTriggerEnter(Collider collision)
     {
+<<<<<<< Updated upstream
+=======
+        //Debug.Log("Bullet Hit: " + collision.name);
+>>>>>>> Stashed changes
         // ignore the entity that shoots the bullet
         if (shooterLayerMask == (shooterLayerMask | (1 << collision.gameObject.layer)))
         {

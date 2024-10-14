@@ -30,6 +30,7 @@ public class EnemyRifleTrackPlayerState : EnemyState
             EnemyRifle rifleEnemy = EnemyStateMachine.Enemy as EnemyRifle;
             if (rifleEnemy != null)
             {
+                EnemyStateMachine.Enemy.transform.rotation = Quaternion.LookRotation(playerPosition - enemyPosition);
                 EnemyStateMachine.ChangeState(rifleEnemy.ShootState);
             }
         }

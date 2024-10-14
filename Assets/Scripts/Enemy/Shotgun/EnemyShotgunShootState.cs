@@ -8,7 +8,6 @@ public class EnemyShotgunShootState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Enemy Shotgun Shoot Enter");
         //Shoot 5 bullets in a Circular sector with 120 degrees in front of the enemy
         Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
         for (int i = 0; i < 5; i++)

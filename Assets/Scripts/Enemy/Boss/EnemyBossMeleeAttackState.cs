@@ -37,7 +37,7 @@ public class EnemyBossMeleeAttackState : EnemyState
                 {
                     if (hitCollider.CompareTag("Player"))
                     {
-                        Player.Instance.TakeDamage(30);
+                        Player.Instance.TakeDamage(100);
                     }
                 }
 

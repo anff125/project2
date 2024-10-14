@@ -25,7 +25,7 @@ public class EnemyBossTrackPlayerState : EnemyState
         playerPosition.y = 0;
         var dis = Vector3.Distance(enemyPosition, playerPosition);
 
-        if (dis < 3.5f)
+        if (dis < 5f)
         {
             EnemyStateMachine.ChangeState(_bossEnemy.MeleeState);
         }
