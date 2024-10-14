@@ -8,6 +8,7 @@ public class Spiral : Weapon
     private Vector3 _gizmoExtents;
     private Quaternion _gizmoRotation;
     private Vector3 landPoint;
+    [SerializeField] private Transform VisualSupportPrefab;
     [SerializeField] private int _projectilePerShoot = 2;
     [SerializeField] private float _skillDuration = 5f;
     [SerializeField] private float _dagmagePerHit = 8f;
@@ -17,7 +18,7 @@ public class Spiral : Weapon
     public override void MainAttack()
     {
         if (!CanShoot) return;
-        SetShootCooldown(0.1f);
+        SetShootCooldown(0.3f);
         Vector3 direction = GetDirection();
         float theta = 360f / _projectilePerShoot;
         
@@ -25,8 +26,9 @@ public class Spiral : Weapon
         {
             Transform bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
             //set bullet direction
-            bullet.GetComponent<BulletSpiral>().SetBulletProperty(direction, 15, 5f, 10);
-            bullet.GetComponent<BulletSpiral>().SetSpiralProperty(firePoint.position, (theta * i + firePoint.rotation.eulerAngles.z) % 360f);
+            bullet.GetComponent<BulletSpiral>().SetBulletProperty(direction, 10, 5f, 10);
+            bullet.GetComponent<BulletSpiral>().SetSpiralProperty(firePoint.position, (theta * i + firePoint.rotation.eulerAngles.z) % 360f,
+                        rotationSpeed: 360);
         }
         
     }
@@ -36,14 +38,14 @@ public class Spiral : Weapon
         GameObject handler = new GameObject("SpiralSkill");
         SpiralSkillHandler spiralSkillHandler = handler.AddComponent<SpiralSkillHandler>();
 
-        Destroy(VisualSupport.gameObject);
+        VisualSupport.gameObject.SetActive(false);
         spiralSkillHandler.Initialize(
-            visualSupportPrefab, landPoint, _dagmagePerHit, _damageInterval, _skillDuration, _dragSpeed, LayerMask.GetMask("Enemy"));
+            VisualSupportPrefab, landPoint, _dagmagePerHit, _damageInterval, _skillDuration, _dragSpeed, LayerMask.GetMask("Enemy"));
     }
 
     public override void StartSecondaryAttack()
     {
-        VisualSupport = Instantiate(visualSupportPrefab, GetCursorPointOnGround(), Quaternion.identity);
+        VisualSupport.gameObject.SetActive(true);
     }
 
     public override void DrawVisualSupport()

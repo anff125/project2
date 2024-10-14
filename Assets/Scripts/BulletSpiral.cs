@@ -27,7 +27,7 @@ public class BulletSpiral : Bullet
     }
     void Update()
     {
-        _center += _movingDirection * (Time.deltaTime * _speed);
+        _center += MovingDirection * (Time.deltaTime * Speed);
         _angle += _rotationSpeed * Time.deltaTime;
         _angle %= 360f;
         _radius += _radiusGrowth * Time.deltaTime;
