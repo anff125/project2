@@ -342,6 +342,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3578596228249821820, guid: c2670a887af3dfc4d84efe654a55d0d0,
     type: 3}
   VisualSupport: {fileID: 1869952004}
+  index: 0
   VisualSupportPrefab: {fileID: 3326874971075278156, guid: 24fd0ab1863771642998680478d912d9,
     type: 3}
   _projectilePerShoot: 2
@@ -1378,6 +1379,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5039823218128439911, guid: fd244db2ad4d3be42b6db60a427482b2,
     type: 3}
   VisualSupport: {fileID: 348199721}
+  index: 0
 --- !u!1 &1009326910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1464,7 +1466,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   maxHealth: 1000
-  currentWeapon: {fileID: 1000023702}
   weaponHolder: {fileID: 24388171}
   startingWeaponIndex: 0
 --- !u!4 &1009326914
@@ -1762,6 +1763,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5039823218128439911, guid: fd244db2ad4d3be42b6db60a427482b2,
     type: 3}
   VisualSupport: {fileID: 230289614}
+  index: 0
 --- !u!1001 &1635278485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1955,6 +1957,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5039823218128439911, guid: fd244db2ad4d3be42b6db60a427482b2,
     type: 3}
   VisualSupport: {fileID: 1188770926}
+  index: 0
 --- !u!23 &1889703535
 MeshRenderer:
   m_ObjectHideFlags: 0
