@@ -60,7 +60,7 @@ public class EnemySpiralShootState : EnemyState
             Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
             Vector3 center = enemyPosition + Vector3.up * 0.75f;
             float theta = 360f / _projectilePerShoot;
-            for (int i=0; i<_projectilePerShoot; i++)
+            for (int i = 0; i < _projectilePerShoot; i++)
             {
                 Transform bullet = Object.Instantiate(EnemyStateMachine.Enemy.bulletPrefab, center, rotation);
                 // Set bullet direction

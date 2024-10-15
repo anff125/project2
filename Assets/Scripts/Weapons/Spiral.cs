@@ -21,16 +21,16 @@ public class Spiral : Weapon
         SetShootCooldown(0.3f);
         Vector3 direction = GetDirection();
         float theta = 360f / _projectilePerShoot;
-        
-        for (int i=0; i<_projectilePerShoot; i++)
+
+        for (int i = 0; i < _projectilePerShoot; i++)
         {
             Transform bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
             //set bullet direction
             bullet.GetComponent<BulletSpiral>().SetBulletProperty(direction, 10, 5f, 10);
             bullet.GetComponent<BulletSpiral>().SetSpiralProperty(firePoint.position, (theta * i + firePoint.rotation.eulerAngles.z) % 360f,
-                        rotationSpeed: 360);
+                rotationSpeed: 360);
         }
-        
+
     }
 
     public override void SecondaryAttack()

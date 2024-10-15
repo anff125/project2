@@ -342,7 +342,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3578596228249821820, guid: c2670a887af3dfc4d84efe654a55d0d0,
     type: 3}
   VisualSupport: {fileID: 1869952004}
-  index: 0
+  index: 3
   VisualSupportPrefab: {fileID: 3326874971075278156, guid: 24fd0ab1863771642998680478d912d9,
     type: 3}
   _projectilePerShoot: 2
@@ -1297,7 +1297,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1000023699
 Transform:
   m_ObjectHideFlags: 0
@@ -1681,7 +1681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1601098477
 Transform:
   m_ObjectHideFlags: 0
@@ -1940,7 +1940,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1889703534
 MonoBehaviour:
   m_ObjectHideFlags: 0
