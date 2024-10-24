@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour, IDamageable
     protected int WeaponIndex = 0;
     public float currentHealth;
 
+    public event Action<GameObject> OnEnemyDestroyed;
+
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     #region States
 
@@ -46,7 +48,41 @@ public class Enemy : MonoBehaviour, IDamageable
     private IEnumerator Die()
     {
         yield return null;
+
+        OnEnemyDestroyed?.Invoke(gameObject);
+
         Destroy(gameObject);
+    }
+
+    public int TotalBulletsShot { get; set; }
+
+    private int _reflectedBullets;
+    public int ReflectedBullets
+    {
+        get => _reflectedBullets;
+        set
+        {
+            _reflectedBullets = value;
+            CheckIfDestroyed();
+        }
+    }
+
+    public void RegisterBullet(Bullet bullet)
+    {
+        bullet.SetShooter(this);
+    }
+
+    public void IncrementReflectedCount()
+    {
+        ReflectedBullets++;
+    }
+
+    private void CheckIfDestroyed()
+    {
+        if (ReflectedBullets == TotalBulletsShot && TotalBulletsShot > 0)
+        {
+            StartCoroutine(Die());
+        }
     }
 
 }

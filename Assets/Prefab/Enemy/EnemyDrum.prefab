@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: be6ed2e1f307df248b45fb44d133ec54, type: 2}
+  - {fileID: 2100000, guid: de778d1314edc28489cd1f312d74193d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 7156413630495845778}
   - component: {fileID: 6413653247485201906}
   - component: {fileID: 3339012449451244804}
-  - component: {fileID: 6191737560842019019}
+  - component: {fileID: 5066170372753042593}
   m_Layer: 8
   m_Name: EnemyDrum
   m_TagString: Untagged
@@ -167,7 +167,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &6191737560842019019
+--- !u!114 &5066170372753042593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,15 +176,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7979279618180815756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2a1f877a64c084f8901abf48d2f663, type: 3}
+  m_Script: {fileID: 11500000, guid: f9e8d9d2e97191f4e848777e3ae3df9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationMark: {fileID: 7215603656578952971}
   speed: 5
   maxHealth: 100
-  bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
+  bulletPrefab: {fileID: 5039823218128439911, guid: ad6f0a4608e7fb14e84e308532aec8f8,
     type: 3}
   currentHealth: 0
+  timeSpace:
+  - 0.3333
+  - 0.3333
 --- !u!1001 &3717903246209876820
 PrefabInstance:
   m_ObjectHideFlags: 0

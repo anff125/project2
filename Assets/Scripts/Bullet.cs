@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
     {
         _damage = damage;
     }
-    public void SetBulletProperty(Vector3 bulletDirection, float speed = 10, float destroyTime = 0.5f, int damage = 1)
+    public void SetBulletProperty(Vector3 bulletDirection, float speed = 10, float destroyTime = 0.5f, int damage = 25)
     {
         SetSpeed(speed);
         SetDirection(bulletDirection);
@@ -70,16 +70,19 @@ public class Bullet : MonoBehaviour
         //destroy bullet
         Destroy(gameObject);
     }
-    
-    private EnemyDrum shooter;
 
-    public void SetShooter(EnemyDrum enemy) {
+    private Enemy shooter; // Use the generic Enemy class
+
+    public void SetShooter(Enemy enemy)
+    {
         shooter = enemy;
     }
 
-    public void ReflectBullet() {
-        if (shooter != null) {
-            shooter.IncrementReflectedCount();  // Increment count only on the specific shooter
+    public void ReflectBullet()
+    {
+        if (shooter != null)
+        {
+            shooter.IncrementReflectedCount(); // Increment count only on the specific shooter
         }
     }
 

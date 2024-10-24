@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -8,13 +9,22 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] private int maxHealth;
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float mainAttackCooldown; // Cooldown time in seconds
-    [SerializeField] private float dashCooldown; // Adjust this value to control dash cooldown time
+    [SerializeField] private float mainAttackCooldown;
+    [SerializeField] private float secondaryAttackCooldown;
+    [SerializeField] private float dashCooldown;
+    [SerializeField] private Transform drumDetector;
+
+    private Renderer drumDetectorRenderer;
 
     private float mainAttackTimer;
     private bool mainAttackOnCooldown;
+    private float secondaryAttackTimer;
+    private bool secondaryAttackOnCooldown;
     private float dashTimer;
     private bool dashOnCooldown;
+
+    private const float RADIUS = 2f;
+    private const float BULLET_RADIUS = 0.5f;
 
     private float _currentHealth;
     public static Player Instance { get; private set; }
@@ -40,12 +50,18 @@ public class Player : MonoBehaviour, IDamageable
         GameInput.Instance.OnMainAttack += OnMainAttack;
         GameInput.Instance.OnMainAttackCancelled += OnMainAttackCancelled;
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
+        GameInput.Instance.OnSecondaryAttack += OnSecondaryAttack;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
         GameInput.Instance.OnDash += OnDash;
         lineRenderer.positionCount = 0;
-        DrawCircle(1.5f, Color.white);
+        DrawHollowCircle(RADIUS, Color.white);
+
+        //set drum detector scale x,z to RADIUS*2
+        drumDetector.localScale = new Vector3(RADIUS * 2, .01f, RADIUS * 2);
+        drumDetectorRenderer = drumDetector.GetComponent<Renderer>();
     }
-    
+
+
     private void Update()
     {
         HandleMovement();
@@ -58,14 +74,27 @@ public class Player : MonoBehaviour, IDamageable
             {
                 mainAttackOnCooldown = false;
             }
-
             // Set circle color to grey while on cooldown
             SetLineColor(Color.grey);
         }
         else
         {
             // Set circle color to white when ready
-            SetLineColor(Color.white);
+            SetLineColor(Color.cyan);
+        }
+
+        if (secondaryAttackOnCooldown)
+        {
+            secondaryAttackTimer -= Time.deltaTime;
+            if (secondaryAttackTimer <= 0)
+            {
+                secondaryAttackOnCooldown = false;
+            }
+            drumDetectorRenderer.material.color = Color.grey;
+        }
+        else
+        {
+            drumDetectorRenderer.material.color = Color.red;
         }
 
         if (dashOnCooldown)
@@ -97,8 +126,6 @@ public class Player : MonoBehaviour, IDamageable
             Vector3 dashDirection = transform.forward;
             float dashDistance = 5f; // Adjust this value to control dash distance
             transform.position += dashDirection * dashDistance;
-
-
             dashOnCooldown = true;
             dashTimer = dashCooldown;
         }
@@ -107,7 +134,7 @@ public class Player : MonoBehaviour, IDamageable
             Debug.Log("Dash is on cooldown.");
         }
     }
-    private void DrawCircle(float radius, Color color)
+    private void DrawHollowCircle(float radius, Color color)
     {
         int segments = 360;
         lineRenderer.positionCount = segments + 1;
@@ -117,8 +144,8 @@ public class Player : MonoBehaviour, IDamageable
         SetLineColor(color);
 
         // Adjust the line width to ensure it's thin and hollow
-        lineRenderer.startWidth = 0.25f;
-        lineRenderer.endWidth = 0.25f;
+        lineRenderer.startWidth = BULLET_RADIUS;
+        lineRenderer.endWidth = BULLET_RADIUS;
 
         float angle = 0f;
         for (int i = 0; i < segments + 1; i++)
@@ -134,30 +161,23 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (mainAttackOnCooldown)
         {
-            //Debug.Log("Main attack is on cooldown.");
             return;
         }
 
-        // Set circle color to yellow for the attack
         SetLineColor(Color.yellow);
-       
-        float radius = 1.5f;
-        float bulletRadius = 0.5f; // Half of the bullet's scale (0.5 / 2)
-        
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up * 0.3f,
-            radius + bulletRadius, LayerMask.GetMask("Bullet"));
+            RADIUS + BULLET_RADIUS, LayerMask.GetMask("Bullet"));
 
         bool bulletRebounded = false;
 
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.CompareTag("Bullet"))
+            if (hitCollider.CompareTag("BulletHiHat"))
             {
-                float distanceToCenter = Vector3.Distance(transform.position, hitCollider.transform.position);
+                float bulletEdgeDistance = Vector3.Distance(transform.position, hitCollider.transform.position);
 
-                float bulletEdgeDistance = distanceToCenter - bulletRadius;
-
-                if (bulletEdgeDistance >= 1 - bulletRadius && bulletEdgeDistance <= 1 + bulletRadius)
+                if (bulletEdgeDistance >= RADIUS - BULLET_RADIUS && bulletEdgeDistance <= RADIUS + BULLET_RADIUS)
                 {
                     var bullet = hitCollider.GetComponent<Bullet>();
                     // Change the color of the bullet to yellow
@@ -180,21 +200,51 @@ public class Player : MonoBehaviour, IDamageable
             mainAttackTimer = mainAttackCooldown;
         }
 
-        // Clear line renderer after 0.1f
-        StartCoroutine(ClearLineRenderer());
     }
 
-    private IEnumerator ClearLineRenderer()
+    private void OnSecondaryAttack(object sender, EventArgs e)
     {
-        yield return new WaitForSeconds(0.1f);
-        // Revert to grey after clearing
-        SetLineColor(Color.grey);
+        if (secondaryAttackOnCooldown)
+        {
+            return;
+        }
+
+        drumDetectorRenderer.material.color = Color.yellow;
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up * 0.3f,
+            RADIUS - BULLET_RADIUS, LayerMask.GetMask("Bullet"));
+        bool bulletRebounded = false;
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("BulletDrum"))
+            {
+                var bullet = hitCollider.GetComponent<Bullet>();
+                // Change the color of the bullet to yellow
+                bullet.SetTextureForPlayer();
+                // Shoot the bullet in the direction of player to the bullet, y=0
+                Vector3 direction = (hitCollider.transform.position - transform.position).normalized;
+                direction.y = 0; // Ensure no vertical component in the direction
+                bullet.SetShooterLayerMask(LayerMask.GetMask("Player"));
+                bullet.SetBulletProperty(direction, 10, 10f, 10);
+                bullet.ReflectBullet();
+                bulletRebounded = true;
+            }
+        }
+
+        if (!bulletRebounded)
+        {
+            secondaryAttackOnCooldown = true;
+            secondaryAttackTimer = secondaryAttackCooldown;
+        }
+
     }
 
     public void Moveto(Vector3 targetPosition)
     {
         transform.position = targetPosition;
     }
+
     private void HandleMovement()
     {
         Vector2 move = GameInput.Instance.GetMovementVector();
@@ -257,12 +307,12 @@ public class Player : MonoBehaviour, IDamageable
             _currentHealth = maxHealth;
         }
     }
-    
+
     private void Die()
     {
         Debug.Log("Player has died");
     }
-    
+
     private void SetLineColor(Color color)
     {
         lineRenderer.startColor = color;

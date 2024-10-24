@@ -11,6 +11,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnMainAttack;
     public event EventHandler OnMainAttackCancelled;
     public event EventHandler OnSecondaryAttackStarted;
+    public event EventHandler OnSecondaryAttack;
     public event EventHandler OnSecondaryAttackCancelled;
     public event EventHandler OnDash;
     private PlayerControl _playerInputActions;
@@ -31,8 +32,13 @@ public class GameInput : MonoBehaviour
         _playerInputActions.Player.MainAttack.performed += MainAttack_performed;
         _playerInputActions.Player.MainAttack.canceled += MainAttack_cancelled;
         _playerInputActions.Player.SecondaryAttack.started += SecondaryAttack_started;
+        _playerInputActions.Player.SecondaryAttack.performed += SecondaryAttack_performed;
         _playerInputActions.Player.SecondaryAttack.canceled += SecondaryAttack_cancelled;
         _playerInputActions.Player.Dash.performed += Dash_performed;
+    }
+    private void SecondaryAttack_performed(InputAction.CallbackContext obj)
+    {
+        OnSecondaryAttack?.Invoke(this, EventArgs.Empty);
     }
     private void MainAttack_cancelled(InputAction.CallbackContext obj)
     {
