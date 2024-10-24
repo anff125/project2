@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ public class EnemyShotgun : Enemy
     public EnemyShotgunShootState ShootState { get; private set; }
 
     #endregion
-    //Awake
     protected override void Awake()
     {
         base.Awake();

@@ -9,13 +9,14 @@ public class GameInput : MonoBehaviour
     public static GameInput Instance { get; private set; }
 
     public event EventHandler OnMainAttack;
+    public event EventHandler OnMainAttackCancelled;
     public event EventHandler OnSecondaryAttackStarted;
     public event EventHandler OnSecondaryAttackCancelled;
     public event EventHandler OnDash;
     private PlayerControl _playerInputActions;
     private void Awake()
     {
-        //Singleton pattern
+        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -28,9 +29,14 @@ public class GameInput : MonoBehaviour
         _playerInputActions = new PlayerControl();
         _playerInputActions.Player.Enable();
         _playerInputActions.Player.MainAttack.performed += MainAttack_performed;
+        _playerInputActions.Player.MainAttack.canceled += MainAttack_cancelled;
         _playerInputActions.Player.SecondaryAttack.started += SecondaryAttack_started;
         _playerInputActions.Player.SecondaryAttack.canceled += SecondaryAttack_cancelled;
         _playerInputActions.Player.Dash.performed += Dash_performed;
+    }
+    private void MainAttack_cancelled(InputAction.CallbackContext obj)
+    {
+        OnMainAttackCancelled?.Invoke(this, EventArgs.Empty);
     }
     private void SecondaryAttack_cancelled(InputAction.CallbackContext obj)
     {

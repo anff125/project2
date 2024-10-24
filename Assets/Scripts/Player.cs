@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private LayerMask collisionLayerMask;
-    [SerializeField] private int maxHealth = 100;
-    //[SerializeField] private int maxMana = 10;
-    [SerializeField] private WeaponHolder weaponHolder;
-    [SerializeField] private int startingWeaponIndex;
-    private Weapon currentWeapon = null;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private float mainAttackCooldown; // Cooldown time in seconds
+    [SerializeField] private float dashCooldown; // Adjust this value to control dash cooldown time
+
+    private float mainAttackTimer;
+    private bool mainAttackOnCooldown;
+    private float dashTimer;
+    private bool dashOnCooldown;
+
     private float _currentHealth;
     public static Player Instance { get; private set; }
     // private float _currentMana;
@@ -32,98 +37,160 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void Start()
     {
-        weaponHolder.Init();
-        WearWeapon(startingWeaponIndex);
-        
         GameInput.Instance.OnMainAttack += OnMainAttack;
+        GameInput.Instance.OnMainAttackCancelled += OnMainAttackCancelled;
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
         GameInput.Instance.OnDash += OnDash;
+        lineRenderer.positionCount = 0;
+        DrawCircle(1.5f, Color.white);
     }
+    
+    private void Update()
+    {
+        HandleMovement();
+
+        // Update cooldown timers
+        if (mainAttackOnCooldown)
+        {
+            mainAttackTimer -= Time.deltaTime;
+            if (mainAttackTimer <= 0)
+            {
+                mainAttackOnCooldown = false;
+            }
+
+            // Set circle color to grey while on cooldown
+            SetLineColor(Color.grey);
+        }
+        else
+        {
+            // Set circle color to white when ready
+            SetLineColor(Color.white);
+        }
+
+        if (dashOnCooldown)
+        {
+            dashTimer -= Time.deltaTime;
+            if (dashTimer <= 0)
+            {
+                dashOnCooldown = false;
+            }
+        }
+    }
+    private void OnMainAttackCancelled(object sender, EventArgs e) { }
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
 
     private bool isAttacking;
 
-    private void StartSecondaryAttacking()
-    {
-        isAttacking = true;
-        if (currentWeapon == null)
-        {
-            Debug.LogError("No weapon is equipped to start secondary attack");
-        }
-        currentWeapon.StartSecondaryAttack();
-        StartCoroutine(SecondaryAttackContinuously());
-    }
+    private void StartSecondaryAttacking() { }
 
-    private void StopSecondaryAttacking()
-    {
-        isAttacking = false;
-        if (currentWeapon == null)
-        {
-            Debug.LogError("No weapon is equipped to stop secondary attack");
-        }
-        StopCoroutine(SecondaryAttackContinuously());
-        currentWeapon.SecondaryAttack();
-        if (currentWeapon.index != 0)
-        {
-            WearWeapon(0);
-        }
-    }
+    private void StopSecondaryAttacking() { }
 
-    private IEnumerator SecondaryAttackContinuously()
-    {
-        while (isAttacking)
-        {
-            currentWeapon.DrawVisualSupport();
-            yield return null;
-        }
-    }
+    // Method to trigger main attack
 
     private void OnDash(object sender, EventArgs e)
     {
-        //Dash forward with a 1f cooldown
-        if (_isMoving)
+        if (!dashOnCooldown)
         {
-            transform.position += transform.forward * 2f;
+            // Execute dash logic, move the player forward
+            Vector3 dashDirection = transform.forward;
+            float dashDistance = 5f; // Adjust this value to control dash distance
+            transform.position += dashDirection * dashDistance;
+
+
+            dashOnCooldown = true;
+            dashTimer = dashCooldown;
+        }
+        else
+        {
+            Debug.Log("Dash is on cooldown.");
         }
     }
-    public void WearWeapon(int index)
+    private void DrawCircle(float radius, Color color)
     {
-        if (currentWeapon != null)
+        int segments = 360;
+        lineRenderer.positionCount = segments + 1;
+        lineRenderer.useWorldSpace = false; // Draw the circle relative to the player
+
+        // Set the color of the circle
+        SetLineColor(color);
+
+        // Adjust the line width to ensure it's thin and hollow
+        lineRenderer.startWidth = 0.25f;
+        lineRenderer.endWidth = 0.25f;
+
+        float angle = 0f;
+        for (int i = 0; i < segments + 1; i++)
         {
-            currentWeapon.HideVisualSupport();
-            currentWeapon.Hide();
-        }
-        currentWeapon = weaponHolder.GetWeapon(index);
-        Debug.Log("Wearing weapon: " + currentWeapon.name);
-        currentWeapon.Show();
-        //if secondary attack is being used show visual support
-        if (isAttacking)
-        {
-            currentWeapon.ShowVisualSupport();
+            // Calculate positions around the circle using Sin and Cos functions
+            float x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
+            float z = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
+            lineRenderer.SetPosition(i, new Vector3(x, 0.01f, z)); // Set position on XZ plane
+            angle += (360f / segments); // Increment angle for next point
         }
     }
     private void OnMainAttack(object sender, EventArgs e)
     {
-        if (currentWeapon == null)
+        if (mainAttackOnCooldown)
         {
-            Debug.LogError("No weapon is equipped to main attack");
+            //Debug.Log("Main attack is on cooldown.");
+            return;
         }
-        currentWeapon.MainAttack();
+
+        // Set circle color to yellow for the attack
+        SetLineColor(Color.yellow);
+       
+        float radius = 1.5f;
+        float bulletRadius = 0.5f; // Half of the bullet's scale (0.5 / 2)
+        
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up * 0.3f,
+            radius + bulletRadius, LayerMask.GetMask("Bullet"));
+
+        bool bulletRebounded = false;
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Bullet"))
+            {
+                float distanceToCenter = Vector3.Distance(transform.position, hitCollider.transform.position);
+
+                float bulletEdgeDistance = distanceToCenter - bulletRadius;
+
+                if (bulletEdgeDistance >= 1 - bulletRadius && bulletEdgeDistance <= 1 + bulletRadius)
+                {
+                    var bullet = hitCollider.GetComponent<Bullet>();
+                    // Change the color of the bullet to yellow
+                    bullet.SetTextureForPlayer();
+
+                    // Shoot the bullet in the direction of player to the bullet, y=0
+                    Vector3 direction = (hitCollider.transform.position - transform.position).normalized;
+                    direction.y = 0; // Ensure no vertical component in the direction
+                    bullet.SetShooterLayerMask(LayerMask.GetMask("Player"));
+                    bullet.SetBulletProperty(direction, 10, 10f, 10);
+                    bullet.ReflectBullet();
+                    bulletRebounded = true;
+                }
+            }
+        }
+
+        if (!bulletRebounded)
+        {
+            mainAttackOnCooldown = true;
+            mainAttackTimer = mainAttackCooldown;
+        }
+
+        // Clear line renderer after 0.1f
+        StartCoroutine(ClearLineRenderer());
     }
 
-    private void Update()
+    private IEnumerator ClearLineRenderer()
     {
-        HandleMovement();
-        //HandleMana();
+        yield return new WaitForSeconds(0.1f);
+        // Revert to grey after clearing
+        SetLineColor(Color.grey);
     }
 
-    // private void HandleMana()
-    // {
-    //     if (_currentMana >= maxMana) return;
-    //     _currentMana += Time.deltaTime;
-    // }
     public void Moveto(Vector3 targetPosition)
     {
         transform.position = targetPosition;
@@ -177,16 +244,6 @@ public class Player : MonoBehaviour, IDamageable
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
 
-    // public float GetCurrentMana()
-    // {
-    //     return _currentMana;
-    // }
-    //
-    // public void UseMana(float amount)
-    // {
-    //     _currentMana -= amount;
-    // }
-
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
@@ -200,9 +257,15 @@ public class Player : MonoBehaviour, IDamageable
             _currentHealth = maxHealth;
         }
     }
+    
     private void Die()
     {
         Debug.Log("Player has died");
     }
-
+    
+    private void SetLineColor(Color color)
+    {
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+    }
 }

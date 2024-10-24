@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
+    [SerializeField] public Transform exclamationMark;
     [SerializeField] public float speed = 5f;
     [SerializeField] public int maxHealth = 100;
     [SerializeField] public Transform bulletPrefab;
@@ -40,11 +42,10 @@ public class Enemy : MonoBehaviour, IDamageable
 
         }
     }
-    
+
     private IEnumerator Die()
     {
         yield return null;
-        Player.Instance.WearWeapon(WeaponIndex);
         Destroy(gameObject);
     }
 

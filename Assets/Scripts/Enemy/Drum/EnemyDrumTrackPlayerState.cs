@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyRifleTrackPlayerState : EnemyState
+public class EnemyDrumTrackPlayerState : EnemyState
 {
-    public EnemyRifleTrackPlayerState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
+    public EnemyDrumTrackPlayerState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
     private float timeRunningAwayFromPlayer;
     public override void Enter()
     {
@@ -29,7 +29,7 @@ public class EnemyRifleTrackPlayerState : EnemyState
             // Change to shoot state if this lasts longer than 1f
             if (timeRunningAwayFromPlayer > 1f)
             {
-                EnemyRifle rifleEnemy = EnemyStateMachine.Enemy as EnemyRifle;
+                EnemyDrum rifleEnemy = EnemyStateMachine.Enemy as EnemyDrum;
                 if (rifleEnemy != null)
                 {
                     timeRunningAwayFromPlayer = 0f;
@@ -39,12 +39,12 @@ public class EnemyRifleTrackPlayerState : EnemyState
         }
         else if (dis > 6 && dis <= 8)
         {
-            // Cast to EnemyRifle
-            EnemyRifle rifleEnemy = EnemyStateMachine.Enemy as EnemyRifle;
-            if (rifleEnemy != null)
+            // Cast to EnemyDrum
+            EnemyDrum enemyDrum = EnemyStateMachine.Enemy as EnemyDrum;
+            if (enemyDrum != null)
             {
                 EnemyStateMachine.Enemy.transform.rotation = Quaternion.LookRotation(playerPosition - enemyPosition);
-                EnemyStateMachine.ChangeState(rifleEnemy.ShootState);
+                EnemyStateMachine.ChangeState(enemyDrum.ShootState);
             }
         }
         else

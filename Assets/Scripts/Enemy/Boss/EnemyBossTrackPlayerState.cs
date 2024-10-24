@@ -10,9 +10,9 @@ public class EnemyBossTrackPlayerState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        SetStateChangeCooldown(.1f);
+        SetStateChangeCooldown(2f);
         _bossEnemy = EnemyStateMachine.Enemy as EnemyBoss;
-
+        Debug.Log("Boss Track Player State");
     }
     public override void Update()
     {
@@ -27,7 +27,7 @@ public class EnemyBossTrackPlayerState : EnemyState
 
         if (dis < 5f)
         {
-            EnemyStateMachine.ChangeState(_bossEnemy.MeleeState);
+            EnemyStateMachine.ChangeState(_bossEnemy.LaserState);
         }
         else
         {

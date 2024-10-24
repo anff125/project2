@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(SpawnEnemy());
         //spawn boss enemy after 10 seconds
-        StartCoroutine(SpawnBossEnemy());
+        //StartCoroutine(SpawnBossEnemy());
     }
     private IEnumerator SpawnBossEnemy()
     {
@@ -29,9 +29,15 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             int randomIndex = Random.Range(0, enemyPrefabs.Count);
-            Instantiate(enemyPrefabs[randomIndex], new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), 0), Quaternion.identity);
+    
+            // Calculate a random position around the player in a circle of radius 10
+            Vector3 playerPosition = Player.Instance.transform.position;
+            float angle = Random.Range(0f, 360f);
+            Vector3 spawnPosition = playerPosition + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 10;
+    
+            Instantiate(enemyPrefabs[randomIndex], spawnPosition, Quaternion.identity);
         }
     }
 }

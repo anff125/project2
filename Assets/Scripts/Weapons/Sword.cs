@@ -1,18 +1,29 @@
 using UnityEngine;
 
-public class Pistol : Weapon
+public class Sword : Weapon
 {
+    [SerializeField] private Transform shield;
     public override void MainAttack()
     {
         if (!CanShoot) return;
         SetShootCooldown(.5f);
         Vector3 direction = GetDirection();
-
-        Transform bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        //set bullet direction
-        bullet.GetComponent<Bullet>().SetBulletProperty(direction, 10, 3f, 10);
+        // Check a sector in the direction and deal 30 damage
+        Collider[] hitColliders = Physics.OverlapSphere(firePoint.position, 1.5f);
+        foreach (var hitCollider in hitColliders)
+        {
+            Vector3 toCollider = (hitCollider.transform.position - firePoint.position).normalized;
+            if (Vector3.Dot(direction, toCollider) > 0.5f)
+            {
+                IDamageable damageable = hitCollider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    damageable.TakeDamage(30);
+                }
+            }
+        }
     }
-    
+
     public override void SecondaryAttack()
     {
         HideVisualSupport();
@@ -22,7 +33,7 @@ public class Pistol : Weapon
     {
         ShowVisualSupport();
     }
-    
+
     public override void DrawVisualSupport()
     {
         //make the visual support rotate around the player(use player as Origin) according to the mouse position
