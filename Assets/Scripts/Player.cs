@@ -2,35 +2,50 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float moveSpeed;
     [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] private int maxHealth;
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float mainAttackCooldown;
-    [SerializeField] private float secondaryAttackCooldown;
+
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float skillCooldown;
+    [SerializeField] private float shieldCooldown;
     [SerializeField] private float dashCooldown;
-    [SerializeField] private Transform drumDetector;
 
-    private Renderer drumDetectorRenderer;
+    [SerializeField] private SkillUI skillCooldownUI;
+    [SerializeField] private SkillUI dashCooldownUI;
 
-    private float mainAttackTimer;
-    private bool mainAttackOnCooldown;
-    private float secondaryAttackTimer;
-    private bool secondaryAttackOnCooldown;
-    private float dashTimer;
+    private Camera _camera;
+
+    private float skillTimer;
+    private bool skillOnCooldown;
+
+    private float shieldTimer;
+    private bool shieldOnCooldown;
+
     private bool dashOnCooldown;
-
-    private const float RADIUS = 2f;
-    private const float BULLET_RADIUS = 0.5f;
+    private float dashTimer;
 
     private float _currentHealth;
     public static Player Instance { get; private set; }
-    // private float _currentMana;
-    private bool _isMoving;
+
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
+    public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
+    public void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
+    {
+        _currentHealth -= damage;
+        OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
+        {
+            healthNormalized = _currentHealth / maxHealth
+        });
+        if (_currentHealth <= 0)
+        {
+            Die();
+            _currentHealth = maxHealth;
+        }
+    }
 
     private void Awake()
     {
@@ -45,20 +60,26 @@ public class Player : MonoBehaviour, IDamageable
 
         _currentHealth = maxHealth;
     }
+
     private void Start()
     {
+        _camera = Camera.main;
+        GameInput.Instance.OnMainAttackStarted += OnMainAttackStarted;
         GameInput.Instance.OnMainAttack += OnMainAttack;
         GameInput.Instance.OnMainAttackCancelled += OnMainAttackCancelled;
+
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
         GameInput.Instance.OnSecondaryAttack += OnSecondaryAttack;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
-        GameInput.Instance.OnDash += OnDash;
-        lineRenderer.positionCount = 0;
-        DrawHollowCircle(RADIUS, Color.white);
 
-        //set drum detector scale x,z to RADIUS*2
-        drumDetector.localScale = new Vector3(RADIUS * 2, .01f, RADIUS * 2);
-        drumDetectorRenderer = drumDetector.GetComponent<Renderer>();
+        GameInput.Instance.OnMainSkillStart += OnMainSkillStart;
+        GameInput.Instance.OnMainSkillCancelled += OnMainSkillCancelled;
+
+        GameInput.Instance.OnShield += OnShield;
+        GameInput.Instance.OnDash += OnDash;
+
+        mainAttackParameters.effect.Stop();
+        secondaryAttackParameters.effect.Stop();
     }
 
 
@@ -66,65 +87,223 @@ public class Player : MonoBehaviour, IDamageable
     {
         HandleMovement();
 
-        // Update cooldown timers
-        if (mainAttackOnCooldown)
-        {
-            mainAttackTimer -= Time.deltaTime;
-            if (mainAttackTimer <= 0)
-            {
-                mainAttackOnCooldown = false;
-            }
-            // Set circle color to grey while on cooldown
-            SetLineColor(Color.grey);
-        }
-        else
-        {
-            // Set circle color to white when ready
-            SetLineColor(Color.cyan);
-        }
-
-        if (secondaryAttackOnCooldown)
-        {
-            secondaryAttackTimer -= Time.deltaTime;
-            if (secondaryAttackTimer <= 0)
-            {
-                secondaryAttackOnCooldown = false;
-            }
-            drumDetectorRenderer.material.color = Color.grey;
-        }
-        else
-        {
-            drumDetectorRenderer.material.color = Color.red;
-        }
-
         if (dashOnCooldown)
         {
             dashTimer -= Time.deltaTime;
+
+            dashCooldownUI.coolDownMaskImage.fillAmount = dashTimer / dashCooldown;
+            var color = dashCooldownUI.mainSkillImage.color;
+            color.a = 125 / 255f; // Alpha value should be between 0 and 1
+            dashCooldownUI.mainSkillImage.color = color;
+
             if (dashTimer <= 0)
             {
                 dashOnCooldown = false;
+                color.a = 1; // Alpha value should be between 0 and 1
+                dashCooldownUI.mainSkillImage.color = color;
+            }
+        }
+
+        if (skillOnCooldown)
+        {
+            skillTimer -= Time.deltaTime;
+
+            skillCooldownUI.coolDownMaskImage.fillAmount = skillTimer / skillCooldown;
+            var color = skillCooldownUI.mainSkillImage.color;
+            color.a = 125 / 255f; // Alpha value should be between 0 and 1
+            skillCooldownUI.mainSkillImage.color = color;
+
+            if (skillTimer <= 0)
+            {
+                skillOnCooldown = false;
+                color.a = 1; // Alpha value should be between 0 and 1
+                skillCooldownUI.mainSkillImage.color = color;
+            }
+        }
+
+        if (shieldOnCooldown)
+        {
+            shieldTimer -= Time.deltaTime;
+            if (shieldTimer <= 0)
+            {
+                shieldOnCooldown = false;
             }
         }
     }
-    private void OnMainAttackCancelled(object sender, EventArgs e) { }
-    private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
-    private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
+
+    private void OnMainAttack(object sender, EventArgs e) { }
+    private void OnSecondaryAttack(object sender, EventArgs e) { }
+
+    private void OnMainAttackStarted(object sender, EventArgs e) { StartAttacking(mainAttackParameters); }
+    private void OnMainAttackCancelled(object sender, EventArgs e) { StopAttacking(mainAttackParameters); }
+
+    private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
+    private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopAttacking(secondaryAttackParameters); }
+
+
+    [SerializeField] Transform shield;
+    [SerializeField] private float shieldDuration;
+    private void OnShield(object sender, EventArgs e)
+    {
+        StartCoroutine(ShieldCoroutine());
+    }
+    private IEnumerator ShieldCoroutine()
+    {
+        shield.gameObject.SetActive(true);
+        yield return new WaitForSeconds(shieldDuration);
+        shield.gameObject.SetActive(false);
+    }
+
+    #region Skill
+
+    [SerializeField] private GameObject lightingVisualSupportPrefab; // Assign in the inspector
+    [SerializeField] private float skillRange;
+    [SerializeField] private AttackParameters skillAttackParameters;
+
+    private Coroutine skillCoroutine;
+    private GameObject skillVisualSupport;
+    private void OnMainSkillStart(object sender, EventArgs e)
+    {
+        if (skillOnCooldown)
+        {
+            Debug.Log("Skill is on cooldown.");
+            return;
+        }
+        skillOnCooldown = true;
+        skillTimer = skillCooldown;
+
+        if (skillCoroutine == null)
+        {
+            skillVisualSupport = Instantiate(lightingVisualSupportPrefab);
+            //set skillAttackParameters.range to skillVisualSupport x scale
+            skillAttackParameters.range = skillVisualSupport.transform.localScale.x / 2;
+            skillCoroutine = StartCoroutine(SkillCoroutine());
+        }
+    }
+
+    private void OnMainSkillCancelled(object sender, EventArgs e)
+    {
+        if (skillCoroutine != null)
+        {
+            StopCoroutine(skillCoroutine);
+            skillCoroutine = null;
+            //deal damage to enemies
+            DealDamage(skillVisualSupport.transform, skillAttackParameters);
+            Destroy(skillVisualSupport);
+        }
+    }
+
+    private IEnumerator SkillCoroutine()
+    {
+        while (true)
+        {
+            Vector3 mousePosition = GetCursorPointOnGround();
+
+            Vector3 directionToCursor = (mousePosition - transform.position).normalized;
+            float distanceToCursor = Vector3.Distance(transform.position, mousePosition);
+            if (distanceToCursor > skillRange)
+            {
+                mousePosition = transform.position + directionToCursor * skillRange;
+            }
+
+            skillVisualSupport.transform.position = mousePosition + Vector3.up * 0.1f;
+            yield return null;
+        }
+    }
+
+  #endregion
+
+    #region Attack
 
     private bool isAttacking;
 
-    private void StartSecondaryAttacking() { }
+    private Coroutine mainAttackCoroutine;
 
-    private void StopSecondaryAttacking() { }
+    [Serializable]
+    public struct AttackParameters
+    {
+        public float range;
+        public float angle;
+        public float damage;
+        public ElementType elementType;
+        public ParticleSystem effect;
+    }
 
-    // Method to trigger main attack
+    [SerializeField] private AttackParameters mainAttackParameters;
+    [SerializeField] private AttackParameters secondaryAttackParameters;
+    private void PerformAttack(AttackParameters parameters)
+    {
+        DealDamage(transform, parameters);
+    }
+
+    private void AdjustAttackEffect(AttackParameters parameters)
+    {
+        if (parameters.effect == null)
+        {
+            Debug.LogError("Effect is null. Please assign it in the inspector.");
+            return;
+        }
+
+        var shapeModule = parameters.effect.shape;
+        shapeModule.enabled = true;
+        shapeModule.shapeType = ParticleSystemShapeType.Cone;
+        shapeModule.angle = parameters.angle * 0.5f;
+        shapeModule.radius = 0f;
+        shapeModule.length = parameters.range;
+
+        var mainModule = parameters.effect.main;
+        float startSpeed = mainModule.startSpeed.constant;
+        if (startSpeed == 0)
+        {
+            Debug.LogWarning("StartSpeed is zero. Setting it to a default value of 5.");
+            startSpeed = 5f;
+            mainModule.startSpeed = startSpeed;
+        }
+
+        mainModule.startLifetime = parameters.range / startSpeed;
+    }
+
+    private Coroutine currentAttackCoroutine;
+
+    private IEnumerator AttackCoroutine(AttackParameters parameters)
+    {
+        while (true)
+        {
+            PerformAttack(parameters);
+            yield return null;
+        }
+    }
+
+    private void StartAttacking(AttackParameters parameters)
+    {
+        if (currentAttackCoroutine == null)
+        {
+            AdjustAttackEffect(parameters);
+            parameters.effect.Play();
+            currentAttackCoroutine = StartCoroutine(AttackCoroutine(parameters));
+        }
+    }
+
+    private void StopAttacking(AttackParameters parameters)
+    {
+        if (currentAttackCoroutine != null)
+        {
+            StopCoroutine(currentAttackCoroutine);
+            parameters.effect.Stop();
+            currentAttackCoroutine = null;
+        }
+    }
+
+  #endregion
+
+    #region Movement
 
     private void OnDash(object sender, EventArgs e)
     {
         if (!dashOnCooldown)
         {
-            // Execute dash logic, move the player forward
             Vector3 dashDirection = transform.forward;
-            float dashDistance = 5f; // Adjust this value to control dash distance
+            float dashDistance = 5f;
             transform.position += dashDirection * dashDistance;
             dashOnCooldown = true;
             dashTimer = dashCooldown;
@@ -133,111 +312,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             Debug.Log("Dash is on cooldown.");
         }
-    }
-    private void DrawHollowCircle(float radius, Color color)
-    {
-        int segments = 360;
-        lineRenderer.positionCount = segments + 1;
-        lineRenderer.useWorldSpace = false; // Draw the circle relative to the player
-
-        // Set the color of the circle
-        SetLineColor(color);
-
-        // Adjust the line width to ensure it's thin and hollow
-        lineRenderer.startWidth = BULLET_RADIUS;
-        lineRenderer.endWidth = BULLET_RADIUS;
-
-        float angle = 0f;
-        for (int i = 0; i < segments + 1; i++)
-        {
-            // Calculate positions around the circle using Sin and Cos functions
-            float x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            float z = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
-            lineRenderer.SetPosition(i, new Vector3(x, 0.01f, z)); // Set position on XZ plane
-            angle += (360f / segments); // Increment angle for next point
-        }
-    }
-    private void OnMainAttack(object sender, EventArgs e)
-    {
-        if (mainAttackOnCooldown)
-        {
-            return;
-        }
-
-        SetLineColor(Color.yellow);
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up * 0.3f,
-            RADIUS + BULLET_RADIUS, LayerMask.GetMask("Bullet"));
-
-        bool bulletRebounded = false;
-
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("BulletHiHat"))
-            {
-                float bulletEdgeDistance = Vector3.Distance(transform.position, hitCollider.transform.position);
-
-                if (bulletEdgeDistance >= RADIUS - BULLET_RADIUS && bulletEdgeDistance <= RADIUS + BULLET_RADIUS)
-                {
-                    var bullet = hitCollider.GetComponent<Bullet>();
-                    // Change the color of the bullet to yellow
-                    bullet.SetTextureForPlayer();
-
-                    // Shoot the bullet in the direction of player to the bullet, y=0
-                    Vector3 direction = (hitCollider.transform.position - transform.position).normalized;
-                    direction.y = 0; // Ensure no vertical component in the direction
-                    bullet.SetShooterLayerMask(LayerMask.GetMask("Player"));
-                    bullet.SetBulletProperty(direction, 10, 10f, 10);
-                    bullet.ReflectBullet();
-                    bulletRebounded = true;
-                }
-            }
-        }
-
-        if (!bulletRebounded)
-        {
-            mainAttackOnCooldown = true;
-            mainAttackTimer = mainAttackCooldown;
-        }
-
-    }
-
-    private void OnSecondaryAttack(object sender, EventArgs e)
-    {
-        if (secondaryAttackOnCooldown)
-        {
-            return;
-        }
-
-        drumDetectorRenderer.material.color = Color.yellow;
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up * 0.3f,
-            RADIUS - BULLET_RADIUS, LayerMask.GetMask("Bullet"));
-        bool bulletRebounded = false;
-
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("BulletDrum"))
-            {
-                var bullet = hitCollider.GetComponent<Bullet>();
-                // Change the color of the bullet to yellow
-                bullet.SetTextureForPlayer();
-                // Shoot the bullet in the direction of player to the bullet, y=0
-                Vector3 direction = (hitCollider.transform.position - transform.position).normalized;
-                direction.y = 0; // Ensure no vertical component in the direction
-                bullet.SetShooterLayerMask(LayerMask.GetMask("Player"));
-                bullet.SetBulletProperty(direction, 10, 10f, 10);
-                bullet.ReflectBullet();
-                bulletRebounded = true;
-            }
-        }
-
-        if (!bulletRebounded)
-        {
-            secondaryAttackOnCooldown = true;
-            secondaryAttackTimer = secondaryAttackCooldown;
-        }
-
     }
 
     public void Moveto(Vector3 targetPosition)
@@ -257,13 +331,13 @@ public class Player : MonoBehaviour, IDamageable
 
         if (!canMove)
         {
-            //1. check if we can move forward
+            // Check if we can move forward
             Vector3 forwardDir = new Vector3(moveDir.x, 0, 0).normalized;
             canMove = (moveDir.x < -0.5f || moveDir.x > 0.5f) && !Physics.BoxCast(transform.position,
                 Vector3.one * playerRadius,
                 forwardDir, Quaternion.identity, moveDistance, collisionLayerMask);
 
-            //2. check if we can move to the side
+            // Check if we can move to the side
             if (canMove)
             {
                 moveDir = forwardDir;
@@ -281,41 +355,60 @@ public class Player : MonoBehaviour, IDamageable
                 }
                 else
                 {
-                    //Can't move forward or to the side
+                    // Can't move forward or to the side
                     moveDir = Vector3.zero;
                 }
             }
         }
 
-        _isMoving = moveDir != Vector3.zero;
-
         transform.position += (moveDir * moveDistance);
-        float rotateSpeed = 10f;
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-    }
 
-    public void TakeDamage(float damage)
-    {
-        _currentHealth -= damage;
-        OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
+        // Rotate towards the cursor position
+        Vector3 cursorPosition = GetCursorPointOnGround();
+        if (cursorPosition != Vector3.zero) // Ensure we have a valid point
         {
-            healthNormalized = _currentHealth / maxHealth
-        });
-        if (_currentHealth <= 0)
-        {
-            Die();
-            _currentHealth = maxHealth;
+            Vector3 lookDirection = (cursorPosition - transform.position).normalized;
+            lookDirection.y = 0; // Keep the rotation horizontal
+            float rotateSpeed = 10f;
+            transform.forward = Vector3.Slerp(transform.forward, lookDirection, Time.deltaTime * rotateSpeed);
         }
     }
+
+  #endregion
 
     private void Die()
     {
         Debug.Log("Player has died");
     }
 
-    private void SetLineColor(Color color)
+    private void DealDamage(Transform attacker, AttackParameters parameters)
     {
-        lineRenderer.startColor = color;
-        lineRenderer.endColor = color;
+        Collider[] hits = Physics.OverlapSphere(attacker.position, parameters.range, ~LayerMask.GetMask("Player"));
+        foreach (Collider hit in hits)
+        {
+            IDamageable target = hit.GetComponent<IDamageable>();
+            if (target != null)
+            {
+                Vector3 directionToTarget = (hit.transform.position - attacker.position).normalized;
+                float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
+
+                if (angleToTarget <= parameters.angle * 0.5f)
+                {
+                    target.TakeDamage(parameters.damage, parameters.elementType);
+                }
+            }
+        }
+    }
+
+    private Vector3 GetCursorPointOnGround()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        //return point of ray hit layer ground
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, LayerMask.GetMask("Ground")))
+        {
+            Vector3 mousePosition = hit.point;
+            return mousePosition;
+        }
+        return Vector3.zero;
     }
 }

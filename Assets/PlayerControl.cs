@@ -62,6 +62,24 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shield"",
+                    ""type"": ""Button"",
+                    ""id"": ""b8029547-0be5-409a-893a-92607ecf7698"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MainSkill"",
+                    ""type"": ""Button"",
+                    ""id"": ""f3bfe100-6893-45d0-9c95-9c76317a3008"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -134,7 +152,7 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""13801074-4cac-455a-b76f-fb6630664a11"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -150,6 +168,28 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35cf4e04-aa33-4d3e-aba3-75b659477e09"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shield"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c855422b-2199-4809-a988-9c5e44ede060"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MainSkill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -482,6 +522,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         m_Player_MainAttack = m_Player.FindAction("MainAttack", throwIfNotFound: true);
         m_Player_SecondaryAttack = m_Player.FindAction("SecondaryAttack", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_Shield = m_Player.FindAction("Shield", throwIfNotFound: true);
+        m_Player_MainSkill = m_Player.FindAction("MainSkill", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -559,6 +601,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_MainAttack;
     private readonly InputAction m_Player_SecondaryAttack;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_Shield;
+    private readonly InputAction m_Player_MainSkill;
     public struct PlayerActions
     {
         private @PlayerControl m_Wrapper;
@@ -567,6 +611,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         public InputAction @MainAttack => m_Wrapper.m_Player_MainAttack;
         public InputAction @SecondaryAttack => m_Wrapper.m_Player_SecondaryAttack;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @Shield => m_Wrapper.m_Player_Shield;
+        public InputAction @MainSkill => m_Wrapper.m_Player_MainSkill;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -588,6 +634,12 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Shield.started += instance.OnShield;
+            @Shield.performed += instance.OnShield;
+            @Shield.canceled += instance.OnShield;
+            @MainSkill.started += instance.OnMainSkill;
+            @MainSkill.performed += instance.OnMainSkill;
+            @MainSkill.canceled += instance.OnMainSkill;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -604,6 +656,12 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Shield.started -= instance.OnShield;
+            @Shield.performed -= instance.OnShield;
+            @Shield.canceled -= instance.OnShield;
+            @MainSkill.started -= instance.OnMainSkill;
+            @MainSkill.performed -= instance.OnMainSkill;
+            @MainSkill.canceled -= instance.OnMainSkill;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -745,6 +803,8 @@ public partial class @PlayerControl: IInputActionCollection2, IDisposable
         void OnMainAttack(InputAction.CallbackContext context);
         void OnSecondaryAttack(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnShield(InputAction.CallbackContext context);
+        void OnMainSkill(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
