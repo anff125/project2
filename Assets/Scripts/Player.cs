@@ -16,6 +16,9 @@ public class Player : MonoBehaviour, IDamageable
     // private float _currentMana;
     private bool _isMoving;
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
+    private float parryTimer;
+    private bool isParrying;
+    public bool IsParrying => isParrying;
 
     private void Awake()
     {
@@ -29,6 +32,8 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         _currentHealth = maxHealth;
+        isParrying = false;
+        parryTimer = 0f;
     }
     private void Start()
     {
@@ -39,6 +44,7 @@ public class Player : MonoBehaviour, IDamageable
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
         GameInput.Instance.OnDash += OnDash;
+        GameInput.Instance.OnParry += OnParry;
     }
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
@@ -88,6 +94,12 @@ public class Player : MonoBehaviour, IDamageable
             transform.position += transform.forward * 2f;
         }
     }
+    private void OnParry(object sender, EventArgs e)
+    {
+        Debug.Log("Parry!");
+        parryTimer = 1 / 6;
+        isParrying = true;
+    }
     public void WearWeapon(int index)
     {
         if (currentWeapon != null)
@@ -116,6 +128,7 @@ public class Player : MonoBehaviour, IDamageable
     private void Update()
     {
         HandleMovement();
+        HandleParryTimer();
         //HandleMana();
     }
 
@@ -175,6 +188,17 @@ public class Player : MonoBehaviour, IDamageable
         transform.position += (moveDir * moveDistance);
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+    }
+
+    private void HandleParryTimer()
+    {
+        if (isParrying && parryTimer <= 0)
+        {
+            isParrying = false;
+            return;
+        }
+
+        parryTimer -= Time.deltaTime;
     }
 
     // public float GetCurrentMana()

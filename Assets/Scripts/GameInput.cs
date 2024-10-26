@@ -12,6 +12,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnSecondaryAttackStarted;
     public event EventHandler OnSecondaryAttackCancelled;
     public event EventHandler OnDash;
+    public event EventHandler OnParry;
     private PlayerControl _playerInputActions;
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class GameInput : MonoBehaviour
         _playerInputActions.Player.SecondaryAttack.started += SecondaryAttack_started;
         _playerInputActions.Player.SecondaryAttack.canceled += SecondaryAttack_cancelled;
         _playerInputActions.Player.Dash.performed += Dash_performed;
+        _playerInputActions.Player.Parry.performed += Parry_performed;
     }
     private void SecondaryAttack_cancelled(InputAction.CallbackContext obj)
     {
@@ -44,6 +46,11 @@ public class GameInput : MonoBehaviour
     private void Dash_performed(InputAction.CallbackContext obj)
     {
         OnDash?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Parry_performed(InputAction.CallbackContext obj)
+    {
+        OnParry?.Invoke(this, EventArgs.Empty);
     }
 
     private void MainAttack_performed(InputAction.CallbackContext obj)
