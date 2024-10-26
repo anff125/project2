@@ -1,3 +1,13 @@
 fileFormatVersion: 2
 guid: eb32832443fd470a8ec8be0c1d90c7e4
-timeCreated: 1727952282
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - textureForPlayer: {instanceID: 0}
+  - textureForEnemy: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

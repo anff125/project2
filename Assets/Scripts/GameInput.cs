@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,12 +11,19 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnMainAttack;
     public event EventHandler OnSecondaryAttackStarted;
     public event EventHandler OnSecondaryAttackCancelled;
-
     public event EventHandler OnDash;
     private PlayerControl _playerInputActions;
     private void Awake()
     {
-        Instance = this;
+        //Singleton pattern
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         _playerInputActions = new PlayerControl();
         _playerInputActions.Player.Enable();

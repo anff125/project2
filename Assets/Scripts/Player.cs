@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -10,9 +8,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] private int maxHealth = 100;
     //[SerializeField] private int maxMana = 10;
-    [SerializeField] private Weapon currentWeapon;
     [SerializeField] private WeaponHolder weaponHolder;
-    [SerializeField] private int startingWeaponIndex = 0;
+    [SerializeField] private int startingWeaponIndex;
+    private Weapon currentWeapon = null;
     private float _currentHealth;
     public static Player Instance { get; private set; }
     // private float _currentMana;
@@ -21,15 +19,22 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         _currentHealth = maxHealth;
     }
     private void Start()
     {
-        //hide all weapons
         weaponHolder.Init();
         WearWeapon(startingWeaponIndex);
-
+        
         GameInput.Instance.OnMainAttack += OnMainAttack;
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
@@ -38,11 +43,15 @@ public class Player : MonoBehaviour, IDamageable
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
 
-    private bool isAttacking = false;
+    private bool isAttacking;
 
     private void StartSecondaryAttacking()
     {
         isAttacking = true;
+        if (currentWeapon == null)
+        {
+            Debug.LogError("No weapon is equipped to start secondary attack");
+        }
         currentWeapon.StartSecondaryAttack();
         StartCoroutine(SecondaryAttackContinuously());
     }
@@ -50,9 +59,16 @@ public class Player : MonoBehaviour, IDamageable
     private void StopSecondaryAttacking()
     {
         isAttacking = false;
+        if (currentWeapon == null)
+        {
+            Debug.LogError("No weapon is equipped to stop secondary attack");
+        }
         StopCoroutine(SecondaryAttackContinuously());
         currentWeapon.SecondaryAttack();
-        WearWeapon(0);
+        if (currentWeapon.index != 0)
+        {
+            WearWeapon(0);
+        }
     }
 
     private IEnumerator SecondaryAttackContinuously()
@@ -76,14 +92,24 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentWeapon != null)
         {
+            currentWeapon.HideVisualSupport();
             currentWeapon.Hide();
         }
         currentWeapon = weaponHolder.GetWeapon(index);
         Debug.Log("Wearing weapon: " + currentWeapon.name);
         currentWeapon.Show();
+        //if secondary attack is being used show visual support
+        if (isAttacking)
+        {
+            currentWeapon.ShowVisualSupport();
+        }
     }
     private void OnMainAttack(object sender, EventArgs e)
     {
+        if (currentWeapon == null)
+        {
+            Debug.LogError("No weapon is equipped to main attack");
+        }
         currentWeapon.MainAttack();
     }
 
@@ -166,7 +192,7 @@ public class Player : MonoBehaviour, IDamageable
         _currentHealth -= damage;
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
         {
-            healthNormalized = (float)_currentHealth / maxHealth
+            healthNormalized = _currentHealth / maxHealth
         });
         if (_currentHealth <= 0)
         {

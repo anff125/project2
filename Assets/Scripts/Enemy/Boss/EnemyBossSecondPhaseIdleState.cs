@@ -26,15 +26,21 @@ public class EnemyBossSecondPhaseIdleState : EnemyState
             if (EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseLaserState))
             {
                 _shootCount++;
-                _smashCount = 0;
+                if (_shootCount == 3)
+                {
+                    _smashCount = 0;
+                }
             }
         }
-        else if(_smashCount < 3)
+        else if (_smashCount < 3)
         {
             if (EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseSmashState))
             {
-                _shootCount = 0;
                 _smashCount++;
+                if (_smashCount == 3)
+                {
+                    _shootCount = 0;
+                }
             }
         }
     }

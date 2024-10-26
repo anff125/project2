@@ -12,7 +12,6 @@ public class EnemyRifleShootState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Enemy Rifle Shoot Enter");
         _bulletsToShoot = 5;
     }
     public override void Update()

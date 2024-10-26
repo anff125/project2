@@ -8,8 +8,9 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] protected Transform firePoint;
     [SerializeField] protected Transform bulletPrefab;
-    [SerializeField] protected Transform visualSupportPrefab;
-    protected Transform VisualSupport;
+    [SerializeField] protected Transform VisualSupport;
+
+    public int index;
     protected float _mainAttackCooldownTimer = 0f; // Cooldown timer
     protected bool CanShoot => _mainAttackCooldownTimer <= 0;
     //create two virtual for main attack and secondary attack
@@ -23,13 +24,21 @@ public class Weapon : MonoBehaviour
     }
     public virtual void StartSecondaryAttack() { }
     public virtual void DrawVisualSupport() { }
-    public virtual void Show()
+    public void Show()
     {
         gameObject.SetActive(true);
     }
-    public virtual void Hide()
+    public void Hide()
     {
         gameObject.SetActive(false);
+    }
+    public void ShowVisualSupport()
+    {
+        VisualSupport.gameObject.SetActive(true);
+    }
+    public void HideVisualSupport()
+    {
+        VisualSupport.gameObject.SetActive(false);
     }
     public virtual void Update()
     {
