@@ -249,8 +249,7 @@ public class Player : MonoBehaviour, IDamageable
         shapeModule.shapeType = ParticleSystemShapeType.Cone;
         shapeModule.angle = parameters.angle * 0.5f;
         shapeModule.radius = 0f;
-        shapeModule.length = parameters.range;
-
+        
         var mainModule = parameters.effect.main;
         float startSpeed = mainModule.startSpeed.constant;
         if (startSpeed == 0)
@@ -392,7 +391,7 @@ public class Player : MonoBehaviour, IDamageable
                 Vector3 directionToTarget = (hit.transform.position - attacker.position).normalized;
                 float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
 
-                if (angleToTarget <= parameters.angle * 0.5f)
+                if (angleToTarget <= parameters.angle)
                 {
                     target.TakeDamage(parameters.damage, parameters.elementType);
                 }
