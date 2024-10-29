@@ -6,19 +6,19 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
-    
+
     public void SetTextureForPlayer()
     {
         GetComponent<Renderer>().material.mainTexture = textureForPlayer;
     }
 
-    
+
     private Vector3 _movingDirection;
     public Vector3 MovingDirection => _movingDirection;
-    
+
     private float _speed = 10;
     public float Speed => _speed;
-    
+
     private int _damage = 1;
     public int Damage => _damage;
     public void SetShooterLayerMask(LayerMask layerMask)
@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
     {
         _damage = damage;
     }
-    public void SetBulletProperty(Vector3 bulletDirection, float speed = 10, float destroyTime = 0.5f, int damage = 1)
+    public void SetBulletProperty(Vector3 bulletDirection, float speed = 10, float destroyTime = 0.5f, int damage = 25)
     {
         SetSpeed(speed);
         SetDirection(bulletDirection);
@@ -63,11 +63,29 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Bullet Hit: " + collision.name);
+      
+        //Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
         damageable.TakeDamage(_damage);
         //destroy bullet
         Destroy(gameObject);
     }
+
+    private Enemy shooter; // Use the generic Enemy class
+
+    public void SetShooter(Enemy enemy)
+    {
+        shooter = enemy;
+    }
+
+    public void ReflectBullet()
+    {
+        if (shooter != null)
+        {
+            shooter.IncrementReflectedCount(); // Increment count only on the specific shooter
+        }
+    }
+
+
 }

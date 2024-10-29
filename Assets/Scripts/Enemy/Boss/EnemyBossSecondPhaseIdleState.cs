@@ -15,7 +15,7 @@ public class EnemyBossSecondPhaseIdleState : EnemyState
         if (_bossEnemy == null) return;
         _bossEnemy.meleePrefab.gameObject.SetActive(false);
         _bossEnemy.smashPrefab.gameObject.SetActive(false);
-        _bossEnemy.laserPrefab.gameObject.SetActive(false);
+        _bossEnemy.secondPhaseLaserPrefab.gameObject.SetActive(false);
         SetStateChangeCooldown(1f);
     }
     public override void Update()

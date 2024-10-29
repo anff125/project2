@@ -96,11 +96,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98cf702176aa8144a743cae6cc4f034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  maxHealth: 100
+  exclamationMark: {fileID: 2068558350584745163}
   bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
+  waterPrefab: {fileID: 3949445710372248976, guid: b5d4951722f7d6649b965f692030c9a0,
+    type: 3}
+  speed: 5
+  maxHealth: 100
+  maxFrozenAmount: 50
+  frozenTime: 3
   currentHealth: 0
+  currentFrozenAmount: 0
 --- !u!1 &7154621293354503424
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,30 +198,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7594919577328423014}
     m_Modifications:
-    - target: {fileID: 960555215835349947, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_Name
       value: HealthBarUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319124445299081485, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7663835465460077492, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
@@ -322,16 +308,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9217639493497622664, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: mode
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 845177d32682cb94080f53bf4af8c8c0, type: 3}
+--- !u!224 &2068558350584745163 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6321466209652534367, guid: 845177d32682cb94080f53bf4af8c8c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 5408439261286162580}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3885228083934498974 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,

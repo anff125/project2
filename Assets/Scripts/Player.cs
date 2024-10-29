@@ -1,21 +1,51 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private LayerMask collisionLayerMask;
-    [SerializeField] private int maxHealth = 100;
-    //[SerializeField] private int maxMana = 10;
-    [SerializeField] private WeaponHolder weaponHolder;
-    [SerializeField] private int startingWeaponIndex;
-    private Weapon currentWeapon = null;
+    [SerializeField] private int maxHealth;
+
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float skillCooldown;
+    [SerializeField] private float shieldCooldown;
+    [SerializeField] private float dashCooldown;
+
+    [SerializeField] private SkillUI skillCooldownUI;
+    [SerializeField] private SkillUI dashCooldownUI;
+
+    private Camera _camera;
+
+    private float skillTimer;
+    private bool skillOnCooldown;
+
+    private float shieldTimer;
+    private bool shieldOnCooldown;
+
+    private bool dashOnCooldown;
+    private float dashTimer;
+
     private float _currentHealth;
     public static Player Instance { get; private set; }
-    // private float _currentMana;
-    private bool _isMoving;
+
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
+    public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
+    public void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
+    {
+        _currentHealth -= damage;
+        OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
+        {
+            healthNormalized = _currentHealth / maxHealth
+        });
+        if (_currentHealth <= 0)
+        {
+            Die();
+            _currentHealth = maxHealth;
+        }
+    }
 
     private void Awake()
     {
@@ -30,104 +60,264 @@ public class Player : MonoBehaviour, IDamageable
 
         _currentHealth = maxHealth;
     }
+
     private void Start()
     {
-        weaponHolder.Init();
-        WearWeapon(startingWeaponIndex);
-        
+        _camera = Camera.main;
+        GameInput.Instance.OnMainAttackStarted += OnMainAttackStarted;
         GameInput.Instance.OnMainAttack += OnMainAttack;
+        GameInput.Instance.OnMainAttackCancelled += OnMainAttackCancelled;
+
         GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
+        GameInput.Instance.OnSecondaryAttack += OnSecondaryAttack;
         GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
+
+        GameInput.Instance.OnMainSkillStart += OnMainSkillStart;
+        GameInput.Instance.OnMainSkillCancelled += OnMainSkillCancelled;
+
+        GameInput.Instance.OnShield += OnShield;
         GameInput.Instance.OnDash += OnDash;
-    }
-    private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
-    private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
 
-    private bool isAttacking;
-
-    private void StartSecondaryAttacking()
-    {
-        isAttacking = true;
-        if (currentWeapon == null)
-        {
-            Debug.LogError("No weapon is equipped to start secondary attack");
-        }
-        currentWeapon.StartSecondaryAttack();
-        StartCoroutine(SecondaryAttackContinuously());
+        mainAttackParameters.effect.Stop();
+        secondaryAttackParameters.effect.Stop();
     }
 
-    private void StopSecondaryAttacking()
-    {
-        isAttacking = false;
-        if (currentWeapon == null)
-        {
-            Debug.LogError("No weapon is equipped to stop secondary attack");
-        }
-        StopCoroutine(SecondaryAttackContinuously());
-        currentWeapon.SecondaryAttack();
-        if (currentWeapon.index != 0)
-        {
-            WearWeapon(0);
-        }
-    }
-
-    private IEnumerator SecondaryAttackContinuously()
-    {
-        while (isAttacking)
-        {
-            currentWeapon.DrawVisualSupport();
-            yield return null;
-        }
-    }
-
-    private void OnDash(object sender, EventArgs e)
-    {
-        //Dash forward with a 1f cooldown
-        if (_isMoving)
-        {
-            transform.position += transform.forward * 2f;
-        }
-    }
-    public void WearWeapon(int index)
-    {
-        if (currentWeapon != null)
-        {
-            currentWeapon.HideVisualSupport();
-            currentWeapon.Hide();
-        }
-        currentWeapon = weaponHolder.GetWeapon(index);
-        Debug.Log("Wearing weapon: " + currentWeapon.name);
-        currentWeapon.Show();
-        //if secondary attack is being used show visual support
-        if (isAttacking)
-        {
-            currentWeapon.ShowVisualSupport();
-        }
-    }
-    private void OnMainAttack(object sender, EventArgs e)
-    {
-        if (currentWeapon == null)
-        {
-            Debug.LogError("No weapon is equipped to main attack");
-        }
-        currentWeapon.MainAttack();
-    }
 
     private void Update()
     {
         HandleMovement();
-        //HandleMana();
+
+        if (dashOnCooldown)
+        {
+            dashTimer -= Time.deltaTime;
+
+            dashCooldownUI.coolDownMaskImage.fillAmount = dashTimer / dashCooldown;
+            var color = dashCooldownUI.mainSkillImage.color;
+            color.a = 125 / 255f; // Alpha value should be between 0 and 1
+            dashCooldownUI.mainSkillImage.color = color;
+
+            if (dashTimer <= 0)
+            {
+                dashOnCooldown = false;
+                color.a = 1; // Alpha value should be between 0 and 1
+                dashCooldownUI.mainSkillImage.color = color;
+            }
+        }
+
+        if (skillOnCooldown)
+        {
+            skillTimer -= Time.deltaTime;
+
+            skillCooldownUI.coolDownMaskImage.fillAmount = skillTimer / skillCooldown;
+            var color = skillCooldownUI.mainSkillImage.color;
+            color.a = 125 / 255f; // Alpha value should be between 0 and 1
+            skillCooldownUI.mainSkillImage.color = color;
+
+            if (skillTimer <= 0)
+            {
+                skillOnCooldown = false;
+                color.a = 1; // Alpha value should be between 0 and 1
+                skillCooldownUI.mainSkillImage.color = color;
+            }
+        }
+
+        if (shieldOnCooldown)
+        {
+            shieldTimer -= Time.deltaTime;
+            if (shieldTimer <= 0)
+            {
+                shieldOnCooldown = false;
+            }
+        }
     }
 
-    // private void HandleMana()
-    // {
-    //     if (_currentMana >= maxMana) return;
-    //     _currentMana += Time.deltaTime;
-    // }
+    private void OnMainAttack(object sender, EventArgs e) { }
+    private void OnSecondaryAttack(object sender, EventArgs e) { }
+
+    private void OnMainAttackStarted(object sender, EventArgs e) { StartAttacking(mainAttackParameters); }
+    private void OnMainAttackCancelled(object sender, EventArgs e) { StopAttacking(mainAttackParameters); }
+
+    private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
+    private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopAttacking(secondaryAttackParameters); }
+
+
+    [SerializeField] Transform shield;
+    [SerializeField] private float shieldDuration;
+    private void OnShield(object sender, EventArgs e)
+    {
+        StartCoroutine(ShieldCoroutine());
+    }
+    private IEnumerator ShieldCoroutine()
+    {
+        shield.gameObject.SetActive(true);
+        yield return new WaitForSeconds(shieldDuration);
+        shield.gameObject.SetActive(false);
+    }
+
+    #region Skill
+
+    [SerializeField] private GameObject lightingVisualSupportPrefab; // Assign in the inspector
+    [SerializeField] private float skillRange;
+    [SerializeField] private AttackParameters skillAttackParameters;
+
+    private Coroutine skillCoroutine;
+    private GameObject skillVisualSupport;
+    private void OnMainSkillStart(object sender, EventArgs e)
+    {
+        if (skillOnCooldown)
+        {
+            Debug.Log("Skill is on cooldown.");
+            return;
+        }
+        skillOnCooldown = true;
+        skillTimer = skillCooldown;
+
+        if (skillCoroutine == null)
+        {
+            skillVisualSupport = Instantiate(lightingVisualSupportPrefab);
+            //set skillAttackParameters.range to skillVisualSupport x scale
+            skillAttackParameters.range = skillVisualSupport.transform.localScale.x / 2;
+            skillCoroutine = StartCoroutine(SkillCoroutine());
+        }
+    }
+
+    private void OnMainSkillCancelled(object sender, EventArgs e)
+    {
+        if (skillCoroutine != null)
+        {
+            StopCoroutine(skillCoroutine);
+            skillCoroutine = null;
+            //deal damage to enemies
+            DealDamage(skillVisualSupport.transform, skillAttackParameters);
+            Destroy(skillVisualSupport);
+        }
+    }
+
+    private IEnumerator SkillCoroutine()
+    {
+        while (true)
+        {
+            Vector3 mousePosition = GetCursorPointOnGround();
+
+            Vector3 directionToCursor = (mousePosition - transform.position).normalized;
+            float distanceToCursor = Vector3.Distance(transform.position, mousePosition);
+            if (distanceToCursor > skillRange)
+            {
+                mousePosition = transform.position + directionToCursor * skillRange;
+            }
+
+            skillVisualSupport.transform.position = mousePosition + Vector3.up * 0.1f;
+            yield return null;
+        }
+    }
+
+  #endregion
+
+    #region Attack
+
+    private bool isAttacking;
+
+    private Coroutine mainAttackCoroutine;
+
+    [Serializable]
+    public struct AttackParameters
+    {
+        public float range;
+        public float angle;
+        public float damage;
+        public ElementType elementType;
+        public ParticleSystem effect;
+    }
+
+    [SerializeField] private AttackParameters mainAttackParameters;
+    [SerializeField] private AttackParameters secondaryAttackParameters;
+    private void PerformAttack(AttackParameters parameters)
+    {
+        DealDamage(transform, parameters);
+    }
+
+    private void AdjustAttackEffect(AttackParameters parameters)
+    {
+        if (parameters.effect == null)
+        {
+            Debug.LogError("Effect is null. Please assign it in the inspector.");
+            return;
+        }
+
+        var shapeModule = parameters.effect.shape;
+        shapeModule.enabled = true;
+        shapeModule.shapeType = ParticleSystemShapeType.Cone;
+        shapeModule.angle = parameters.angle * 0.5f;
+        shapeModule.radius = 0f;
+        
+        var mainModule = parameters.effect.main;
+        float startSpeed = mainModule.startSpeed.constant;
+        if (startSpeed == 0)
+        {
+            Debug.LogWarning("StartSpeed is zero. Setting it to a default value of 5.");
+            startSpeed = 5f;
+            mainModule.startSpeed = startSpeed;
+        }
+
+        mainModule.startLifetime = parameters.range / startSpeed;
+    }
+
+    private Coroutine currentAttackCoroutine;
+
+    private IEnumerator AttackCoroutine(AttackParameters parameters)
+    {
+        while (true)
+        {
+            PerformAttack(parameters);
+            yield return null;
+        }
+    }
+
+    private void StartAttacking(AttackParameters parameters)
+    {
+        if (currentAttackCoroutine == null)
+        {
+            AdjustAttackEffect(parameters);
+            parameters.effect.Play();
+            currentAttackCoroutine = StartCoroutine(AttackCoroutine(parameters));
+        }
+    }
+
+    private void StopAttacking(AttackParameters parameters)
+    {
+        if (currentAttackCoroutine != null)
+        {
+            StopCoroutine(currentAttackCoroutine);
+            parameters.effect.Stop();
+            currentAttackCoroutine = null;
+        }
+    }
+
+  #endregion
+
+    #region Movement
+
+    private void OnDash(object sender, EventArgs e)
+    {
+        if (!dashOnCooldown)
+        {
+            Vector3 dashDirection = transform.forward;
+            float dashDistance = 5f;
+            transform.position += dashDirection * dashDistance;
+            dashOnCooldown = true;
+            dashTimer = dashCooldown;
+        }
+        else
+        {
+            Debug.Log("Dash is on cooldown.");
+        }
+    }
+
     public void Moveto(Vector3 targetPosition)
     {
         transform.position = targetPosition;
     }
+
     private void HandleMovement()
     {
         Vector2 move = GameInput.Instance.GetMovementVector();
@@ -140,13 +330,13 @@ public class Player : MonoBehaviour, IDamageable
 
         if (!canMove)
         {
-            //1. check if we can move forward
+            // Check if we can move forward
             Vector3 forwardDir = new Vector3(moveDir.x, 0, 0).normalized;
             canMove = (moveDir.x < -0.5f || moveDir.x > 0.5f) && !Physics.BoxCast(transform.position,
                 Vector3.one * playerRadius,
                 forwardDir, Quaternion.identity, moveDistance, collisionLayerMask);
 
-            //2. check if we can move to the side
+            // Check if we can move to the side
             if (canMove)
             {
                 moveDir = forwardDir;
@@ -164,45 +354,60 @@ public class Player : MonoBehaviour, IDamageable
                 }
                 else
                 {
-                    //Can't move forward or to the side
+                    // Can't move forward or to the side
                     moveDir = Vector3.zero;
                 }
             }
         }
 
-        _isMoving = moveDir != Vector3.zero;
-
         transform.position += (moveDir * moveDistance);
-        float rotateSpeed = 10f;
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-    }
 
-    // public float GetCurrentMana()
-    // {
-    //     return _currentMana;
-    // }
-    //
-    // public void UseMana(float amount)
-    // {
-    //     _currentMana -= amount;
-    // }
-
-    public void TakeDamage(float damage)
-    {
-        _currentHealth -= damage;
-        OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
+        // Rotate towards the cursor position
+        Vector3 cursorPosition = GetCursorPointOnGround();
+        if (cursorPosition != Vector3.zero) // Ensure we have a valid point
         {
-            healthNormalized = _currentHealth / maxHealth
-        });
-        if (_currentHealth <= 0)
-        {
-            Die();
-            _currentHealth = maxHealth;
+            Vector3 lookDirection = (cursorPosition - transform.position).normalized;
+            lookDirection.y = 0; // Keep the rotation horizontal
+            float rotateSpeed = 10f;
+            transform.forward = Vector3.Slerp(transform.forward, lookDirection, Time.deltaTime * rotateSpeed);
         }
     }
+
+  #endregion
+
     private void Die()
     {
         Debug.Log("Player has died");
     }
 
+    private void DealDamage(Transform attacker, AttackParameters parameters)
+    {
+        Collider[] hits = Physics.OverlapSphere(attacker.position, parameters.range, ~LayerMask.GetMask("Player"));
+        foreach (Collider hit in hits)
+        {
+            IDamageable target = hit.GetComponent<IDamageable>();
+            if (target != null)
+            {
+                Vector3 directionToTarget = (hit.transform.position - attacker.position).normalized;
+                float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
+
+                if (angleToTarget <= parameters.angle)
+                {
+                    target.TakeDamage(parameters.damage, parameters.elementType);
+                }
+            }
+        }
+    }
+
+    private Vector3 GetCursorPointOnGround()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        //return point of ray hit layer ground
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, LayerMask.GetMask("Ground")))
+        {
+            Vector3 mousePosition = hit.point;
+            return mousePosition;
+        }
+        return Vector3.zero;
+    }
 }
