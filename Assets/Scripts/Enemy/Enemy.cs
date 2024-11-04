@@ -142,7 +142,8 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         if (ReflectedBullets == TotalBulletsShot && TotalBulletsShot > 0)
         {
-            StartCoroutine(Die());
+            Debug.Log("Should not happen in project2. Please check the code");
+            //StartCoroutine(Die());
         }
     }
 

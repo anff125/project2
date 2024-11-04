@@ -6,10 +6,13 @@ public class EnemyStateMachine
 {
     public EnemyState CurrentEnemyState { get; private set; }
     public Enemy Enemy { get; private set; }
+    public EnemyElementalBoss EnemyElementalBoss;
+
     //a constructor with Enemy as a parameter
     public EnemyStateMachine(Enemy enemy)
     {
         Enemy = enemy;
+        EnemyElementalBoss = enemy as EnemyElementalBoss ?? null;
     }
     public void Initialize(EnemyState startEnemyState)
     {

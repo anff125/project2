@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 public class BarUI : MonoBehaviour
 {
     [SerializeField] private GameObject hasProgressGameObject;
-    
+
     [SerializeField] private Image healthBarImage;
     [SerializeField] private Image frozenBarImage;
 
@@ -28,7 +28,7 @@ public class BarUI : MonoBehaviour
         frozenBarImage.fillAmount = 0;
         Show();
     }
-    
+
     private void HasIDamageableOnFrozenChanged(object sender, IDamageable.OnFrozenProgressChangedEventArgs e)
     {
         frozenBarImage.fillAmount = e.frozenProgressNormalized;
@@ -37,14 +37,7 @@ public class BarUI : MonoBehaviour
     private void HasIDamageableOnHealthChanged(object sender, IDamageable.OnHealthChangedEventArgs e)
     {
         healthBarImage.fillAmount = e.healthNormalized;
-        if (e.healthNormalized == 0f)
-        {
-            Hide();
-        }
-        else
-        {
-            Show();
-        }
+        
     }
 
     private void Show()

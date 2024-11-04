@@ -78,9 +78,12 @@ public class Player : MonoBehaviour, IDamageable
         GameInput.Instance.OnShield += OnShield;
         GameInput.Instance.OnDash += OnDash;
 
+        shield.GetComponent<Shield>().OnBlockSuccess += BlockSuccess;
+
         mainAttackParameters.effect.Stop();
         secondaryAttackParameters.effect.Stop();
     }
+
 
 
     private void Update()
@@ -140,12 +143,32 @@ public class Player : MonoBehaviour, IDamageable
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopAttacking(secondaryAttackParameters); }
 
+    #region Shield
 
     [SerializeField] Transform shield;
     [SerializeField] private float shieldDuration;
+    private Coroutine shieldCoroutine;
+
+    private void BlockSuccess(object sender, EventArgs e)
+    {
+        if (shieldOnCooldown)
+        {
+            shieldTimer = 0;
+            shieldOnCooldown = false;
+        }
+    }
+
     private void OnShield(object sender, EventArgs e)
     {
-        StartCoroutine(ShieldCoroutine());
+        if (shieldOnCooldown) return;
+        
+        shieldOnCooldown = true;
+        shieldTimer = shieldCooldown;
+        if (shieldCoroutine != null)
+        {
+            StopCoroutine(shieldCoroutine);
+        }
+        shieldCoroutine = StartCoroutine(ShieldCoroutine());
     }
     private IEnumerator ShieldCoroutine()
     {
@@ -153,6 +176,8 @@ public class Player : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(shieldDuration);
         shield.gameObject.SetActive(false);
     }
+
+#endregion
 
     #region Skill
 
@@ -249,7 +274,7 @@ public class Player : MonoBehaviour, IDamageable
         shapeModule.shapeType = ParticleSystemShapeType.Cone;
         shapeModule.angle = parameters.angle * 0.5f;
         shapeModule.radius = 0f;
-        
+
         var mainModule = parameters.effect.main;
         float startSpeed = mainModule.startSpeed.constant;
         if (startSpeed == 0)

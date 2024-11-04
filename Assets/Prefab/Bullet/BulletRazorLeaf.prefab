@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 5039823218128439911}
   - component: {fileID: 3038691364654913045}
   - component: {fileID: 114030401251504300}
-  - component: {fileID: 5665537204340773614}
-  - component: {fileID: 2442631257792483083}
+  - component: {fileID: 3112800642802951907}
+  - component: {fileID: -5502476585714572507}
   m_Layer: 9
-  m_Name: Bullet
+  m_Name: BulletRazorLeaf
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,9 +29,9 @@ Transform:
   m_GameObject: {fileID: 2026112952563092200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 2, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026112952563092200}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &114030401251504300
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d76d5dba59c8a824a8170635648a356c, type: 2}
+  - {fileID: 2100000, guid: d031f021c50d59448aab1732a72f836e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5665537204340773614
-SphereCollider:
+--- !u!65 &3112800642802951907
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -98,15 +98,15 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 16
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2442631257792483083
+--- !u!114 &-5502476585714572507
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,11 +115,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026112952563092200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb32832443fd470a8ec8be0c1d90c7e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 06665d2c4c2a48179014632b9e3f5749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shooterLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 256
   textureForPlayer: {fileID: 2800000, guid: ee12d2bc9f5c8554d97d5beb9dc4b275, type: 3}
-  textureForEnemy: {fileID: 2800000, guid: 3d6064e2e1cd7214e9f67f3a68f494fb, type: 3}
+  textureForEnemy: {fileID: 2800000, guid: 988b6610bda0aca4286aff060b8d16b8, type: 3}
+  player: {fileID: 0}
