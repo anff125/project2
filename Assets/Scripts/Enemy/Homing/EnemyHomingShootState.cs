@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyTurretShootState : EnemyState
+public class EnemyHomingShootState : EnemyState
 {
     private int _bulletsToShoot = 1;
     private float _shootingTimer = 0f; // Cooldown timer
     private bool CanShoot => _shootingTimer <= 0;
 
-    public EnemyTurretShootState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
+    public EnemyHomingShootState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
 
     public override void Enter()
     {
@@ -20,13 +20,13 @@ public class EnemyTurretShootState : EnemyState
     {
         
         base.Update();
-        EnemyTurret turretEnemy = EnemyStateMachine.Enemy as EnemyTurret;
-        if (turretEnemy != null)
+        EnemyHoming HomingEnemy = EnemyStateMachine.Enemy as EnemyHoming;
+        if (HomingEnemy != null)
         {
             
             if (_bulletsToShoot <= 0)
             {
-                EnemyStateMachine.ChangeState(turretEnemy.TrackPlayerState);
+                EnemyStateMachine.ChangeState(HomingEnemy.TrackPlayerState);
             }
 
             if (_shootingTimer > 0)
@@ -35,12 +35,12 @@ public class EnemyTurretShootState : EnemyState
             }
             else
             {
-                _shootingTimer = .3f; // 控制射擊頻率
+                _shootingTimer = 1.5f; // 控制射擊頻率
 
                 // 發射子彈
                 Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
                 Transform bullet = Object.Instantiate(EnemyStateMachine.Enemy.bulletPrefab, EnemyStateMachine.Enemy.transform.position + Vector3.up * 0.3f, Quaternion.identity);
-                bullet.GetComponent<Bullet>().SetBulletProperty(direction, 10, 10f);
+                bullet.GetComponent<BulletHoming>().SetBulletProperty(direction, 10, 10f);
                 _bulletsToShoot--;
             }
         }
