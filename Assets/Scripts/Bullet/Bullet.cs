@@ -1,4 +1,7 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
@@ -6,12 +9,27 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
+    [SerializeField] private BulletProperty initProperty;
 
+    [System.Serializable]
+    class BulletProperty
+    {
+        public Vector3 direction;
+        public float speed;
+        public float destroyTime;
+        public int damage;
+    }
+
+    public bool canBeReflected = true;
     public void SetTextureForPlayer()
     {
         GetComponent<Renderer>().material.mainTexture = textureForPlayer;
     }
-
+    private void Start()
+    {
+        initProperty.direction = transform.forward;
+        SetBulletProperty(initProperty.direction, initProperty.speed, initProperty.destroyTime, initProperty.damage);
+    }
 
     protected Vector3 _movingDirection;
     public Vector3 MovingDirection => _movingDirection;
@@ -29,7 +47,7 @@ public class Bullet : MonoBehaviour
     {
         _speed = speed;
     }
-    protected void SetDirection(Vector3 direction)
+    public void SetDirection(Vector3 direction)
     {
         //set bullet direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;

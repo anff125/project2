@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeFrozenProgress(float frozenProgress)
+    private void TakeFrozenProgress(float frozenProgress)
     {
         if (currentFrozenAmount >= maxFrozenAmount) return;
         currentFrozenAmount += frozenProgress;

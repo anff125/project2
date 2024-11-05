@@ -21,7 +21,8 @@ public class Shield : MonoBehaviour
         }
         else
         {
-            bullet.SetBulletProperty(-bullet.MovingDirection, 10, 5f, 5);
+            if (bullet.canBeReflected)
+                bullet.SetBulletProperty(-bullet.MovingDirection, 10, 5f, 5);
         }
     }
 
