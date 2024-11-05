@@ -78,9 +78,12 @@ public class Player : MonoBehaviour, IDamageable
         GameInput.Instance.OnShield += OnShield;
         GameInput.Instance.OnDash += OnDash;
 
+        shield.GetComponent<Shield>().OnBlockSuccess += BlockSuccess;
+
         mainAttackParameters.effect.Stop();
         secondaryAttackParameters.effect.Stop();
     }
+
 
 
     private void Update()
@@ -140,12 +143,32 @@ public class Player : MonoBehaviour, IDamageable
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopAttacking(secondaryAttackParameters); }
 
+    #region Shield
 
     [SerializeField] Transform shield;
     [SerializeField] private float shieldDuration;
+    private Coroutine shieldCoroutine;
+
+    private void BlockSuccess(object sender, EventArgs e)
+    {
+        if (shieldOnCooldown)
+        {
+            shieldTimer = 0;
+            shieldOnCooldown = false;
+        }
+    }
+
     private void OnShield(object sender, EventArgs e)
     {
-        StartCoroutine(ShieldCoroutine());
+        if (shieldOnCooldown) return;
+
+        shieldOnCooldown = true;
+        shieldTimer = shieldCooldown;
+        if (shieldCoroutine != null)
+        {
+            StopCoroutine(shieldCoroutine);
+        }
+        shieldCoroutine = StartCoroutine(ShieldCoroutine());
     }
     private IEnumerator ShieldCoroutine()
     {
@@ -153,6 +176,8 @@ public class Player : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(shieldDuration);
         shield.gameObject.SetActive(false);
     }
+
+    #endregion
 
     #region Skill
 
@@ -249,7 +274,7 @@ public class Player : MonoBehaviour, IDamageable
         shapeModule.shapeType = ParticleSystemShapeType.Cone;
         shapeModule.angle = parameters.angle * 0.5f;
         shapeModule.radius = 0f;
-        
+
         var mainModule = parameters.effect.main;
         float startSpeed = mainModule.startSpeed.constant;
         if (startSpeed == 0)
@@ -301,9 +326,28 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (!dashOnCooldown)
         {
-            Vector3 dashDirection = transform.forward;
             float dashDistance = 5f;
-            transform.position += dashDirection * dashDistance;
+            Vector2 move = GameInput.Instance.GetMovementVector();
+            float playerRadius = .7f;
+            Vector3 moveDir = new Vector3(move.x, 0, move.y);
+
+            RaycastHit hitInfo;
+            bool canDash = !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDir,
+                out hitInfo, Quaternion.identity, dashDistance, collisionLayerMask);
+
+            Vector3 dashTarget;
+            if (canDash)
+            {
+                // No obstacles within dash range, dash the full distance
+                dashTarget = transform.position + moveDir * dashDistance;
+            }
+            else
+            {
+                // Obstacle detected, dash to the hit point
+                dashTarget = hitInfo.point - moveDir.normalized * playerRadius * 1.5f;
+            }
+            dashTarget.y = 0;
+            transform.position = dashTarget;
             dashOnCooldown = true;
             dashTimer = dashCooldown;
         }
@@ -312,6 +356,7 @@ public class Player : MonoBehaviour, IDamageable
             Debug.Log("Dash is on cooldown.");
         }
     }
+
 
     public void Moveto(Vector3 targetPosition)
     {
@@ -388,7 +433,10 @@ public class Player : MonoBehaviour, IDamageable
             IDamageable target = hit.GetComponent<IDamageable>();
             if (target != null)
             {
-                Vector3 directionToTarget = (hit.transform.position - attacker.position).normalized;
+                // 使用 ClosestPoint 來取得碰撞體表面最接近攻擊者的點
+                Vector3 closestPoint = hit.ClosestPoint(attacker.position);
+                closestPoint.y = 0;
+                Vector3 directionToTarget = (closestPoint - attacker.position).normalized;
                 float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
 
                 if (angleToTarget <= parameters.angle)
@@ -398,6 +446,7 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
     }
+
 
     private Vector3 GetCursorPointOnGround()
     {

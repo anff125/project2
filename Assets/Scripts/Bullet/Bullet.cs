@@ -1,4 +1,7 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
@@ -6,14 +9,29 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
+    [SerializeField] private BulletProperty initProperty;
 
+    [System.Serializable]
+    class BulletProperty
+    {
+        public Vector3 direction;
+        public float speed;
+        public float destroyTime;
+        public int damage;
+    }
+
+    public bool canBeReflected = true;
     public void SetTextureForPlayer()
     {
         GetComponent<Renderer>().material.mainTexture = textureForPlayer;
     }
+    private void Start()
+    {
+        initProperty.direction = transform.forward;
+        SetBulletProperty(initProperty.direction, initProperty.speed, initProperty.destroyTime, initProperty.damage);
+    }
 
-
-    private Vector3 _movingDirection;
+    protected Vector3 _movingDirection;
     public Vector3 MovingDirection => _movingDirection;
 
     private float _speed = 10;
@@ -25,11 +43,11 @@ public class Bullet : MonoBehaviour
     {
         shooterLayerMask = layerMask;
     }
-    private void SetSpeed(float speed)
+    protected void SetSpeed(float speed)
     {
         _speed = speed;
     }
-    protected void SetDirection(Vector3 direction)
+    public void SetDirection(Vector3 direction)
     {
         //set bullet direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -40,19 +58,22 @@ public class Bullet : MonoBehaviour
     {
         Destroy(gameObject, time);
     }
-    protected void SetDamage(int damage)
+    public void SetDamage(int damage)
     {
         _damage = damage;
     }
     public void SetBulletProperty(Vector3 bulletDirection, float speed = 10, float destroyTime = 0.5f, int damage = 25)
     {
+        SetDestroyTime(destroyTime);
         SetSpeed(speed);
         SetDirection(bulletDirection);
-        SetDestroyTime(destroyTime);
         SetDamage(damage);
     }
     protected virtual void Update()
     {
+        //rotate the bullet to face the moving direction
+        transform.rotation = Quaternion.LookRotation(_movingDirection);
+        //move the bullet
         transform.position += _movingDirection * (Time.deltaTime * _speed);
     }
     protected void OnTriggerEnter(Collider collision)
@@ -63,7 +84,7 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-      
+
         //Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
@@ -78,7 +99,10 @@ public class Bullet : MonoBehaviour
     {
         shooter = enemy;
     }
-
+    public Enemy GetShooter()
+    {
+        return shooter;
+    }
     public void ReflectBullet()
     {
         if (shooter != null)

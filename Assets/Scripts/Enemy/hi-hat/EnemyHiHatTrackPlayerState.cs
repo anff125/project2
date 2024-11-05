@@ -40,11 +40,11 @@ public class EnemyHiHatTrackPlayerState : EnemyState
         else if (dis > 6 && dis <= 8)
         {
             // Cast to EnemyDrum
-            EnemyHiHat enemyHiHat = EnemyStateMachine.Enemy as EnemyHiHat;
-            if (enemyHiHat != null)
+            EnemyHiHat enemyElementalBoss = EnemyStateMachine.Enemy as EnemyHiHat;
+            if (enemyElementalBoss != null)
             {
                 EnemyStateMachine.Enemy.transform.rotation = Quaternion.LookRotation(playerPosition - enemyPosition);
-                EnemyStateMachine.ChangeState(enemyHiHat.ShootState);
+                EnemyStateMachine.ChangeState(enemyElementalBoss.ShootState);
             }
         }
         else

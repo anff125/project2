@@ -9,12 +9,12 @@ public class EnemyHiHatShootState : EnemyState
     private int _currentBulletIndex = 0;
     List<float> timeSpace; 
     private bool CanShoot => _shootingTimer <= 0;
-    private readonly EnemyHiHat _enemyHiHat;
+    private readonly EnemyHiHat _enemyElementalBoss;
  
     public EnemyHiHatShootState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine)
     {
-        _enemyHiHat = EnemyStateMachine.Enemy as EnemyHiHat;
-        timeSpace = _enemyHiHat?.timeSpace;
+        _enemyElementalBoss = EnemyStateMachine.Enemy as EnemyHiHat;
+        timeSpace = _enemyElementalBoss?.timeSpace;
     }
 
     public override void Enter()
@@ -22,8 +22,8 @@ public class EnemyHiHatShootState : EnemyState
         base.Enter();
         _bulletsToShoot = timeSpace.Count + 1;
         
-        _enemyHiHat.TotalBulletsShot = _bulletsToShoot; 
-        _enemyHiHat.ReflectedBullets = 0; 
+        _enemyElementalBoss.TotalBulletsShot = _bulletsToShoot; 
+        _enemyElementalBoss.ReflectedBullets = 0; 
         
         _currentBulletIndex = 0;
         _shootingTimer = 0f;
@@ -33,9 +33,9 @@ public class EnemyHiHatShootState : EnemyState
     {
         base.Update();
 
-        if (_bulletsToShoot <= 0 && _enemyHiHat != null)
+        if (_bulletsToShoot <= 0 && _enemyElementalBoss != null)
         {
-            EnemyStateMachine.ChangeState(_enemyHiHat.TrackPlayerState);
+            EnemyStateMachine.ChangeState(_enemyElementalBoss.TrackPlayerState);
             return; 
         }
         
@@ -52,7 +52,7 @@ public class EnemyHiHatShootState : EnemyState
                 Quaternion.identity);
             // Set bullet properties
             bullet.GetComponent<Bullet>().SetBulletProperty(direction, 5, 10f);
-            _enemyHiHat.RegisterBullet(bullet.GetComponent<Bullet>()); 
+            _enemyElementalBoss.RegisterBullet(bullet.GetComponent<Bullet>()); 
             _bulletsToShoot--;
             
             if (_currentBulletIndex < timeSpace.Count)
