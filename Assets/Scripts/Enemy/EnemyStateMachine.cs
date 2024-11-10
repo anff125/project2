@@ -8,6 +8,7 @@ public class EnemyStateMachine
     public Enemy Enemy { get; private set; }
     public EnemyElementalBoss EnemyElementalBoss;
 
+    public EnemyState LastState;
     //a constructor with Enemy as a parameter
     public EnemyStateMachine(Enemy enemy)
     {
@@ -27,6 +28,7 @@ public class EnemyStateMachine
             //Debug.Log("Cannot exit current state" + CurrentEnemyState);
             return false;
         }
+        LastState = CurrentEnemyState;
         CurrentEnemyState.Exit();
         CurrentEnemyState = newEnemyState;
         CurrentEnemyState.Enter();

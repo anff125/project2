@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -14,7 +15,9 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] public int maxFrozenAmount = 50;
     [SerializeField] public int frozenTime = 3;
     protected int WeaponIndex = 0;
-
+    [SerializeField] public float moveDistance;
+    [SerializeField] public LayerMask collisionLayerMask;
+    [SerializeField] public float attackRange = 10f;
     public float currentHealth;
     public float currentFrozenAmount;
 
@@ -25,8 +28,16 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
-    public virtual void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
+
+    protected virtual float CalculateDamage(IDamageable.Damage damage)
     {
+        return damage.Amount;
+    }
+
+    public virtual void TakeDamage(IDamageable.Damage damage)
+    {
+        ElementType elementType = damage.ElementType;
+
         // If the enemy is frozen and takes fire damage, unfreeze and reset frozen amount
         if (_isFrozen && elementType == ElementType.Fire)
         {
@@ -48,7 +59,7 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
         // Reduce health by the damage amount
-        currentHealth -= damage;
+        currentHealth -= CalculateDamage(damage);
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
         {
             healthNormalized = (float)currentHealth / maxHealth
@@ -147,4 +158,34 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
+    public IEnumerator MoveToPosition(Vector3 targetPosition, float time = 1f)
+    {
+        float elapsedTime = 0f;
+        Vector3 startPosition = gameObject.transform.position;
+        while (elapsedTime < time)
+        {
+
+            // Rotate to face the player
+            Vector3 direction = (Player.Instance.transform.position - gameObject.transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, lookRotation, Time.deltaTime * 5f);
+
+            bool canMove = !Physics.BoxCast(transform.position, Vector3.one,
+                (targetPosition - startPosition), Quaternion.identity, moveDistance, collisionLayerMask);
+            if (canMove)
+            {
+                gameObject.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / time);
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public Vector3 GetFixedDistancePositionAroundPlayer(float range = 10f)
+    {
+        float angle = Random.Range(0f, 360f);
+        Vector3 randomPosition = Player.Instance.transform.position + new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * range;
+        return randomPosition;
+    }
 }

@@ -11,8 +11,9 @@ public class EnemyElementalBossMeleeState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        SetStateChangeCooldown(delay);
 
+        SetStateChangeCooldown(delay);
+        
         EnemyStateMachine.EnemyElementalBoss.exclamationMark.gameObject.SetActive(true);
         EnemyStateMachine.EnemyElementalBoss.StartCoroutine(ShootWithDelay());
         EnemyStateMachine.EnemyElementalBoss.meleeCount++;
@@ -30,7 +31,7 @@ public class EnemyElementalBossMeleeState : EnemyState
             elapsed += blinkInterval;
         }
         EnemyStateMachine.EnemyElementalBoss.exclamationMark.gameObject.SetActive(false);
-
+        Debug.Log("Melee Attack");
         // Shoot 5 bullets in a Circular sector with 120 degrees in front of the enemy
         Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
 

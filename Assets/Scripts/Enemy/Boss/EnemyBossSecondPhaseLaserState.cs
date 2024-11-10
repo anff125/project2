@@ -22,7 +22,7 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
 
         _playerTransform = Player.Instance.transform;
         _laserCollider = _bossEnemy.secondPhaseLaserPrefab.GetComponent<CapsuleCollider>();
-        
+
         _bossEnemy.secondPhaseLaserPrefab.transform.localRotation = Quaternion.Euler(90, 0, 0);
     }
 
@@ -58,7 +58,8 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
         //Deal Damage to player if player is in the _bossEnemy laserPrefab's collider
         if (_laserCollider.bounds.Contains(Player.Instance.transform.position))
         {
-            Player.Instance.TakeDamage(0.7f);
+            IDamageable.Damage damage = new IDamageable.Damage(0.7f, ElementType.Physical, _bossEnemy.transform);
+            Player.Instance.TakeDamage(damage);
         }
 
     }
