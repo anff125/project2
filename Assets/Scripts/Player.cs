@@ -33,9 +33,9 @@ public class Player : MonoBehaviour, IDamageable
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
-    public void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
+    public void TakeDamage(IDamageable.Damage damage)
     {
-        _currentHealth -= damage;
+        _currentHealth -= damage.Amount;
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
         {
             healthNormalized = _currentHealth / maxHealth
@@ -83,8 +83,6 @@ public class Player : MonoBehaviour, IDamageable
         mainAttackParameters.effect.Stop();
         secondaryAttackParameters.effect.Stop();
     }
-
-
 
     private void Update()
     {
@@ -169,6 +167,10 @@ public class Player : MonoBehaviour, IDamageable
             StopCoroutine(shieldCoroutine);
         }
         shieldCoroutine = StartCoroutine(ShieldCoroutine());
+
+        //push object around away
+
+
     }
     private IEnumerator ShieldCoroutine()
     {
@@ -256,6 +258,8 @@ public class Player : MonoBehaviour, IDamageable
 
     [SerializeField] private AttackParameters mainAttackParameters;
     [SerializeField] private AttackParameters secondaryAttackParameters;
+
+    private AttackParameters lastParameters;
     private void PerformAttack(AttackParameters parameters)
     {
         DealDamage(transform, parameters);
@@ -302,15 +306,21 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentAttackCoroutine == null)
         {
+            lastParameters = parameters;
             AdjustAttackEffect(parameters);
             parameters.effect.Play();
             currentAttackCoroutine = StartCoroutine(AttackCoroutine(parameters));
+        }
+        else
+        {
+            StopAttacking(lastParameters);
+            StartAttacking(parameters);
         }
     }
 
     private void StopAttacking(AttackParameters parameters)
     {
-        if (currentAttackCoroutine != null)
+        if (currentAttackCoroutine != null && lastParameters.effect == parameters.effect)
         {
             StopCoroutine(currentAttackCoroutine);
             parameters.effect.Stop();
@@ -318,7 +328,7 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-  #endregion
+    #endregion
 
     #region Movement
 
@@ -441,12 +451,12 @@ public class Player : MonoBehaviour, IDamageable
 
                 if (angleToTarget <= parameters.angle)
                 {
-                    target.TakeDamage(parameters.damage, parameters.elementType);
+                    IDamageable.Damage damage = new IDamageable.Damage(parameters.damage, parameters.elementType, attacker);
+                    target.TakeDamage(damage);
                 }
             }
         }
     }
-
 
     private Vector3 GetCursorPointOnGround()
     {

@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,14 @@ public class GameManager : MonoBehaviour
     //Create a singleton
     public static GameManager Instance { get; private set; }
 
+    [SerializeField] private bool isBossFight;
     // Spawn Enemy every 5 seconds
     [SerializeField] private List<GameObject> enemyPrefabs;
     [SerializeField] private List<GameObject> bossEnemyPrefabs;
     [SerializeField] private int maxEnemiesInScene; // Maximum number of enemies allowed
     [SerializeField] private float spawnWindow; // Maximum number of enemies allowed
+    [SerializeField] public CinemachineVirtualCamera mainCamera;
+    [SerializeField] public CinemachineVirtualCamera farCamera;
 
     private readonly List<GameObject> spawnedEnemies = new List<GameObject>(); // To keep track of spawned enemies
 
@@ -20,12 +24,12 @@ public class GameManager : MonoBehaviour
     {
         maxEnemiesInScene = maxEnemies;
     }
-    
+
     public void ChangeSpawnWindow(float newSpawnWindow)
     {
         spawnWindow = newSpawnWindow;
     }
-    
+
     private void Awake()
     {
         Instance = this;
@@ -33,7 +37,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnEnemy());
+        if (!isBossFight)
+        {
+            StartCoroutine(SpawnEnemy());
+        }
+        //StartCoroutine(SpawnEnemy());
         // Uncomment to spawn boss enemy after 10 seconds
         //StartCoroutine(SpawnBossEnemy());
     }
@@ -78,4 +86,5 @@ public class GameManager : MonoBehaviour
             spawnedEnemies.Remove(enemy);
         }
     }
+
 }

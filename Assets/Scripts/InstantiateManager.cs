@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,10 @@ public class InstantiateManager : MonoBehaviour
     [SerializeField] public Transform aSetOfLavaBallPrefab;
     [SerializeField] public List<Transform> lavaBallSpawnPoints;
     public static InstantiateManager Instance { get; private set; }
-    private readonly float stageDuration = 20f;
+    private readonly float lavaStageDuration = 20f;
 
     private readonly List<GameObject> activeLavaBalls = new List<GameObject>();
-    private readonly int maxLavaBallCount = 10;
+    private readonly int maxLavaBallCount = 20;
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class InstantiateManager : MonoBehaviour
 
     private void Start()
     {
-        StartLavaBallStage();
+        //StartLavaBallStage();
     }
 
     public void InstantiateWater(Transform spawnPoint)
@@ -44,16 +45,12 @@ public class InstantiateManager : MonoBehaviour
     private IEnumerator InstantiateLavaBall()
     {
         float elapsedTime = 0f;
-
-        while (elapsedTime < stageDuration)
+        GameManager.Instance.mainCamera.gameObject.SetActive(false);
+        while (elapsedTime < lavaStageDuration - 6)
         {
-            float randomCooldown = Random.Range(4f, 5f);
-            yield return new WaitForSeconds(randomCooldown);
-
-            if (elapsedTime >= stageDuration || activeLavaBalls.Count >= maxLavaBallCount)
+            if (elapsedTime >= lavaStageDuration || activeLavaBalls.Count >= maxLavaBallCount)
                 break;
 
-            // 隨機選擇兩個生成位置
             List<Transform> selectedSpawnPoints = GetRandomSpawnPoints(2);
             foreach (var spawnPoint in selectedSpawnPoints)
             {
@@ -61,8 +58,12 @@ public class InstantiateManager : MonoBehaviour
                 activeLavaBalls.Add(newLavaBall);
             }
 
+            float randomCooldown = Random.Range(2f, 3f);
+            yield return new WaitForSeconds(randomCooldown);
+
             elapsedTime += randomCooldown;
         }
+        GameManager.Instance.mainCamera.gameObject.SetActive(true);
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)
@@ -87,5 +88,10 @@ public class InstantiateManager : MonoBehaviour
         {
             activeLavaBalls.Remove(lavaBall);
         }
+    }
+
+    public float GetLavaStageDuration()
+    {
+        return lavaStageDuration;
     }
 }

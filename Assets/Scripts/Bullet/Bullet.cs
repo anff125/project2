@@ -9,10 +9,10 @@ public class Bullet : MonoBehaviour
     [SerializeField] private LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
-    [SerializeField] private BulletProperty initProperty;
+    [SerializeField] protected BulletProperty initProperty;
 
     [System.Serializable]
-    class BulletProperty
+    protected class BulletProperty
     {
         public Vector3 direction;
         public float speed;
@@ -25,10 +25,10 @@ public class Bullet : MonoBehaviour
     {
         GetComponent<Renderer>().material.mainTexture = textureForPlayer;
     }
-    private void Start()
+
+    protected virtual void Start()
     {
         initProperty.direction = transform.forward;
-        SetBulletProperty(initProperty.direction, initProperty.speed, initProperty.destroyTime, initProperty.damage);
     }
 
     protected Vector3 _movingDirection;
@@ -88,7 +88,10 @@ public class Bullet : MonoBehaviour
         //Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
-        damageable.TakeDamage(_damage);
+        
+        IDamageable.Damage damage = new IDamageable.Damage(_damage, ElementType.Physical, transform);
+        damageable.TakeDamage(damage);
+        
         //destroy bullet
         Destroy(gameObject);
     }

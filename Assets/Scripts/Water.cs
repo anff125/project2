@@ -9,10 +9,10 @@ public class Water : MonoBehaviour, IDamageable
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
 
     private bool isTriggered;
-    public void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
+    public void TakeDamage(IDamageable.Damage damage)
     {
 
-        if (elementType == ElementType.Electric)
+        if (damage.ElementType == ElementType.Electric)
         {
             if (isTriggered) return;
             isTriggered = true;
@@ -22,13 +22,13 @@ public class Water : MonoBehaviour, IDamageable
                 if (colliderOut.CompareTag("Water"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
-                    damageable.TakeDamage(damage, elementType);
+                    damageable.TakeDamage(damage);
                 }
 
                 else if (colliderOut.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
-                    damageable.TakeDamage(damage, elementType);
+                    damageable.TakeDamage(damage);
                 }
             }
             Destroy(gameObject);

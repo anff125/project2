@@ -76,7 +76,8 @@ public class EnemyBossSecondPhaseSmashState : EnemyState
             //if player deal damage
             else if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                hitCollider.GetComponent<IDamageable>()?.TakeDamage(50);
+                IDamageable.Damage damage = new IDamageable.Damage(50, ElementType.Physical, _bossEnemy.transform);
+                hitCollider.GetComponent<IDamageable>()?.TakeDamage(damage);
             }
         }
     }

@@ -392,18 +392,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationMark: {fileID: 2041771477433241246}
-  bulletPrefab: {fileID: 5039823218128439911, guid: f60db5c94361b8048b9c297c1fff5530,
+  bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
-  speed: 5
-  maxHealth: 100
-  maxFrozenAmount: 50
+  speed: 2
+  maxHealth: 1000
+  maxFrozenAmount: 300
   frozenTime: 3
+  moveDistance: 1
+  collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  attackRange: 10
   currentHealth: 0
   currentFrozenAmount: 0
   lineRenderer: {fileID: 8803367539567536311}
   timeSpace:
-  - 1
-  - 1
+  - 0.25
+  - 0.333333
+  - 0.25
+  - 0.333333
+  - 0.25
+  secondPhaseTimeSpace:
+  - 0.3
+  - 0.3
+  - 0.4
+  - 0.2
+  - 0.5
+  - 0.2
+  isSecondPhase: 0
+  powderKegPrefab: {fileID: 653096076306477914, guid: 9e1394fe7bd3e3049a4d8d5e0fe515a7,
+    type: 3}
+  bulletRazorLeafPrefab: {fileID: 5039823218128439911, guid: f60db5c94361b8048b9c297c1fff5530,
+    type: 3}
+  meleeCount: 0
 --- !u!1 &7513504372489734470
 GameObject:
   m_ObjectHideFlags: 0

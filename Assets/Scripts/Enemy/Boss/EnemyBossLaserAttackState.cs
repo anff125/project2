@@ -91,7 +91,8 @@ public class EnemyBossLaserAttackState : EnemyState
                     Debug.Log($"Laser {i} hit: {hit.collider.gameObject.name}");
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
                     {
-                        Player.Instance.TakeDamage(0.3f);
+                        IDamageable.Damage damage = new IDamageable.Damage(0.3f, ElementType.Physical, _bossEnemy.transform);
+                        Player.Instance.TakeDamage(damage);
                     }
                 }
             }
