@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyBossMeleeAttackState : EnemyState
@@ -37,7 +36,8 @@ public class EnemyBossMeleeAttackState : EnemyState
                 {
                     if (hitCollider.CompareTag("Player"))
                     {
-                        Player.Instance.TakeDamage(100);
+                        IDamageable.Damage damage = new IDamageable.Damage(100, ElementType.Physical, _bossEnemy.transform);
+                        Player.Instance.TakeDamage(damage);
                     }
                 }
 

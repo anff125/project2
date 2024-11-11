@@ -1,21 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    //make enemy bullet bounce back when it hits the shield and change shooterLayerMask to playerLayerMask
+    public event EventHandler OnBlockSuccess;
+
     [SerializeField] private LayerMask playerLayerMask;
+    [SerializeField] private LayerMask interactionBlockLayerMask;
     private void OnTriggerEnter(Collider collision)
     {
-        //make the bullet bounce back
+        //check if is not in interactionBlockLayerMask
+        if ((interactionBlockLayerMask.value & 1 << collision.gameObject.layer) == 0)
+        {
+            Debug.Log("Interaction block: " + collision.name);
+            return;
+        }
         Bullet bullet = collision.GetComponent<Bullet>();
-        if (bullet == null) return;
-        //set bullet Texture to the player texture
-        bullet.SetTextureForPlayer();
-        //set bullet direction to the shield forward direction
-        bullet.SetBulletProperty(transform.forward, 10, 1f, 10);
+        if (bullet == null)
+        {
+            //push object with rigidbody away from player
+            Debug.Log("Pushing object away: " + collision.name);
+            Rigidbody rb = collision.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 direction = collision.transform.position - transform.position;
+                rb.AddForce(direction.normalized * 10, ForceMode.Impulse);
+            }
+
+            return;
+        }
+        //if is razor leaf, destroy it
+        OnBlockSuccess?.Invoke(this, EventArgs.Empty);
         bullet.SetShooterLayerMask(playerLayerMask);
+        bullet.SetTextureForPlayer();
+        if (bullet is BulletRazorLeaf razorLeafBullet)
+        {
+            var shooter = razorLeafBullet.GetShooter();
+            if (shooter != null)
+            {
+                razorLeafBullet.SetTarget(shooter.transform);
+                razorLeafBullet.SetDamage(5);
+            }
+        }
+        else
+        {
+            if (bullet.canBeReflected)
+                bullet.SetBulletProperty(-bullet.MovingDirection, 10, 5f, 5);
+        }
     }
-    
+
+
 }

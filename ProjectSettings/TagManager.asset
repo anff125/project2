@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
-  - Enemy
+  - BulletHiHat
+  - BulletDrum
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - Player
   - Enemy
   - Bullet
-  - 
+  - 'PhysicalInteractable '
   - 
   - 
   - 

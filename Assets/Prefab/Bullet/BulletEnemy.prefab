@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2026112952563092200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.3, y: 0.772, z: 0.253}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -98,7 +98,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -123,3 +123,9 @@ MonoBehaviour:
     m_Bits: 256
   textureForPlayer: {fileID: 2800000, guid: ee12d2bc9f5c8554d97d5beb9dc4b275, type: 3}
   textureForEnemy: {fileID: 2800000, guid: 3d6064e2e1cd7214e9f67f3a68f494fb, type: 3}
+  initProperty:
+    direction: {x: 0, y: 0, z: 0}
+    speed: 0
+    destroyTime: 0
+    damage: 0
+  canBeReflected: 1

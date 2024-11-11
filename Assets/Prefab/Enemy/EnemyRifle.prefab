@@ -116,7 +116,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6510108573769656266}
-  - {fileID: 5583651875085480798}
+  - {fileID: 6375772523352916516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6413653247485201906
@@ -179,12 +179,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f38212dfab0cea944b7280ce0186cfc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  maxHealth: 80
+  exclamationMark: {fileID: 8152834549754732145}
   bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
+  speed: 5
+  maxHealth: 80
+  maxFrozenAmount: 50
+  frozenTime: 5
   currentHealth: 0
---- !u!1001 &3717903246209876820
+  currentFrozenAmount: 0
+--- !u!1001 &2782929719124881966
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -192,36 +196,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7156413630495845778}
     m_Modifications:
-    - target: {fileID: 960555215835349947, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_Name
-      value: HealthBarUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3897212576810922174, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319124445299081485, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
+      value: BarUI
       objectReference: {fileID: 0}
     - target: {fileID: 7663835465460077492, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: hasProgressGameObject
       value: 
       objectReference: {fileID: 7979279618180815756}
+    - target: {fileID: 8607154497787361570, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607154497787361570, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_Pivot.x
@@ -285,17 +279,17 @@ PrefabInstance:
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
@@ -322,19 +316,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9217639493497622664, guid: 845177d32682cb94080f53bf4af8c8c0,
-        type: 3}
-      propertyPath: mode
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 845177d32682cb94080f53bf4af8c8c0, type: 3}
---- !u!224 &5583651875085480798 stripped
+--- !u!224 &6375772523352916516 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
     type: 3}
-  m_PrefabInstance: {fileID: 3717903246209876820}
+  m_PrefabInstance: {fileID: 2782929719124881966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8152834549754732145 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6321466209652534367, guid: 845177d32682cb94080f53bf4af8c8c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2782929719124881966}
   m_PrefabAsset: {fileID: 0}

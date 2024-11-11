@@ -6,14 +6,21 @@ public class EnemyRifleShootState : EnemyState
 {
     private int _bulletsToShoot = 5;
     private float _shootingTimer = 0f; // Cooldown timer
+    private readonly float _shootingInterval; // Interval between shots
     private bool CanShoot => _shootingTimer <= 0;
 
-    public EnemyRifleShootState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
+    // Add the shooting interval as a parameter in the constructor
+    public EnemyRifleShootState(EnemyStateMachine enemyStateMachine, float shootingInterval = 0.2f) : base(enemyStateMachine)
+    {
+        _shootingInterval = shootingInterval;
+    }
+
     public override void Enter()
     {
         base.Enter();
         _bulletsToShoot = 5;
     }
+
     public override void Update()
     {
         base.Update();
@@ -23,24 +30,27 @@ public class EnemyRifleShootState : EnemyState
             EnemyStateMachine.ChangeState(rifleEnemy.TrackPlayerState);
         }
 
+        // Handle the cooldown timer
         if (_shootingTimer > 0)
         {
             _shootingTimer -= Time.deltaTime;
         }
-        else
-        {
-            _shootingTimer = .1f;
-        }
 
+        // Shoot if the timer has reached 0 (CanShoot) and reset the timer
         if (CanShoot)
         {
             Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
-            Transform bullet = Object.Instantiate(EnemyStateMachine.Enemy.bulletPrefab, EnemyStateMachine.Enemy.transform.position + Vector3.up * 0.3f, Quaternion.identity);
-            // Set bullet direction
-            bullet.GetComponent<Bullet>().SetBulletProperty(direction, 10, 10f);
+            Transform bullet = Object.Instantiate(EnemyStateMachine.Enemy.bulletPrefab,
+                EnemyStateMachine.Enemy.transform.position + Vector3.up * 0.3f,
+                Quaternion.identity);
+            // Set bullet properties
+            bullet.GetComponent<Bullet>().SetBulletProperty(direction, 5, 10f);
+
             _bulletsToShoot--;
+            _shootingTimer = _shootingInterval; // Reset the timer to the shooting interval
         }
     }
+
     public override void Exit()
     {
         base.Exit();

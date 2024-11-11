@@ -18,12 +18,12 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
             return;
         }
         EnemyStateMachine.Enemy.transform.position = new Vector3(0, 0, 0);
-        _bossEnemy.laserPrefab.gameObject.SetActive(true);
+        _bossEnemy.secondPhaseLaserPrefab.gameObject.SetActive(true);
 
         _playerTransform = Player.Instance.transform;
-        _laserCollider = _bossEnemy.laserPrefab.GetComponent<CapsuleCollider>();
-        
-        _bossEnemy.laserPrefab.transform.localRotation = Quaternion.Euler(90, 0, 0);
+        _laserCollider = _bossEnemy.secondPhaseLaserPrefab.GetComponent<CapsuleCollider>();
+
+        _bossEnemy.secondPhaseLaserPrefab.transform.localRotation = Quaternion.Euler(90, 0, 0);
     }
 
     public override void Update()
@@ -46,19 +46,20 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
         if (_laserScale <= 6)
         {
             _laserScale += Time.deltaTime * _rotationSpeed;
-            _bossEnemy.laserPrefab.localScale = new Vector3(0.1f * _laserScale, _laserScale, 0.1f * _laserScale);
-            _bossEnemy.laserPrefab.localPosition = new Vector3(0f, 0.1f, _laserScale);
+            _bossEnemy.secondPhaseLaserPrefab.localScale = new Vector3(0.1f * _laserScale, _laserScale, 0.1f * _laserScale);
+            _bossEnemy.secondPhaseLaserPrefab.localPosition = new Vector3(0f, 0.1f, _laserScale);
         }
         else
         {
-            _bossEnemy.laserPrefab.gameObject.SetActive(false);
+            _bossEnemy.secondPhaseLaserPrefab.gameObject.SetActive(false);
             _laserScale = 0;
             EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseIdleState);
         }
         //Deal Damage to player if player is in the _bossEnemy laserPrefab's collider
         if (_laserCollider.bounds.Contains(Player.Instance.transform.position))
         {
-            Player.Instance.TakeDamage(0.7f);
+            IDamageable.Damage damage = new IDamageable.Damage(0.7f, ElementType.Physical, _bossEnemy.transform);
+            Player.Instance.TakeDamage(damage);
         }
 
     }

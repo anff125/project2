@@ -42,18 +42,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Parry",
+                    "name": "Shield",
                     "type": "Button",
-                    "id": "8de46dbc-5db9-437d-bdc7-b52b92cb9b6d",
+                    "id": "b8029547-0be5-409a-893a-92607ecf7698",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MeleeAttack",
+                    "name": "MainSkill",
                     "type": "Button",
-                    "id": "1a41f346-60b1-4768-b9fd-6fc2a58db247",
+                    "id": "f3bfe100-6893-45d0-9c95-9c76317a3008",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -151,23 +151,23 @@
                 },
                 {
                     "name": "",
-                    "id": "3169e2bc-1251-4a37-8906-7d41f993205c",
-                    "path": "<Mouse>/rightButton",
+                    "id": "35cf4e04-aa33-4d3e-aba3-75b659477e09",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Parry",
+                    "action": "Shield",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "329069f4-43f2-4ee8-b1aa-1cad663467ee",
-                    "path": "<Mouse>/leftButton",
+                    "id": "c855422b-2199-4809-a988-9c5e44ede060",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MeleeAttack",
+                    "action": "MainSkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

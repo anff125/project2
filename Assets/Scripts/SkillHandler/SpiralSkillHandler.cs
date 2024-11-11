@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpiralSkillHandler : MonoBehaviour
@@ -58,7 +56,8 @@ public class SpiralSkillHandler : MonoBehaviour
             Collider[] hitColliders = Physics.OverlapSphere(position, VisualSupport.localScale.x, enemyLayer);
             foreach (var hitCollider in hitColliders)
             {
-                hitCollider.GetComponent<Enemy>()?.TakeDamage(damagePerHit);
+                IDamageable.Damage damage = new IDamageable.Damage(damagePerHit, ElementType.Physical, transform);
+                hitCollider.GetComponent<Enemy>()?.TakeDamage(damage);
             }
 
             // Update the elapsed time
