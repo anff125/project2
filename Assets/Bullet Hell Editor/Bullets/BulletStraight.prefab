@@ -118,5 +118,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4301f5aa04fd2b74098913d8d6292229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patterns:
+  shooterLayerMask:
+    serializedVersion: 2
+    m_Bits: 768
+  textureForPlayer: {fileID: 0}
+  textureForEnemy: {fileID: 0}
+  initProperty:
+    direction: {x: 0, y: 0, z: 0}
+    speed: 0
+    destroyTime: 0
+    damage: 0
+  canBeReflected: 0
+  patterns0: []
+  patterns1:
   - {fileID: 11400000, guid: 2ac4f7369495d3245b7a32743e89e6d7, type: 2}
+  patternIndex: 0
+  switchTimer: 2

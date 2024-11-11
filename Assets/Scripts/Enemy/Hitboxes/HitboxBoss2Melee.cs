@@ -16,16 +16,16 @@ public class HitboxBoss2Melee : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player == null) return;
 
-            if (player.IsParrying == true)
-            {
-                Debug.Log("    Boss2 been parried by " + other.name);
-                enemyBoss.beenParried = true;
-            }
-            else
-            {
-                Debug.Log("    Boss2 damage");
-                player.TakeDamage(damage);
-            }
+            // if (player.IsParrying == true)
+            // {
+            //     Debug.Log("    Boss2 been parried by " + other.name);
+            //     enemyBoss.beenParried = true;
+            // }
+            // else
+            // {
+            //     Debug.Log("    Boss2 damage");
+            //     player.TakeDamage(damage);
+            // }
         }
     }
 }

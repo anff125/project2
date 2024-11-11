@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool dashOnCooldown;
     private float dashTimer;
 
-    private float _currentHealth;
+    [SerializeField] private float _currentHealth;
     public static Player Instance { get; private set; }
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
@@ -59,8 +59,6 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         _currentHealth = maxHealth;
-        isParrying = false;
-        parryTimer = 0f;
     }
 
     private void Start()

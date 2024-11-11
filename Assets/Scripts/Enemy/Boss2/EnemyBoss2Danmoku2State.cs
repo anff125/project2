@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBoss2Danmoku0State : EnemyState
+public class EnemyBoss2Danmoku2State : EnemyState
 {
-    public EnemyBoss2Danmoku0State(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
+    public EnemyBoss2Danmoku2State(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
     private EnemyBoss2 _bossEnemy;
     private float delay = .3f;
 
@@ -15,7 +15,7 @@ public class EnemyBoss2Danmoku0State : EnemyState
 
         EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(true);
         EnemyStateMachine.EnemyBoss2.StartCoroutine(FireWithDelay());
-        EnemyStateMachine.EnemyBoss2.danmokuCount0++;
+        EnemyStateMachine.EnemyBoss2.danmokuCount2++;
     }
     private IEnumerator FireWithDelay()
     {
@@ -30,7 +30,7 @@ public class EnemyBoss2Danmoku0State : EnemyState
         }
         EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(false);
         
-        EnemyStateMachine.EnemyBoss2.bulletEmitters[0].PlayAnimationMultipleTimes(0, 2, out float clipLength);
+        EnemyStateMachine.EnemyBoss2.bulletEmitters[1].PlayAnimationMultipleTimes(2, 1, out float clipLength);
         SetStateChangeCooldown(clipLength - 0.4f);
     }
 

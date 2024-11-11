@@ -7,6 +7,7 @@ public class EnemyStateMachine
     public EnemyState CurrentEnemyState { get; private set; }
     public Enemy Enemy { get; private set; }
     public EnemyElementalBoss EnemyElementalBoss;
+    public EnemyBoss2 EnemyBoss2;
 
     public EnemyState LastState;
     //a constructor with Enemy as a parameter
@@ -14,6 +15,10 @@ public class EnemyStateMachine
     {
         Enemy = enemy;
         EnemyElementalBoss = enemy as EnemyElementalBoss ?? null;
+        if (EnemyElementalBoss == null)
+        {
+            EnemyBoss2 = enemy as EnemyBoss2 ?? null;
+        }
     }
     public void Initialize(EnemyState startEnemyState)
     {

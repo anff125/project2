@@ -16,12 +16,15 @@ public class BulletEmitter : MonoBehaviour
     public float fireRadius = 2;
     public float rotationSpeed = 0;
     public float straightSpeed = 0.5f;
+    public float secondStraightSpeed = 1f;
     public int numberOfWave;
-    public float minAngle;
-    public float maxAngle;
+    public float minAngle = 0f;
+    public float maxAngle = 360f;
+    public float destroyTime = 5f;
         
     public float fireTimer = 0;
     public bool isFiring = false;
+    public bool lookAtPlayer = false;
     private Animator animator;
     private AnimationClip clip;
 
@@ -70,6 +73,12 @@ public class BulletEmitter : MonoBehaviour
         }
 
         transform.Rotate(new Vector3(0, reverseRotation * rotationSpeed * Mathf.Deg2Rad, 0), Space.Self);
+
+        if (lookAtPlayer)
+        {
+            Vector3 playerPosition = Player.Instance.transform.position;
+            transform.LookAt(new Vector3(playerPosition.x, transform.position.y, playerPosition.z));
+        }
     }
 
     void FireBullet()
@@ -79,8 +88,8 @@ public class BulletEmitter : MonoBehaviour
             return;
         }
 
-        float angleStep = 360f / numberOfBullets;  // Divide 360 degrees by the number of bullets
-        float angle = 0f;
+        float angleStep = (maxAngle - minAngle) / numberOfBullets;  // Divide 360 degrees by the number of bullets
+        float angle = minAngle;
         for (int i=0; i<numberOfBullets; ++i)
         {
             float bulletPosX = Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -93,9 +102,10 @@ public class BulletEmitter : MonoBehaviour
             Transform bulletTransform = Instantiate(bulletPrefabs[bulletIndex], bulletPosition, transform.rotation);
             BulletNew bullet = bulletTransform.GetComponent<BulletNew>();
 
+            bullet.destroyTime = destroyTime;
             Vector3 direction = offset.normalized;
             bullet.transform.LookAt(bulletPosition + direction);
-            bullet.setBulletProperty(bulletPosition, bulletPosition, bullet.transform.rotation, direction, straightSpeed, 270f, 0f, fireRadius);
+            bullet.SetBulletProperty(bulletPosition, bulletPosition, bullet.transform.rotation, direction, straightSpeed, secondStraightSpeed, 270f, 0f, fireRadius);
 
             angle += angleStep;
         }
@@ -109,8 +119,13 @@ public class BulletEmitter : MonoBehaviour
         {
             Debug.Log("Play " + animationName + " " + currentPlayCount + " out of " + playCount + " time");
             animator.Play(animationName); // Play the animation
-            yield return new WaitForSeconds(duration + 0.1f); // Wait for animation to finish
             currentPlayCount++;
+            yield return new WaitForSeconds(duration + 0.1f); // Wait for animation to finish
         }
+    }
+
+    public void SetRotationIdentity()
+    {
+        transform.rotation = Quaternion.identity;
     }
 }

@@ -6,32 +6,55 @@ public class EnemyBoss2Danmoku1State : EnemyState
 {
     public EnemyBoss2Danmoku1State(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
     private EnemyBoss2 _bossEnemy;
-    private BulletEmitter _bulletEmitter;
-    private float _timer;
+    private float delay = .3f;
 
     public override void Enter()
     {
-        base.Enter();
-        _bossEnemy = EnemyStateMachine.Enemy as EnemyBoss2;
+        Debug.Log("Enter Danmoku1");
+        EnemyStateMachine.EnemyBoss2.danmokuCount0 = 0;
+        EnemyStateMachine.EnemyBoss2.danmokuCount2 = 0;
 
-        _bossEnemy.bulletEmitters[0].PlayAnimationMultipleTimes(1, 2, out float clipLength0);
-        _bossEnemy.bulletEmitters[1].PlayAnimationMultipleTimes(1, 2, out float clipLength1);
-        _timer = clipLength0 + 1f;
+        base.Enter();
+        SetStateChangeCooldown(1f);
+
+        EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(true);
+        EnemyStateMachine.EnemyBoss2.StartCoroutine(FireWithDelay());
+        EnemyStateMachine.EnemyBoss2.danmokuCount1++;
+    }
+    private IEnumerator FireWithDelay()
+    {
+        // Wait for the delay duration
+        float blinkInterval = .1f;
+        float elapsed = 0f;
+        while (elapsed <= delay)
+        {
+            EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(!EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.activeSelf);
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+        EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(false);
+        
+        EnemyStateMachine.EnemyBoss2.bulletEmitters[0].PlayAnimationMultipleTimes(1, 2, out float clipLength0);
+        EnemyStateMachine.EnemyBoss2.bulletEmitters[1].PlayAnimationMultipleTimes(1, 2, out float clipLength1);
+        SetStateChangeCooldown(clipLength1);
     }
 
     public override void Update()
     {
         base.Update();
 
-        if (_timer < 0){
-            EnemyStateMachine.ChangeState(_bossEnemy.TrackPlayerState);
+        if (EnemyStateMachine.EnemyBoss2 != null){
+            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.TrackPlayerState);
         }
-
-        _timer -= Time.deltaTime;
     }
 
     public override void Exit()
     {
         base.Exit();
+
+        // foreach (var emitter in EnemyStateMachine.EnemyBoss2.bulletEmitters)
+        // {
+        //     emitter.SetRotationIdentity();
+        // }
     }
 }

@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
     private float _speed = 10;
     public float Speed => _speed;
 
-    private int _damage = 1;
+    private int _damage = 10;
     public int Damage => _damage;
     public void SetShooterLayerMask(LayerMask layerMask)
     {
@@ -84,11 +84,7 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-<<<<<<<< HEAD:Assets/Scripts/Bullets/Bullet.cs
-========
-
-        //Debug.Log("Bullet Hit: " + collision.name);
->>>>>>>> ca701723f33627ade509ac8dfd51489360eb73f3:Assets/Scripts/Bullet/Bullet.cs
+        
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
         

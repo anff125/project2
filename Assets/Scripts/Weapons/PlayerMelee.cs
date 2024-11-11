@@ -28,7 +28,7 @@ public class PlayerMelee : MonoBehaviour
 
     private IEnumerator SwingCoroutine()
     {
-        Player.Instance.weaponHitbox.ActivateHitbox();
+        // Player.Instance.weaponHitbox.ActivateHitbox();
 
         float elapsedTime = 0f;
         float startAngle = 30f;   // Start at 45 degrees
@@ -67,6 +67,6 @@ public class PlayerMelee : MonoBehaviour
         transform.position = Player.Instance.transform.position + (Player.Instance.transform.rotation * lOffset);
 
         isSwinging = false;
-        Player.Instance.weaponHitbox.DeactivateHitbox();
+        // Player.Instance.weaponHitbox.DeactivateHitbox();
     }
 }

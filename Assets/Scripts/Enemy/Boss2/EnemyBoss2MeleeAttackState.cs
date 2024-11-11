@@ -120,14 +120,14 @@ public class EnemyBoss2MeleeAttackState : EnemyState
                 Debug.Log("collide: " + hitCollider.name);
                 if (hitCollider.CompareTag("Player"))
                 {
-                    if (Player.Instance.IsParrying == true)
-                    {
-                        _beenParried = true;
-                        Debug.Log("     Boss2 been parried!!!!!");
-                        return;
-                    }
+                    // if (Player.Instance.IsParrying == true)
+                    // {
+                    //     _beenParried = true;
+                    //     Debug.Log("     Boss2 been parried!!!!!");
+                    //     return;
+                    // }
                     _notyetHit = false;
-                    Player.Instance.TakeDamage(100);
+                    // Player.Instance.TakeDamage(100);
                     Debug.Log("Hit player");
                 }
             }

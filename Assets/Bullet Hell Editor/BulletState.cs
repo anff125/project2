@@ -9,19 +9,21 @@ public class BulletState
     public Quaternion Rotation { get; set; }
     public Vector3 Direction { get; set; }
     public float StraightSpeed { get; set; }
+    public float SecondStraightSpeed { get; set; }
     public float CircleAngle { get; set; }
     public float SineAngle { get; set; }
     public float Radius { get; set; }
 
     // You can add other properties as needed
     public BulletState(Vector3 center, Vector3 position, Quaternion rotation, Vector3 direction,
-                         float straightSpeed, float circleAngle, float sineAngle, float radius)
+                         float straightSpeed, float secondStraightSpeed, float circleAngle, float sineAngle, float radius)
     {
         Center = center;
         Position = position;
         Rotation = rotation;
         Direction = direction;
         StraightSpeed = straightSpeed;
+        SecondStraightSpeed = secondStraightSpeed;
         CircleAngle = circleAngle;
         SineAngle = sineAngle;
         Radius = radius;
@@ -35,19 +37,21 @@ public class BulletState
         Rotation = other.Rotation;
         Direction = other.Direction;
         StraightSpeed = other.StraightSpeed;
+        SecondStraightSpeed = other.SecondStraightSpeed;
         CircleAngle = other.CircleAngle;
         SineAngle = other.SineAngle;
         Radius = other.Radius;
     }
 
     public void SetState(Vector3 center, Vector3 position, Quaternion rotation, Vector3 direction,
-                         float straightSpeed, float circleAngle, float sineAngle, float radius)
+                         float straightSpeed, float secondStraightSpeed, float circleAngle, float sineAngle, float radius)
     {
         Center = center;
         Position = position;
         Rotation = rotation;
         Direction = direction;
         StraightSpeed = straightSpeed;
+        SecondStraightSpeed = secondStraightSpeed;
         CircleAngle = circleAngle;
         SineAngle = sineAngle;
         Radius = radius;

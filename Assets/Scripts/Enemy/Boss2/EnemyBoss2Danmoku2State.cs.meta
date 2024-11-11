@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: eb32832443fd470a8ec8be0c1d90c7e4
+guid: 02ab3f81fbcab1f4eb6dcd94de5fdd0a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - textureForPlayer: {instanceID: 0}
-  - textureForEnemy: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

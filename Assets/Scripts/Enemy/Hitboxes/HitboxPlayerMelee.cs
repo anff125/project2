@@ -16,7 +16,7 @@ public class HitboxPlayerMelee : MonoBehaviour
             IDamageable enemy = other.GetComponent<IDamageable>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damageAmount);
+                // enemy.TakeDamage(damageAmount);
                 Debug.Log("Hit enemy with weapon hitbox, dealt " + damageAmount + " damage.");
             }
         }

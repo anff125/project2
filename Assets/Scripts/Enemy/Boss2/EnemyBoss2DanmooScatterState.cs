@@ -19,11 +19,11 @@ public class EnemyBoss2DanmooScatterState : EnemyState
         Vector3 direction = _bossEnemy.transform.forward;
         Vector3 center = _bossEnemy.transform.position;
         Quaternion rotation = _bossEnemy.transform.rotation;
-        for (int i = 0; i < _projectileNumber; i++)
-        {
-            Transform bullet = Object.Instantiate(_bossEnemy.scatterBulletPrefab, center, rotation);
-            // Set bullet direction
-        }
+        // for (int i = 0; i < _projectileNumber; i++)
+        // {
+        //     Transform bullet = Object.Instantiate(_bossEnemy.scatterBulletPrefab, center, rotation);
+        //     // Set bullet direction
+        // }
     }
 
     public override void Update()
