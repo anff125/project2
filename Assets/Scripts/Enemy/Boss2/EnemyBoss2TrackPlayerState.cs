@@ -27,7 +27,7 @@ public class EnemyBoss2TrackPlayerState : EnemyState
         if (dis < 5f)
         {
             EnemyStateMachine.Enemy.transform.rotation = Quaternion.LookRotation(playerPosition - enemyPosition);
-            EnemyStateMachine.ChangeState(_bossEnemy.CircleState);
+            EnemyStateMachine.ChangeState(_bossEnemy.ScatterState);
         }
         else
         {

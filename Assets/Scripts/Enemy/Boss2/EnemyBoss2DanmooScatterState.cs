@@ -32,7 +32,7 @@ public class EnemyBoss2DanmooScatterState : EnemyState
         
         if (_waitTimer <= 0)
         {
-            EnemyStateMachine.ChangeState(_bossEnemy.TrackPlayerState);
+            EnemyStateMachine.ChangeState(_bossEnemy.Danmoku1State);
         }
 
         _waitTimer -= Time.deltaTime;

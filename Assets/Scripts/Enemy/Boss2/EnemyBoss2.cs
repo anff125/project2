@@ -5,11 +5,9 @@ using UnityEngine.Serialization;
 
 public class EnemyBoss2 : Enemy
 {
+    public List<BulletEmitter> bulletEmitters = new List<BulletEmitter>();
     public Transform handPoint;
     public Transform melee;
-    public Transform laserPrefab;
-    public Transform meleePrefab;
-    public Transform smashPrefab;
     public Transform scatterBulletPrefab;
     public bool beenParried;
 
@@ -19,6 +17,8 @@ public class EnemyBoss2 : Enemy
     public EnemyBoss2MeleeAttackState MeleeState { get; private set; }
     public EnemyBoss2DanmooScatterState ScatterState { get; private set; }
     public EnemyBoss2DanmooCircleState CircleState { get; private set; }
+    public EnemyBoss2Danmoku0State Danmoku0State { get; private set; }
+    public EnemyBoss2Danmoku1State Danmoku1State { get; private set; }
 
     #endregion
 
@@ -30,6 +30,8 @@ public class EnemyBoss2 : Enemy
         MeleeState = new EnemyBoss2MeleeAttackState(EnemyStateMachine);
         ScatterState = new EnemyBoss2DanmooScatterState(EnemyStateMachine);
         CircleState = new EnemyBoss2DanmooCircleState(EnemyStateMachine);
+        Danmoku0State = new EnemyBoss2Danmoku0State(EnemyStateMachine);
+        Danmoku1State = new EnemyBoss2Danmoku1State(EnemyStateMachine);
         beenParried = false;
     }
     protected override void Start()

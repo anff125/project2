@@ -9,6 +9,7 @@ public class GameInput : MonoBehaviour
     public static GameInput Instance { get; private set; }
 
     public event EventHandler OnMainAttack;
+    public event EventHandler OnMeleeAttack;
     public event EventHandler OnSecondaryAttackStarted;
     public event EventHandler OnSecondaryAttackCancelled;
     public event EventHandler OnDash;
@@ -28,7 +29,8 @@ public class GameInput : MonoBehaviour
 
         _playerInputActions = new PlayerControl();
         _playerInputActions.Player.Enable();
-        _playerInputActions.Player.MainAttack.performed += MainAttack_performed;
+        // _playerInputActions.Player.MainAttack.performed += MainAttack_performed;
+        _playerInputActions.Player.MeleeAttack.performed += MeleeAttack_performed;
         _playerInputActions.Player.SecondaryAttack.started += SecondaryAttack_started;
         _playerInputActions.Player.SecondaryAttack.canceled += SecondaryAttack_cancelled;
         _playerInputActions.Player.Dash.performed += Dash_performed;
@@ -56,6 +58,11 @@ public class GameInput : MonoBehaviour
     private void MainAttack_performed(InputAction.CallbackContext obj)
     {
         OnMainAttack?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void MeleeAttack_performed(InputAction.CallbackContext obj)
+    {
+        OnMeleeAttack?.Invoke(this, EventArgs.Empty);
     }
 
 

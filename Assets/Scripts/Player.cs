@@ -10,6 +10,9 @@ public class Player : MonoBehaviour, IDamageable
     //[SerializeField] private int maxMana = 10;
     [SerializeField] private WeaponHolder weaponHolder;
     [SerializeField] private int startingWeaponIndex;
+    [SerializeField] private Transform playerMeleeTransform;
+    [SerializeField] public HitboxPlayerMelee weaponHitbox;
+    private PlayerMelee playerMelee;
     private Weapon currentWeapon = null;
     private float _currentHealth;
     public static Player Instance { get; private set; }
@@ -19,6 +22,7 @@ public class Player : MonoBehaviour, IDamageable
     private float parryTimer;
     private bool isParrying;
     public bool IsParrying => isParrying;
+    private bool isAttacking;
 
     private void Awake()
     {
@@ -37,19 +41,26 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void Start()
     {
-        weaponHolder.Init();
-        WearWeapon(startingWeaponIndex);
+        playerMelee = playerMeleeTransform.GetComponent<PlayerMelee>();
+        // weaponHolder.Init();
+        // WearWeapon(startingWeaponIndex);
         
-        GameInput.Instance.OnMainAttack += OnMainAttack;
-        GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
-        GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
+        // GameInput.Instance.OnMainAttack += OnMainAttack;
+        // GameInput.Instance.OnSecondaryAttackStarted += OnSecondaryAttackStarted;
+        // GameInput.Instance.OnSecondaryAttackCancelled += OnSecondaryAttackCancelled;
+        GameInput.Instance.OnMeleeAttack += OnMeleeAttack;
         GameInput.Instance.OnDash += OnDash;
         GameInput.Instance.OnParry += OnParry;
     }
+
+    private void OnMeleeAttack(object sender, EventArgs e)
+    {
+        playerMelee.Swing();
+    }
+
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartSecondaryAttacking(); }
     private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopSecondaryAttacking(); }
-
-    private bool isAttacking;
+    
 
     private void StartSecondaryAttacking()
     {
