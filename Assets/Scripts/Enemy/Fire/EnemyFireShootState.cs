@@ -18,7 +18,7 @@ public class EnemyFireShootState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Entered EnemyFireShootState");
+        // Debug.Log("Entered EnemyFireShootState");
         _bulletsToShoot = 5;
     }
 
@@ -40,7 +40,7 @@ public class EnemyFireShootState : EnemyState
         // Shoot if the timer has reached 0 (CanShoot) and reset the timer
         if (CanShoot)
         {   
-            Debug.Log("EnemyFire attempting to shoot bullet...");
+            // Debug.Log("EnemyFire attempting to shoot bullet...");
             Vector3 direction = EnemyStateMachine.Enemy.transform.forward;
             Transform bullet = Object.Instantiate(EnemyStateMachine.Enemy.bulletPrefab,
                 EnemyStateMachine.Enemy.transform.position + Vector3.up * 0.3f,
