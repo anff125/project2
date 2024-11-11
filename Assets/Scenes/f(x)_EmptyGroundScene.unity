@@ -2417,6 +2417,7 @@ MonoBehaviour:
   destroyTime: 5
   fireTimer: 0
   isFiring: 0
+  lookAtPlayer: 0
 --- !u!4 &851770978
 Transform:
   m_ObjectHideFlags: 0
@@ -2782,6 +2783,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1086003276}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!224 &1144876470 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4342037442645072547, guid: 852577939d0cd9945968006e62648eac,
+    type: 3}
+  m_PrefabInstance: {fileID: 2364682941204676808}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1159072204
 GameObject:
   m_ObjectHideFlags: 0
@@ -4681,7 +4688,7 @@ MonoBehaviour:
   reverseRotation: 1
   bulletPrefabs:
   - {fileID: 968508954007549838, guid: de49cb90a080d204ebb7e26563b5211e, type: 3}
-  - {fileID: 4039619900143679736, guid: 8666651bbad66224aa5aa1c365eda3d9, type: 3}
+  - {fileID: 4039619900143679736, guid: 4b7404479bfdbbc449ccab9131952efb, type: 3}
   - {fileID: 968508954007549838, guid: 2526b60b415b5cc408c7d41b7b8290f7, type: 3}
   bulletIndex: 0
   fireRate: 0.75
@@ -4696,6 +4703,7 @@ MonoBehaviour:
   destroyTime: 5
   fireTimer: 0
   isFiring: 0
+  lookAtPlayer: 0
 --- !u!4 &1597847602
 Transform:
   m_ObjectHideFlags: 0
@@ -6527,6 +6535,7 @@ MonoBehaviour:
   destroyTime: 5
   fireTimer: 0
   isFiring: 0
+  lookAtPlayer: 1
 --- !u!1 &2032155459
 GameObject:
   m_ObjectHideFlags: 0
@@ -6645,7 +6654,7 @@ MonoBehaviour:
   reverseRotation: -1
   bulletPrefabs:
   - {fileID: 6041288082219435890, guid: a744b06067fb3b4448efaf526e4d7296, type: 3}
-  - {fileID: 4039619900143679736, guid: 8666651bbad66224aa5aa1c365eda3d9, type: 3}
+  - {fileID: 4039619900143679736, guid: 4b7404479bfdbbc449ccab9131952efb, type: 3}
   - {fileID: 4039619900143679736, guid: 4b7404479bfdbbc449ccab9131952efb, type: 3}
   bulletIndex: 0
   fireRate: 0.75
@@ -6660,6 +6669,7 @@ MonoBehaviour:
   destroyTime: 5
   fireTimer: 0
   isFiring: 0
+  lookAtPlayer: 0
 --- !u!95 &2130511712
 Animator:
   serializedVersion: 5
@@ -6720,17 +6730,17 @@ PrefabInstance:
     - target: {fileID: 271498885671839356, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 271498885671839356, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 271498885671839356, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 271498885671839356, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
@@ -6820,6 +6830,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
+      propertyPath: exclamationMark
+      value: 
+      objectReference: {fileID: 1144876470}
+    - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
+        type: 3}
       propertyPath: scatterBulletPrefab
       value: 
       objectReference: {fileID: 4979770491285649979, guid: 1a11e043cc8bc634281cd4d5553d4343,
@@ -6837,7 +6852,7 @@ PrefabInstance:
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: collisionLayerMask.m_Bits
-      value: 192
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
@@ -6873,6 +6888,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3448489724171184490, guid: 852577939d0cd9945968006e62648eac,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3607576585433526453, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
