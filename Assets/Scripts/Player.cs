@@ -9,7 +9,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] private int maxHealth;
 
+    [SerializeField] private float maxMoveSpeed;
     [SerializeField] private float moveSpeed;
+
     [SerializeField] private float skillCooldown;
     [SerializeField] private float shieldCooldown;
     [SerializeField] private float dashCooldown;
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour, IDamageable
 
     private float _currentHealth;
     public static Player Instance { get; private set; }
+
+    public event EventHandler OnDeath;
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
@@ -175,7 +179,9 @@ public class Player : MonoBehaviour, IDamageable
     private IEnumerator ShieldCoroutine()
     {
         shield.gameObject.SetActive(true);
+        moveSpeed = 0;
         yield return new WaitForSeconds(shieldDuration);
+        moveSpeed = maxMoveSpeed;
         shield.gameObject.SetActive(false);
     }
 
@@ -254,6 +260,7 @@ public class Player : MonoBehaviour, IDamageable
         public float damage;
         public ElementType elementType;
         public ParticleSystem effect;
+        public Transform shooter;
     }
 
     [SerializeField] private AttackParameters mainAttackParameters;
@@ -262,6 +269,13 @@ public class Player : MonoBehaviour, IDamageable
     private AttackParameters lastParameters;
     private void PerformAttack(AttackParameters parameters)
     {
+        Vector3 cursorPosition = GetCursorPointOnGround();
+        cursorPosition.y = 0.3f;
+        if (cursorPosition != Vector3.zero) // Ensure we have a valid point
+        {
+            Vector3 lookDirection = (cursorPosition - parameters.shooter.position).normalized;
+            parameters.shooter.forward = lookDirection;
+        }
         DealDamage(transform, parameters);
     }
 
@@ -272,6 +286,7 @@ public class Player : MonoBehaviour, IDamageable
             Debug.LogError("Effect is null. Please assign it in the inspector.");
             return;
         }
+
 
         var shapeModule = parameters.effect.shape;
         shapeModule.enabled = true;
@@ -306,6 +321,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentAttackCoroutine == null)
         {
+            moveSpeed *= .25f;
             lastParameters = parameters;
             AdjustAttackEffect(parameters);
             parameters.effect.Play();
@@ -322,6 +338,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (currentAttackCoroutine != null && lastParameters.effect == parameters.effect)
         {
+            moveSpeed = maxMoveSpeed;
             StopCoroutine(currentAttackCoroutine);
             parameters.effect.Stop();
             currentAttackCoroutine = null;
@@ -433,6 +450,7 @@ public class Player : MonoBehaviour, IDamageable
     private void Die()
     {
         Debug.Log("Player has died");
+        OnDeath?.Invoke(this, EventArgs.Empty);
     }
 
     private void DealDamage(Transform attacker, AttackParameters parameters)
@@ -445,6 +463,8 @@ public class Player : MonoBehaviour, IDamageable
             {
                 // 使用 ClosestPoint 來取得碰撞體表面最接近攻擊者的點
                 Vector3 closestPoint = hit.ClosestPoint(attacker.position);
+                //check if y difference is less than 3
+                if (Mathf.Abs(closestPoint.y - attacker.position.y) > 3) continue;
                 closestPoint.y = 0;
                 Vector3 directionToTarget = (closestPoint - attacker.position).normalized;
                 float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
@@ -468,5 +488,12 @@ public class Player : MonoBehaviour, IDamageable
             return mousePosition;
         }
         return Vector3.zero;
+    }
+
+    public Vector3 GetPlayerPositionOnPlane()
+    {
+        Vector3 ret = transform.position;
+        ret.y = 0;
+        return ret;
     }
 }

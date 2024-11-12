@@ -29,7 +29,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
         explosionParticleSystem.Stop();
     }
 
-    public void Ignite(float countdown = .3f)
+    public void Ignite(float countdown = .5f)
     {
         Explode(countdown);
     }
@@ -38,6 +38,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
     {
         if (explodeCoroutine != null)
         {
+            explosionParticleSystem.Stop();
             Debug.Log("UnExplode");
             damageVisualSupport.gameObject.SetActive(false);
 
@@ -48,7 +49,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
         }
     }
 
-    private void Explode(float countdown = .3f)
+    private void Explode(float countdown = .5f)
     {
         if (explodeCoroutine == null)
         {
@@ -58,13 +59,12 @@ public class PowderKeg : MonoBehaviour, IDamageable
         }
     }
 
-    private IEnumerator ExplodeCoroutine(float countdown = .3f)
+    private IEnumerator ExplodeCoroutine(float countdown = .5f)
     {
-        float blinkDuration = 1f;
         float blinkInterval = 0.1f;
         float elapsedTime = 0f;
 
-        while (elapsedTime < blinkDuration)
+        while (elapsedTime < countdown)
         {
             visual.gameObject.SetActive(!visual.gameObject.activeSelf);
             yield return new WaitForSeconds(blinkInterval);
@@ -72,11 +72,13 @@ public class PowderKeg : MonoBehaviour, IDamageable
         }
         visual.gameObject.SetActive(false);
         explosionParticleSystem.Play();
-        yield return new WaitForSeconds(countdown);
+        yield return new WaitForSeconds(0.2f);
         //Deal Fire Damage to nearby entities
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5f);
         foreach (var colliderTMP in colliders)
         {
+            if (colliderTMP.transform.position.y > 3f) continue;
+
             IDamageable damageable = colliderTMP.GetComponent<IDamageable>();
             if (damageable != null)
             {

@@ -89,7 +89,7 @@ public class EnemyElementalBossShootState : EnemyState
         var bullet = bulletObject.GetComponent<BulletRazorLeaf>();
         bullet.SetToggle(toggle);
         toggle *= -1;
-        bullet.SetBulletProperty(Vector3.forward, 10, 7, 25);
+        bullet.SetBulletProperty(Vector3.forward, 10, 10, 25);
         _bossEnemy.RegisterBullet(bullet);
     }
     private void ShootBulletRazorLeafFollowPosition(Vector3 targetPosition)

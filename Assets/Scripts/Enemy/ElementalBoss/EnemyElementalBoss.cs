@@ -10,6 +10,7 @@ public class EnemyElementalBoss : Enemy
     [SerializeField] public List<float> secondPhaseTimeSpace; // Time intervals between each bullet shot, customizable in Unity Editor
     public bool isSecondPhase = false;
     public Transform powderKegPrefab;
+    public Transform iceBlockPrefab;
     public Transform bulletRazorLeafPrefab;
 
     public int meleeCount;
@@ -23,6 +24,7 @@ public class EnemyElementalBoss : Enemy
     public EnemyElementalBossSecondPhaseBaseState SecondPhaseBaseState { get; private set; }
     public EnemyElementalBossSecondPhaseInitState SecondPhaseInitState { get; private set; }
     public EnemyElementalBossThrowPowderKegState ThrowPowderKegState { get; private set; }
+    public EnemyElementalBossIceBlockLaserState IceBlockLaserState { get; private set; }
 
     #endregion
 
@@ -37,7 +39,9 @@ public class EnemyElementalBoss : Enemy
         SecondPhaseBaseState = new EnemyElementalBossSecondPhaseBaseState(EnemyStateMachine);
         SecondPhaseInitState = new EnemyElementalBossSecondPhaseInitState(EnemyStateMachine);
         ThrowPowderKegState = new EnemyElementalBossThrowPowderKegState(EnemyStateMachine);
+        IceBlockLaserState = new EnemyElementalBossIceBlockLaserState(EnemyStateMachine);
     }
+    
     protected override void Start()
     {
         base.Start();

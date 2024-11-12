@@ -20,9 +20,9 @@ TagManager:
   - Enemy
   - Bullet
   - 'PhysicalInteractable '
-  - 
-  - 
-  - 
+  - Wall
+  - Turret
+  - Fluid
   - 
   - 
   - 

@@ -7,13 +7,21 @@ using Random = UnityEngine.Random;
 public class InstantiateManager : MonoBehaviour
 {
     [SerializeField] public Transform waterPrefab;
+    [SerializeField] public Transform grassPrefab;
     [SerializeField] public Transform aSetOfLavaBallPrefab;
     [SerializeField] public List<Transform> lavaBallSpawnPoints;
+
+    [SerializeField] public float fieldBoundaryX;
+    [SerializeField] public float fieldBoundaryY;
+
     public static InstantiateManager Instance { get; private set; }
     private readonly float lavaStageDuration = 20f;
 
     private readonly List<GameObject> activeLavaBalls = new List<GameObject>();
     private readonly int maxLavaBallCount = 20;
+
+    private readonly List<GameObject> activeGrass = new List<GameObject>();
+
 
     private void Awake()
     {
@@ -36,10 +44,24 @@ public class InstantiateManager : MonoBehaviour
     {
         Instantiate(waterPrefab, spawnPoint.position, spawnPoint.rotation);
     }
+    public void StartSpawnGrass()
+    {
+        //StartCoroutine(InstantiateGrass());
+    }
 
     public void StartLavaBallStage()
     {
         StartCoroutine(InstantiateLavaBall());
+    }
+
+    private IEnumerator InstantiateGrass()
+    {
+        while (true)
+        {
+            Vector3 randomPosition = new Vector3(Random.Range(-fieldBoundaryX, fieldBoundaryX), 0, Random.Range(-fieldBoundaryY, fieldBoundaryY));
+            Instantiate(grassPrefab, randomPosition, Quaternion.identity);
+            yield return new WaitForSeconds(3f);
+        }
     }
 
     private IEnumerator InstantiateLavaBall()
@@ -58,12 +80,13 @@ public class InstantiateManager : MonoBehaviour
                 activeLavaBalls.Add(newLavaBall);
             }
 
-            float randomCooldown = Random.Range(2f, 3f);
+            float randomCooldown = Random.Range(4f, 5f);
             yield return new WaitForSeconds(randomCooldown);
 
             elapsedTime += randomCooldown;
         }
         GameManager.Instance.mainCamera.gameObject.SetActive(true);
+        StartSpawnGrass();
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)

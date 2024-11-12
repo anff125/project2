@@ -21,7 +21,8 @@ public class EnemyElementalBossThrowPowderKegState : EnemyState
     {
         //instantiates a powder keg prefab at the boss's position and push it towards the player
         Transform powderKeg = Object.Instantiate(_bossEnemy.powderKegPrefab, _bossEnemy.transform.position, Quaternion.identity);
-        powderKeg.GetComponent<Rigidbody>().AddForce((Player.Instance.transform.position - _bossEnemy.transform.position).normalized * 10f,
+
+        powderKeg.GetComponent<Rigidbody>().AddForce((Player.Instance.GetPlayerPositionOnPlane() - _bossEnemy.transform.position).normalized * 10f,
             ForceMode.Impulse);
         powderKeg.GetComponent<PowderKeg>().Ignite(1f);
         EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseBaseState);

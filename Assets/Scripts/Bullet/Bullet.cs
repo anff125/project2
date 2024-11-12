@@ -6,7 +6,8 @@ using UnityEngine.Serialization;
 public class Bullet : MonoBehaviour
 {
     //set a layer mask to ignore the entity that shoots the bullet
-    [SerializeField] private LayerMask shooterLayerMask;
+    [SerializeField]
+    public LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
     [SerializeField] protected BulletProperty initProperty;

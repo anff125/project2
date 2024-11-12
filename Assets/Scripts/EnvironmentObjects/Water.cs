@@ -16,7 +16,7 @@ public class Water : MonoBehaviour, IDamageable
         {
             if (isTriggered) return;
             isTriggered = true;
-            Collider[] colliders = Physics.OverlapSphere(transform.position, transform.localScale.x);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, transform.localScale.x * 0.5f);
             foreach (var colliderOut in colliders)
             {
                 if (colliderOut.CompareTag("Water"))
