@@ -37,7 +37,7 @@ public class Weakness : MonoBehaviour, IDamageable
             StartCoroutine(enemyFire.Die());
 
             // 生成爆炸效果
-            // Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Explode();
         }
         else if (enemyFire != null){
