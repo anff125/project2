@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 9147199995960883163}
   - component: {fileID: 484229861059231986}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: WeaknessCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,6 +118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b5253bcc29747a699a9a92222aeb9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionPrefab: {fileID: 0}
+  explosionRadius: 3
+  explosionDamage: 40
 --- !u!1 &6152062571131473445
 GameObject:
   m_ObjectHideFlags: 0
