@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyElementalBossTrackPlayerState : EnemyState
@@ -37,7 +34,7 @@ public class EnemyElementalBossTrackPlayerState : EnemyState
             EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
             // EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseInitState);
         }
-        else if (timeTrackingPlayer > 10f || _bossEnemy.meleeCount > 2)
+        else if (timeTrackingPlayer > 10f || _bossEnemy.meleeCount > 1)
         {
             var position = _bossEnemy.GetFixedDistancePositionAroundPlayer(10f);
             position.y = 0;

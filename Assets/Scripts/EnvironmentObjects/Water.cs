@@ -9,9 +9,13 @@ public class Water : MonoBehaviour, IDamageable
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
 
     private bool isTriggered;
+    private void Start()
+    {
+        Destroy(gameObject, 20f);
+    }
+
     public void TakeDamage(IDamageable.Damage damage)
     {
-
         if (damage.ElementType == ElementType.Electric)
         {
             if (isTriggered) return;
@@ -19,7 +23,7 @@ public class Water : MonoBehaviour, IDamageable
             Collider[] colliders = Physics.OverlapSphere(transform.position, transform.localScale.x * 0.5f);
             foreach (var colliderOut in colliders)
             {
-                if (colliderOut.CompareTag("Water"))
+                if (colliderOut.CompareTag("Water") || colliderOut.gameObject.layer == LayerMask.NameToLayer("Wire"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
                     damageable.TakeDamage(damage);
@@ -30,6 +34,8 @@ public class Water : MonoBehaviour, IDamageable
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
                     damageable.TakeDamage(damage);
                 }
+
+
             }
             Destroy(gameObject);
         }

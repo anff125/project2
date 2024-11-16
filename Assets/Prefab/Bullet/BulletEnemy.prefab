@@ -128,4 +128,7 @@ MonoBehaviour:
     speed: 0
     destroyTime: 0
     damage: 0
+  thingsToHit:
+    serializedVersion: 2
+    m_Bits: 384
   canBeReflected: 1

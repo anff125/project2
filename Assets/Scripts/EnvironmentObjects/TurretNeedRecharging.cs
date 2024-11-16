@@ -2,37 +2,56 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TurretNeedRecharging : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxCharge;
     [SerializeField] private float currentCharge;
     [SerializeField] private Transform boss;
-    [SerializeField] private Transform bulletPrefab;
-
+    [SerializeField] private Transform bulletForPlayer;
+    [SerializeField] private Transform bulletForEnemy;
     private void Start()
     {
-        StartCoroutine(ShootingCouroutine());
+        Debug.Log("TurretNeedRecharging Start");
+        StartCoroutine(ShootingCoroutine());
+        currentCharge = maxCharge / 2;
+        OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
+        {
+            frozenProgressNormalized = currentCharge / maxCharge
+        });
     }
 
-    private IEnumerator ShootingCouroutine()
+    private IEnumerator ShootingCoroutine()
     {
         while (true)
         {
-            if (currentCharge > 0)
+            if (currentCharge > maxCharge / 2)
             {
-                // Calculate the direction towards the boss and shoot
                 if (boss == null)
                 {
+                    Debug.Log("Boss is null");
                     Destroy(gameObject);
                     break;
                 }
+                
                 Vector3 directionToBoss = (boss.position - transform.position).normalized;
-                Transform bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                Transform bullet = Instantiate(bulletForPlayer, transform.position + Vector3.up * .3f, Quaternion.identity);
                 bullet.GetComponent<Bullet>().SetBulletProperty(directionToBoss, speed: 15, destroyTime: 10f, damage: 10);
 
-                // Optionally, reduce current charge with each shot
                 currentCharge -= 5f;
+                OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
+                {
+                    frozenProgressNormalized = currentCharge / maxCharge
+                });
+            }
+            else if (currentCharge < maxCharge / 2)
+            {
+                Vector3 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
+                Transform bullet = Instantiate(bulletForEnemy, transform.position + Vector3.up * .3f, Quaternion.identity);
+                bullet.GetComponent<Bullet>().SetBulletProperty(directionToPlayer, speed: 15, destroyTime: 10f, damage: 10);
+
+                currentCharge += 5f;
                 OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
                 {
                     frozenProgressNormalized = currentCharge / maxCharge
@@ -42,20 +61,39 @@ public class TurretNeedRecharging : MonoBehaviour, IDamageable
         }
     }
 
-
     public void TakeDamage(IDamageable.Damage damage)
+    {
+        Charge(damage);
+    }
+
+    private void Charge(IDamageable.Damage damage)
     {
         if (damage.ElementType == ElementType.Electric)
         {
-            currentCharge += damage.Amount;
-            if (currentCharge >= maxCharge)
+            if (damage.Source == Player.Instance.transform)
             {
-                currentCharge = maxCharge;
+                currentCharge += damage.Amount;
+                if (currentCharge >= maxCharge)
+                {
+                    currentCharge = maxCharge;
+                }
+                OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
+                {
+                    frozenProgressNormalized = currentCharge / maxCharge
+                });
             }
-            OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
+            else
             {
-                frozenProgressNormalized = currentCharge / maxCharge
-            });
+                currentCharge -= damage.Amount;
+                if (currentCharge <= 0)
+                {
+                    currentCharge = 0;
+                }
+                OnFrozenProgressChange?.Invoke(this, new IDamageable.OnFrozenProgressChangedEventArgs
+                {
+                    frozenProgressNormalized = currentCharge / maxCharge
+                });
+            }
         }
     }
 

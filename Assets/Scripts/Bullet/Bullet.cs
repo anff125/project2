@@ -1,7 +1,4 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
@@ -11,8 +8,9 @@ public class Bullet : MonoBehaviour
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
     [SerializeField] protected BulletProperty initProperty;
-
+    [SerializeField]private LayerMask thingsToHit;
     [System.Serializable]
+    
     protected class BulletProperty
     {
         public Vector3 direction;
@@ -85,7 +83,12 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-
+        //check if is thingsToHit
+        if (thingsToHit != (thingsToHit | (1 << collision.gameObject.layer)))
+        {
+            return;
+        }
+        
         //Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;

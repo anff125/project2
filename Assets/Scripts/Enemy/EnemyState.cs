@@ -15,7 +15,7 @@ public class EnemyState
 
     public virtual void Enter()
     {
-        Debug.Log("Entered state: " + this);
+        //Debug.Log("Entered state: " + this);
         TimeInCurrentState = 0f;
     }
 

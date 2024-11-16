@@ -86,6 +86,7 @@ public class Player : MonoBehaviour, IDamageable
 
         mainAttackParameters.effect.Stop();
         secondaryAttackParameters.effect.Stop();
+        createWaterParameters.effect.Stop();
     }
 
     private void Update()
@@ -139,11 +140,27 @@ public class Player : MonoBehaviour, IDamageable
     private void OnMainAttack(object sender, EventArgs e) { }
     private void OnSecondaryAttack(object sender, EventArgs e) { }
 
-    private void OnMainAttackStarted(object sender, EventArgs e) { StartAttacking(mainAttackParameters); }
-    private void OnMainAttackCancelled(object sender, EventArgs e) { StopAttacking(mainAttackParameters); }
+    private void OnMainAttackStarted(object sender, EventArgs e)
+    {
+        buttonState = buttonState == AttackButtonState.Right ? AttackButtonState.Both : AttackButtonState.Left;
+        StartAttacking();
+    }
+    private void OnMainAttackCancelled(object sender, EventArgs e)
+    {
+        buttonState = buttonState == AttackButtonState.Both ? AttackButtonState.Right : AttackButtonState.None;
+        StopAttacking();
+    }
 
-    private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
-    private void OnSecondaryAttackCancelled(object sender, EventArgs e) { StopAttacking(secondaryAttackParameters); }
+    private void OnSecondaryAttackStarted(object sender, EventArgs e)
+    {
+        buttonState = buttonState == AttackButtonState.Left ? AttackButtonState.Both : AttackButtonState.Right;
+        StartAttacking();
+    }
+    private void OnSecondaryAttackCancelled(object sender, EventArgs e)
+    {
+        buttonState = buttonState == AttackButtonState.Both ? AttackButtonState.Left : AttackButtonState.None;
+        StopAttacking();
+    }
 
     #region Shield
 
@@ -171,17 +188,20 @@ public class Player : MonoBehaviour, IDamageable
             StopCoroutine(shieldCoroutine);
         }
         shieldCoroutine = StartCoroutine(ShieldCoroutine());
-
-        //push object around away
-
-
     }
     private IEnumerator ShieldCoroutine()
     {
         shield.gameObject.SetActive(true);
         moveSpeed = 0;
         yield return new WaitForSeconds(shieldDuration);
-        moveSpeed = maxMoveSpeed;
+        if (isAttacking)
+        {
+            moveSpeed = maxMoveSpeed * .25f;
+        }
+        else
+        {
+            moveSpeed = maxMoveSpeed;
+        }
         shield.gameObject.SetActive(false);
     }
 
@@ -199,7 +219,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (skillOnCooldown)
         {
-            Debug.Log("Skill is on cooldown.");
+            //Debug.Log("Skill is on cooldown.");
             return;
         }
         skillOnCooldown = true;
@@ -265,8 +285,19 @@ public class Player : MonoBehaviour, IDamageable
 
     [SerializeField] private AttackParameters mainAttackParameters;
     [SerializeField] private AttackParameters secondaryAttackParameters;
+    [SerializeField] private AttackParameters createWaterParameters;
 
-    private AttackParameters lastParameters;
+    //make a variable to present if only left mouse button is pressed or right mouse button is pressed or both
+    private enum AttackButtonState
+    {
+        None,
+        Left,
+        Right,
+        Both
+    }
+
+    private AttackButtonState buttonState;
+
     private void PerformAttack(AttackParameters parameters)
     {
         Vector3 cursorPosition = GetCursorPointOnGround();
@@ -286,8 +317,6 @@ public class Player : MonoBehaviour, IDamageable
             Debug.LogError("Effect is null. Please assign it in the inspector.");
             return;
         }
-
-
         var shapeModule = parameters.effect.shape;
         shapeModule.enabled = true;
         shapeModule.shapeType = ParticleSystemShapeType.Cone;
@@ -317,32 +346,114 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void StartAttacking(AttackParameters parameters)
+    private float _createWaterCooldown = 1f;
+    private IEnumerator CreateWater()
     {
-        if (currentAttackCoroutine == null)
+        while (true)
         {
-            moveSpeed *= .25f;
-            lastParameters = parameters;
-            AdjustAttackEffect(parameters);
-            parameters.effect.Play();
-            currentAttackCoroutine = StartCoroutine(AttackCoroutine(parameters));
-        }
-        else
-        {
-            StopAttacking(lastParameters);
-            StartAttacking(parameters);
+            // Create a water prefab from Instantiate Manager every 1 seconds 
+            if (_createWaterCooldown <= 0)
+            {
+                InstantiateManager.Instance.InstantiateWater(transform.position + transform.forward * 2.5f);
+                _createWaterCooldown = 1f;
+            }
+            yield return new WaitForSeconds(.1f);
+            _createWaterCooldown -= .1f;
         }
     }
 
-    private void StopAttacking(AttackParameters parameters)
+    private void StartAttacking()
     {
-        if (currentAttackCoroutine != null && lastParameters.effect == parameters.effect)
+        if (buttonState == AttackButtonState.Both)
         {
+            StopAttacking();
+            createWaterParameters.effect.Play();
+            _createWaterCooldown = 1f;
+            currentAttackCoroutine = StartCoroutine(CreateWater());
+        }
+        else if (buttonState == AttackButtonState.Left)
+        {
+            isAttacking = true;
+            moveSpeed = maxMoveSpeed * .25f;
+            AdjustAttackEffect(mainAttackParameters);
+            mainAttackParameters.effect.Play();
+            currentAttackCoroutine = StartCoroutine(AttackCoroutine(mainAttackParameters));
+        }
+        else if (buttonState == AttackButtonState.Right)
+        {
+            isAttacking = true;
+            moveSpeed = maxMoveSpeed * .25f;
+            AdjustAttackEffect(secondaryAttackParameters);
+            secondaryAttackParameters.effect.Play();
+            currentAttackCoroutine = StartCoroutine(AttackCoroutine(secondaryAttackParameters));
+        }
+
+        // if (currentAttackCoroutine == null)
+        // {
+        //     isAttacking = true;
+        //     moveSpeed *= .25f;
+        //     lastParameters = parameters;
+        //     AdjustAttackEffect(parameters);
+        //     parameters.effect.Play();
+        //     currentAttackCoroutine = StartCoroutine(AttackCoroutine(parameters));
+        // }
+        // else
+        // {
+        //     StopAttacking(lastParameters);
+        //     StartAttacking(parameters);
+        // }
+    }
+
+    private void StopAttacking()
+    {
+        if (buttonState == AttackButtonState.None)
+        {
+            isAttacking = false;
             moveSpeed = maxMoveSpeed;
             StopCoroutine(currentAttackCoroutine);
-            parameters.effect.Stop();
+            secondaryAttackParameters.effect.Stop();
+            mainAttackParameters.effect.Stop();
             currentAttackCoroutine = null;
         }
+        else if (buttonState == AttackButtonState.Left)
+        {
+            if (currentAttackCoroutine != null)
+            {
+                StopCoroutine(currentAttackCoroutine);
+                createWaterParameters.effect.Stop();
+                currentAttackCoroutine = null;
+            }
+            StartAttacking();
+        }
+        else if (buttonState == AttackButtonState.Right)
+        {
+            if (currentAttackCoroutine != null)
+            {
+                StopCoroutine(currentAttackCoroutine);
+                createWaterParameters.effect.Stop();
+                currentAttackCoroutine = null;
+            }
+            StartAttacking();
+        }
+        else
+        {
+            if (currentAttackCoroutine != null)
+            {
+                StopCoroutine(currentAttackCoroutine);
+                currentAttackCoroutine = null;
+            }
+            secondaryAttackParameters.effect.Stop();
+            mainAttackParameters.effect.Stop();
+        }
+
+        // if (currentAttackCoroutine != null && lastParameters.effect == parameters.effect)
+        // {
+        //     isAttacking = false;
+        //     moveSpeed = maxMoveSpeed;
+        //     StopCoroutine(currentAttackCoroutine);
+        //     parameters.effect.Stop();
+        //     currentAttackCoroutine = null;
+        // }
     }
 
     #endregion
@@ -471,7 +582,7 @@ public class Player : MonoBehaviour, IDamageable
 
                 if (angleToTarget <= parameters.angle)
                 {
-                    IDamageable.Damage damage = new IDamageable.Damage(parameters.damage, parameters.elementType, attacker);
+                    IDamageable.Damage damage = new IDamageable.Damage(parameters.damage, parameters.elementType, Instance.transform);
                     target.TakeDamage(damage);
                 }
             }

@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 7601756641252412213}
   m_Layer: 10
   m_Name: PowderKeg
-  m_TagString: Untagged
+  m_TagString: PowderKeg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

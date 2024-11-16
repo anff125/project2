@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PowderKeg : MonoBehaviour, IDamageable
@@ -22,6 +21,10 @@ public class PowderKeg : MonoBehaviour, IDamageable
         {
             Explode();
         }
+        else if (elementType == ElementType.Electric)
+        {
+            Explode(0f);
+        }
     }
 
     private void Start()
@@ -39,7 +42,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
         if (explodeCoroutine != null)
         {
             explosionParticleSystem.Stop();
-            Debug.Log("UnExplode");
+            //Debug.Log("UnExplode");
             damageVisualSupport.gameObject.SetActive(false);
 
             StopCoroutine(explodeCoroutine);
@@ -53,7 +56,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
     {
         if (explodeCoroutine == null)
         {
-            Debug.Log("Explode");
+            //Debug.Log("Explode");
             damageVisualSupport.gameObject.SetActive(true);
             explodeCoroutine = StartCoroutine(ExplodeCoroutine(countdown));
         }

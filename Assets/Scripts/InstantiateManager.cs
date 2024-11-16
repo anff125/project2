@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class InstantiateManager : MonoBehaviour
@@ -10,7 +11,7 @@ public class InstantiateManager : MonoBehaviour
     [SerializeField] public Transform grassPrefab;
     [SerializeField] public Transform aSetOfLavaBallPrefab;
     [SerializeField] public List<Transform> lavaBallSpawnPoints;
-
+    [SerializeField] private Transform turret;
     [SerializeField] public float fieldBoundaryX;
     [SerializeField] public float fieldBoundaryY;
 
@@ -44,9 +45,14 @@ public class InstantiateManager : MonoBehaviour
     {
         Instantiate(waterPrefab, spawnPoint.position, spawnPoint.rotation);
     }
+    public void InstantiateWater(Vector3 spawnPoint)
+    {
+        Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
+    }
+    
     public void StartSpawnGrass()
     {
-        //StartCoroutine(InstantiateGrass());
+        StartCoroutine(InstantiateGrass());
     }
 
     public void StartLavaBallStage()
@@ -80,13 +86,14 @@ public class InstantiateManager : MonoBehaviour
                 activeLavaBalls.Add(newLavaBall);
             }
 
-            float randomCooldown = Random.Range(4f, 5f);
+            float randomCooldown = Random.Range(3f, 4f);
             yield return new WaitForSeconds(randomCooldown);
 
             elapsedTime += randomCooldown;
         }
         GameManager.Instance.mainCamera.gameObject.SetActive(true);
-        StartSpawnGrass();
+        //StartSpawnGrass();
+        turret.gameObject.SetActive(true);
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)
