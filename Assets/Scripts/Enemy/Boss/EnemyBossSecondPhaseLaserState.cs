@@ -61,7 +61,6 @@ public class EnemyBossSecondPhaseLaserState : EnemyState
             IDamageable.Damage damage = new IDamageable.Damage(0.7f, ElementType.Physical, _bossEnemy.transform);
             Player.Instance.TakeDamage(damage);
         }
-
     }
 
     public override void Exit()
