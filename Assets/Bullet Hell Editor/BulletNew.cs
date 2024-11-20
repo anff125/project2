@@ -11,6 +11,13 @@ public class BulletNew : Bullet
     public float switchTimer = 2f;
     public float destroyTime = 5f;
     private bool hasChangedPatterns = false;
+    private bool[] shootAtPlayer = new bool[2];
+
+    public void SetToShootPlayer(bool a, bool b)
+    {
+        shootAtPlayer[0] = a;
+        shootAtPlayer[1] = b;
+    }
 
     public void SetBulletProperty(
         Vector3 Center,
@@ -24,23 +31,27 @@ public class BulletNew : Bullet
         float Radius
     ){
         bulletStates.Clear();
-        Vector3 lookAtPlayer = (Player.Instance.transform.position - transform.position);
-        Vector3 towardPlayer = new Vector3(lookAtPlayer.x, transform.position.y, lookAtPlayer.z).normalized;
+        Vector3 lookAtPlayer = Player.Instance.transform.position - transform.position;
+        Vector3 towardPlayer = new Vector3(lookAtPlayer.x, 0, lookAtPlayer.z).normalized;
 
-        if (patterns0.Count == 0)
+        if (patterns0.Count == 0 || (hasChangedPatterns && patterns1.Count != 0))
         {
+            hasChangedPatterns = true;
+            
+            if (shootAtPlayer[1])
+            {
+                Direction = towardPlayer;
+            }
             for (int j = 0; j < patterns1.Count; ++j)
             {
                 bulletStates.Add(new BulletState(Center, Position, Rotation, Direction, StraightSpeed, SecondStraightSpeed, CircleAngle, SineAngle, Radius));
             }
-        }
-        else if (hasChangedPatterns)
-        {
-            for (int j = 0; j < patterns0.Count; ++j)
-            {
-                bulletStates.Add(new BulletState(Center, Position, Rotation, towardPlayer, StraightSpeed, SecondStraightSpeed, CircleAngle, SineAngle, Radius));
-            }
         }else{
+            Debug.Log("Try to add Pattern0 !!!!!");
+            if (shootAtPlayer[0])
+            {
+                Direction = towardPlayer;
+            }
             for (int j = 0; j < patterns0.Count; ++j)
             {
                 bulletStates.Add(new BulletState(Center, Position, Rotation, Direction, StraightSpeed, SecondStraightSpeed, CircleAngle, SineAngle, Radius));
@@ -54,10 +65,6 @@ public class BulletNew : Bullet
 
     protected override void Start()
     {
-        if (patterns0.Count == 0)
-        {
-            hasChangedPatterns = true;
-        }
         Destroy(gameObject, destroyTime);
     }
 
@@ -69,18 +76,21 @@ public class BulletNew : Bullet
         {
             hasChangedPatterns = true;
 
-            var state = bulletStates[0];
-            SetBulletProperty(
-                state.Center,
-                transform.position,
-                transform.rotation,
-                state.Direction,
-                state.StraightSpeed,
-                state.SecondStraightSpeed,
-                state.CircleAngle,
-                state.SineAngle,
-                state.Radius
-            );
+            if (patterns0.Count != 0 && patterns1.Count != 0)
+            {
+                var state = bulletStates[0];
+                SetBulletProperty(
+                    state.Center,
+                    transform.position,
+                    transform.rotation,
+                    state.Direction,
+                    state.StraightSpeed,
+                    state.SecondStraightSpeed,
+                    state.CircleAngle,
+                    state.SineAngle,
+                    state.Radius
+                );
+            }
         }
         ApplyPatterns();
     }

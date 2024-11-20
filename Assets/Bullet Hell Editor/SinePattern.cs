@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "BulletPatterns/SinePattern")]
 public class SinePattern : BulletPatternBase
 {
-    public float amplitude = 1f;
+    public float amplitude = 4f;
     public float frequency = 30f;
 
     public override void ModifyTransform(BulletState bulletState)

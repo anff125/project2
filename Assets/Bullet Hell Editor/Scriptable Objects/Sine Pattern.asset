@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 762d9134103005e478486353196c52b5, type: 3}
   m_Name: Sine Pattern
   m_EditorClassIdentifier: 
-  amplitude: 1
-  frequency: 15
+  amplitude: 4
+  frequency: 180

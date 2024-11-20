@@ -30,7 +30,7 @@ public class EnemyBoss2Danmoku2State : EnemyState
         }
         EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(false);
         
-        EnemyStateMachine.EnemyBoss2.bulletEmitters[1].PlayAnimationMultipleTimes(2, 1, out float clipLength);
+        EnemyStateMachine.EnemyBoss2.bulletEmitters[0].PlayAnimationMultipleTimes(2, 2, out float clipLength);
         SetStateChangeCooldown(clipLength - 0.4f);
     }
 
@@ -39,7 +39,14 @@ public class EnemyBoss2Danmoku2State : EnemyState
         base.Update();
 
         if (EnemyStateMachine.EnemyBoss2 != null){
-            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.TrackPlayerState);
+            if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.SecondPhaseTrackPlayerState);
+            }
+            else
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.TrackPlayerState);
+            }
         }
     }
 

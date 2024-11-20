@@ -25,17 +25,22 @@ public class EnemyBoss2MoveToState : EnemyState
         Vector3 startPosition = _bossEnemy.transform.position;
         if (elapsedTime < TIME)
         {
-            // Rotate to face the player
-            Vector3 direction = (Player.Instance.transform.position - _bossEnemy.transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            _bossEnemy.transform.rotation = Quaternion.Slerp(_bossEnemy.transform.rotation, lookRotation, Time.deltaTime * 5f);
-
-            bool canMove = !Physics.BoxCast(_bossEnemy.transform.position, Vector3.one,
-                (_targetPosition - startPosition), Quaternion.identity, _bossEnemy.moveDistance, _bossEnemy.collisionLayerMask);
-            if (canMove)
+            Vector3 moveDir = _targetPosition - startPosition;
+            if (moveDir != Vector3.zero)
             {
-                _bossEnemy.transform.position = Vector3.Lerp(startPosition, _targetPosition, elapsedTime / TIME);
+                // Rotate to face the player
+                Vector3 direction = (Player.Instance.transform.position - _bossEnemy.transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                _bossEnemy.transform.rotation = Quaternion.Slerp(_bossEnemy.transform.rotation, lookRotation, Time.deltaTime * 5f);
+
+                bool canMove = !Physics.BoxCast(_bossEnemy.transform.position, Vector3.one,
+                    moveDir, Quaternion.identity, _bossEnemy.moveDistance, _bossEnemy.collisionLayerMask);
+                if (canMove)
+                {
+                    _bossEnemy.transform.position = Vector3.Lerp(startPosition, _targetPosition, elapsedTime / TIME);
+                }
             }
+            
             elapsedTime += Time.deltaTime;
         }
         else

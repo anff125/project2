@@ -289,19 +289,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3641ace00e2bf1c41b98947f9a6e1bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  maxHealth: 1000
+  exclamationMark: {fileID: 0}
   bulletPrefab: {fileID: 6426461843540707049, guid: 9d744cbc1218ef7489e02deb6f802831,
     type: 3}
+  speed: 5
+  maxHealth: 1000
+  maxFrozenAmount: 100
+  frozenTime: 3
+  moveDistance: 0
+  collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackRange: 10
   currentHealth: 0
+  currentFrozenAmount: 0
+  bulletEmitters: []
+  waveBulletPrefab: {fileID: 0}
   handPoint: {fileID: 5514510439206686253}
   melee: {fileID: 2155008293980286294}
-  laserPrefab: {fileID: 0}
-  meleePrefab: {fileID: 2155008293980286294}
-  smashPrefab: {fileID: 0}
-  scatterBulletPrefab: {fileID: 4979770491285649979, guid: 1a11e043cc8bc634281cd4d5553d4343,
-    type: 3}
   beenParried: 0
+  danmokuCount0: 0
+  danmokuCount1: 0
+  danmokuCount2: 0
+  danmokuCount3: 0
 --- !u!1 &3607576585433526453
 GameObject:
   m_ObjectHideFlags: 0

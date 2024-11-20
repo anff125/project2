@@ -5739,6 +5739,7 @@ MonoBehaviour:
   dashCooldown: 3
   skillCooldownUI: {fileID: 2032155461}
   dashCooldownUI: {fileID: 838623192}
+  _currentHealth: 0
   shield: {fileID: 1281498190}
   shieldDuration: 0.2
   lightingVisualSupportPrefab: {fileID: 7177728259954441285, guid: e74aa55073b26da4bb789d0948e477e8,

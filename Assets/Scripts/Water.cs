@@ -28,7 +28,12 @@ public class Water : MonoBehaviour, IDamageable
                 else if (colliderOut.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
-                    damageable.TakeDamage(damage);
+                    if (damageable == null)
+                    {
+                        Debug.Log("Damageable object name: " + colliderOut.gameObject.name);
+                        return;
+                    }
+                        damageable.TakeDamage(damage);
                 }
             }
             Destroy(gameObject);

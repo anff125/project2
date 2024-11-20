@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673dd7aba8398e941a3f3807c05f06e3, type: 3}
   m_Name: Circle Pattern Reverse
   m_EditorClassIdentifier: 
-  rotationSpeed: -120
-  radiusGrowthSpeed: 6
+  rotationSpeed: -150
+  radiusGrowthSpeed: 4

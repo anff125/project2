@@ -6,6 +6,7 @@ using UnityEngine;
 public class BulletEmitter : MonoBehaviour
 {
     // public Animator animator = null;
+    [SerializeField] private EnemyBoss2 enemyBoss;
     public bool isTesting;
     public bool isRandom;
     public float reverseRotation = 1;
@@ -24,9 +25,14 @@ public class BulletEmitter : MonoBehaviour
         
     public float fireTimer = 0;
     public bool isFiring = false;
+    public bool fixDirection = false;
     public bool lookAtPlayer = false;
+    public bool shootAtPlayer0 = false;
+    public bool shootAtPlayer1 = false;
     private Animator animator;
     private AnimationClip clip;
+    private Coroutine animationCoroutine;
+    public bool InAnimation => animationCoroutine != null;
 
     private AnimationClip GetAnimationClipByName(string animationName)
     {
@@ -46,13 +52,21 @@ public class BulletEmitter : MonoBehaviour
         if (clip != null && playCount > 0)
         {
             clipLength = (clip.length + 0.1f) * playCount;
-            StartCoroutine(PlayAnimationRoutine("AnimationDanmoku" + index, playCount, clip.length));
+            animationCoroutine = StartCoroutine(PlayAnimationRoutine("AnimationDanmoku" + index, playCount, clip.length));
         }
         else
         {
             clipLength = 0f;
             Debug.LogError("Animation clip not found or invalid play count.");
         }
+    }
+    public void PlayIdleAnimation()
+    {
+        if (animationCoroutine != null)
+        {
+            StopCoroutine(animationCoroutine);
+        }
+        animator.Play("IdleState", 0, 0f);
     }
 
     void Start()
@@ -66,7 +80,7 @@ public class BulletEmitter : MonoBehaviour
 
         fireTimer += Time.deltaTime;
         
-        if (fireTimer >= 1f / fireRate)
+        if (fireRate != 0 && fireTimer >= 1f / fireRate)
         {
             FireBullet();
             fireTimer = 0f;
@@ -95,15 +109,17 @@ public class BulletEmitter : MonoBehaviour
             float bulletPosX = Mathf.Cos(angle * Mathf.Deg2Rad);
             float bulletPosZ = Mathf.Sin(angle * Mathf.Deg2Rad);
 
-            Vector3 offset = new Vector3(bulletPosX, 0, bulletPosZ);
-            offset = transform.rotation * offset;    
+            Vector3 worldOffset = new Vector3(bulletPosX, 0, bulletPosZ);
+            Vector3 offset = transform.rotation * worldOffset;
+            Vector3 fixOffset = enemyBoss.transform.rotation * worldOffset;
             Vector3 bulletPosition = transform.position + fireRadius * offset;
 
             Transform bulletTransform = Instantiate(bulletPrefabs[bulletIndex], bulletPosition, transform.rotation);
             BulletNew bullet = bulletTransform.GetComponent<BulletNew>();
 
+            bullet.SetToShootPlayer(shootAtPlayer0, shootAtPlayer1);
             bullet.destroyTime = destroyTime;
-            Vector3 direction = offset.normalized;
+            Vector3 direction = fixDirection ? fixOffset.normalized : offset.normalized;
             bullet.transform.LookAt(bulletPosition + direction);
             bullet.SetBulletProperty(bulletPosition, bulletPosition, bullet.transform.rotation, direction, straightSpeed, secondStraightSpeed, 270f, 0f, fireRadius);
 

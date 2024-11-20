@@ -13,6 +13,7 @@ public class EnemyBoss2Danmoku1State : EnemyState
         Debug.Log("Enter Danmoku1");
         EnemyStateMachine.EnemyBoss2.danmokuCount0 = 0;
         EnemyStateMachine.EnemyBoss2.danmokuCount2 = 0;
+        EnemyStateMachine.EnemyBoss2.danmokuCount3 = 0;
 
         base.Enter();
         SetStateChangeCooldown(1f);
@@ -44,7 +45,14 @@ public class EnemyBoss2Danmoku1State : EnemyState
         base.Update();
 
         if (EnemyStateMachine.EnemyBoss2 != null){
-            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.TrackPlayerState);
+            if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.SecondPhaseTrackPlayerState);
+            }
+            else
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.TrackPlayerState);
+            }
         }
     }
 
