@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3038691364654913045}
   - component: {fileID: 114030401251504300}
   - component: {fileID: 5665537204340773614}
-  - component: {fileID: 5210902983090099535}
+  - component: {fileID: 2442631257792483083}
   m_Layer: 9
   m_Name: Bullet
   m_TagString: Bullet
@@ -106,7 +106,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5210902983090099535
+--- !u!114 &2442631257792483083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,17 +115,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026112952563092200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7643192dda1de8943ae4f18cfcb05d9d, type: 3}
+  m_Script: {fileID: 11500000, guid: eb32832443fd470a8ec8be0c1d90c7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shooterLayerMask:
     serializedVersion: 2
-    m_Bits: 256
-  textureForPlayer: {fileID: 0}
-  textureForEnemy: {fileID: 2800000, guid: 266e639e72d7f4c03aad0c2590d6c799, type: 3}
+    m_Bits: 128
+  textureForPlayer: {fileID: 2800000, guid: ee12d2bc9f5c8554d97d5beb9dc4b275, type: 3}
+  textureForEnemy: {fileID: 2800000, guid: 3d6064e2e1cd7214e9f67f3a68f494fb, type: 3}
   initProperty:
     direction: {x: 0, y: 0, z: 0}
     speed: 0
     destroyTime: 0
     damage: 0
+  thingsToHit:
+    serializedVersion: 2
+    m_Bits: 384
   canBeReflected: 1

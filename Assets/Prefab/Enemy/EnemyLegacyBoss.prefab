@@ -290,10 +290,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationMark: {fileID: 2041771477433241246}
+  bulletPrefab: {fileID: 0}
   speed: 5
   maxHealth: 600
-  bulletPrefab: {fileID: 0}
+  maxFrozenAmount: 50
+  frozenTime: 3
+  moveDistance: 0
+  collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackRange: 10
   currentHealth: 0
+  currentFrozenAmount: 0
   lineRenderer: {fileID: 8803367539567536311}
   secondPhaseLaserPrefab: {fileID: 6209892401945732545}
   meleePrefab: {fileID: 0}

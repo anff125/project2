@@ -5,15 +5,17 @@ using UnityEngine;
 public class EnemyElementalBossMeleeState : EnemyState
 {
     public EnemyElementalBossMeleeState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
-    private float shootAngle = 30;
+    private float shootAngle = 15;
     private float bulletCount = 7;
     private float delay = .3f;
+    EnemyElementalBoss _bossEnemy;
+
     public override void Enter()
     {
         base.Enter();
 
-        SetStateChangeCooldown(delay);
-        
+        SetStateChangeCooldown(delay + .1f);
+        _bossEnemy = EnemyStateMachine.Enemy as EnemyElementalBoss;
         EnemyStateMachine.EnemyElementalBoss.exclamationMark.gameObject.SetActive(true);
         EnemyStateMachine.EnemyElementalBoss.StartCoroutine(ShootWithDelay());
         EnemyStateMachine.EnemyElementalBoss.meleeCount++;
@@ -40,16 +42,21 @@ public class EnemyElementalBossMeleeState : EnemyState
             var bullet = Object.Instantiate(EnemyStateMachine.EnemyElementalBoss.bulletPrefab, EnemyStateMachine.EnemyElementalBoss.transform.position + Vector3.up * 0.3f, Quaternion.identity);
             // Set bullet direction
             Vector3 bulletDirection = Quaternion.Euler(0, (i * shootAngle / (bulletCount - 1)) - (shootAngle / 2), 0) * direction;
-            bullet.GetComponent<Bullet>().SetBulletProperty(bulletDirection, 15, 2f);
+            bullet.GetComponent<Bullet>().SetBulletProperty(bulletDirection, 17, 2f);
         }
     }
 
     public override void Update()
     {
         base.Update();
-        if (EnemyStateMachine.EnemyElementalBoss != null)
+        if (CanExit)
         {
-            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyElementalBoss.TrackPlayerState);
+            //move backwards
+            var direction = (EnemyStateMachine.EnemyElementalBoss.transform.position - Player.Instance.transform.position).normalized;
+            var position = EnemyStateMachine.EnemyElementalBoss.transform.position + direction;
+            position.y = 0;
+            _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.TrackPlayerState);
+            EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
         }
     }
 
