@@ -165,7 +165,7 @@ public class EnemyElementalBossLightningStrikeState : EnemyState
                 IDamageable damageable = collider.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
-                    IDamageable.Damage damage = new IDamageable.Damage(10, ElementType.Electric, _bossEnemy.transform);
+                    IDamageable.Damage damage = new IDamageable.Damage(20, ElementType.Electric, _bossEnemy.transform);
                     damageable.TakeDamage(damage);
                 }
             }

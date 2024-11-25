@@ -12,4 +12,9 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene("Anff125_BossScene"); // Replace "Boss" with the exact name of your scene
     }
+    
+    public void LoadBoss2Scene()
+    {
+        SceneManager.LoadScene("f(x)_Boss2Scene"); // Replace "Boss" with the exact name of your scene
+    }
 }

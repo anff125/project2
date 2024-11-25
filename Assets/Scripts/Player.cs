@@ -37,8 +37,16 @@ public class Player : MonoBehaviour, IDamageable
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
+
+    [SerializeField] private bool canBeInvincible;
+    private bool isInvincible = false;
+    private float invincibilityDuration = 1.5f;
+    private Coroutine invincibilityCoroutine;
+    [SerializeField] private Transform playerVisual;
     public void TakeDamage(IDamageable.Damage damage)
     {
+        if (isInvincible) return; // Ignore damage if already invincible
+
         _currentHealth -= damage.Amount;
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
         {
@@ -49,6 +57,42 @@ public class Player : MonoBehaviour, IDamageable
             Die();
             _currentHealth = maxHealth;
         }
+        else if (canBeInvincible)
+        {
+            // Trigger invincibility after taking damage
+            if (invincibilityCoroutine != null) StopCoroutine(invincibilityCoroutine);
+            invincibilityCoroutine = StartCoroutine(HandleInvincibility());
+        }
+    }
+    private IEnumerator HandleInvincibility()
+    {
+        isInvincible = true;
+
+        float elapsed = 0f;
+        bool isVisible = true;
+
+        while (elapsed < invincibilityDuration)
+        {
+            // Toggle between normal and transparent material
+            if (!isVisible)
+            {
+                playerVisual.gameObject.SetActive(false);
+            }
+            else
+            {
+                playerVisual.gameObject.SetActive(true);
+            }
+            isVisible = !isVisible;
+
+            // Wait for a short interval before toggling again
+            yield return new WaitForSeconds(0.2f);
+
+            elapsed += 0.2f;
+        }
+
+        // Restore to normal material and disable invincibility
+        playerVisual.gameObject.SetActive(true);
+        isInvincible = false;
     }
 
     private void Awake()

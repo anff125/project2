@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Anff125_PlayGroundScene.unity
     guid: 888904a447bace34191d87683ab6f4df
+  - enabled: 1
+    path: Assets/Scenes/f(x)_Boss2Scene.unity
+    guid: 94eba96fa2d2f8c47841835353cdca97
   m_configObjects: {}
