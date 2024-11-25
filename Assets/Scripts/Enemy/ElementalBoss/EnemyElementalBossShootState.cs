@@ -7,7 +7,7 @@ public class EnemyElementalBossShootState : EnemyState
     private int _bulletsToShoot;
     private float _shootingTimer;
     private int _currentBulletIndex;
-    private List<float> timeSpace;
+    private readonly List<float> timeSpace;
     private bool CanShoot => _shootingTimer <= 0;
     private readonly EnemyElementalBoss _bossEnemy;
 
@@ -15,6 +15,7 @@ public class EnemyElementalBossShootState : EnemyState
     public EnemyElementalBossShootState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine)
     {
         _bossEnemy = EnemyStateMachine.Enemy as EnemyElementalBoss;
+        timeSpace = _bossEnemy?.secondPhaseTimeSpace;
     }
 
     public override void Enter()
@@ -23,15 +24,7 @@ public class EnemyElementalBossShootState : EnemyState
         // float angle = Random.Range(0f, 360f);
         // Vector3 randomPosition = Player.Instance.transform.position + new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * 10f;
         //_enemyElementalBoss.StartCoroutine(_enemyElementalBoss.MoveToPosition(randomPosition));
-        if (_bossEnemy.isSecondPhase)
-        {
-            timeSpace = _bossEnemy?.secondPhaseTimeSpace;
-        }
-        else
-        {
-            timeSpace = _bossEnemy?.timeSpace;
-        }
-        
+
         _bulletsToShoot = timeSpace.Count + 1;
 
         _bossEnemy.TotalBulletsShot = _bulletsToShoot;
@@ -96,7 +89,7 @@ public class EnemyElementalBossShootState : EnemyState
         var bullet = bulletObject.GetComponent<BulletRazorLeaf>();
         bullet.SetToggle(toggle);
         toggle *= -1;
-        bullet.SetBulletProperty(Vector3.forward, 10, 10, 25);
+        bullet.SetBulletProperty(Vector3.forward, 10, 7, 25);
         _bossEnemy.RegisterBullet(bullet);
     }
     private void ShootBulletRazorLeafFollowPosition(Vector3 targetPosition)

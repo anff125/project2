@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyElementalBossSecondPhaseBaseState : EnemyState
@@ -8,7 +11,7 @@ public class EnemyElementalBossSecondPhaseBaseState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        SetStateChangeCooldown(2f);
+        SetStateChangeCooldown(1f);
         _bossEnemy = EnemyStateMachine.Enemy as EnemyElementalBoss;
 
         timeTrackingPlayer = 0f;
@@ -26,25 +29,15 @@ public class EnemyElementalBossSecondPhaseBaseState : EnemyState
 
         if (dis <= _bossEnemy.attackRange)
         {
-            int random = Random.Range(0, 3);
-            if (random == 0)
+            //randomly choose between ThrowPowderKeg and ShootState
+            if (Random.Range(0, 2) == 0)
             {
                 EnemyStateMachine.ChangeState(_bossEnemy.ThrowPowderKegState);
             }
-            else if (random == 1)
+            else
             {
                 EnemyStateMachine.ChangeState(_bossEnemy.ShootState);
             }
-            else
-            {
-                var position = _bossEnemy.transform.position + new Vector3(0, 5, 0);
-                _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.LightningStrikeState);
-                EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
-            }
-
-            // var position = _bossEnemy.transform.position + new Vector3(0, 5, 0);
-            // _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.LightningStrikeState);
-            // EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
         }
         else
         {

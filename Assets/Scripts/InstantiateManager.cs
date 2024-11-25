@@ -2,27 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class InstantiateManager : MonoBehaviour
 {
     [SerializeField] public Transform waterPrefab;
-    [SerializeField] public Transform grassPrefab;
     [SerializeField] public Transform aSetOfLavaBallPrefab;
     [SerializeField] public List<Transform> lavaBallSpawnPoints;
-    [SerializeField] private Transform turret;
-    [SerializeField] public float fieldBoundaryX;
-    [SerializeField] public float fieldBoundaryY;
-
     public static InstantiateManager Instance { get; private set; }
     private readonly float lavaStageDuration = 20f;
 
     private readonly List<GameObject> activeLavaBalls = new List<GameObject>();
     private readonly int maxLavaBallCount = 20;
-
-    private readonly List<GameObject> activeGrass = new List<GameObject>();
-
 
     private void Awake()
     {
@@ -45,29 +36,10 @@ public class InstantiateManager : MonoBehaviour
     {
         Instantiate(waterPrefab, spawnPoint.position, spawnPoint.rotation);
     }
-    public void InstantiateWater(Vector3 spawnPoint)
-    {
-        Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
-    }
-    
-    public void StartSpawnGrass()
-    {
-        StartCoroutine(InstantiateGrass());
-    }
 
     public void StartLavaBallStage()
     {
         StartCoroutine(InstantiateLavaBall());
-    }
-
-    private IEnumerator InstantiateGrass()
-    {
-        while (true)
-        {
-            Vector3 randomPosition = new Vector3(Random.Range(-fieldBoundaryX, fieldBoundaryX), 0, Random.Range(-fieldBoundaryY, fieldBoundaryY));
-            Instantiate(grassPrefab, randomPosition, Quaternion.identity);
-            yield return new WaitForSeconds(3f);
-        }
     }
 
     private IEnumerator InstantiateLavaBall()
@@ -86,14 +58,12 @@ public class InstantiateManager : MonoBehaviour
                 activeLavaBalls.Add(newLavaBall);
             }
 
-            float randomCooldown = Random.Range(3f, 4f);
+            float randomCooldown = Random.Range(2f, 3f);
             yield return new WaitForSeconds(randomCooldown);
 
             elapsedTime += randomCooldown;
         }
         GameManager.Instance.mainCamera.gameObject.SetActive(true);
-        //StartSpawnGrass();
-        turret.gameObject.SetActive(true);
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)

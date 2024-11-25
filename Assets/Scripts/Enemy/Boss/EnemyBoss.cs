@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 public class EnemyBoss : Enemy
 {
     [SerializeField] private LineRenderer lineRenderer;
-    
+
     public Transform secondPhaseLaserPrefab;
     public Transform meleePrefab;
     public Transform smashPrefab;

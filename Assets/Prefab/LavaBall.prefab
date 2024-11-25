@@ -126,14 +126,11 @@ MonoBehaviour:
   textureForEnemy: {fileID: 0}
   initProperty:
     direction: {x: 0, y: 0, z: 0}
-    speed: 7
+    speed: 3
     destroyTime: 20
     damage: 25
-  thingsToHit:
-    serializedVersion: 2
-    m_Bits: 128
   canBeReflected: 0
-  maxFrozenAmount: 40
+  maxFrozenAmount: 50
   currentFrozenAmount: 0
 --- !u!1001 &869284383829032890
 PrefabInstance:
