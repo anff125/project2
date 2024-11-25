@@ -2331,7 +2331,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &851770976
 Animator:
   serializedVersion: 5
@@ -6609,6 +6609,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1297394513976144356, guid: 852577939d0cd9945968006e62648eac,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: fortEnemyPrefab
@@ -6644,7 +6649,7 @@ PrefabInstance:
     - target: {fileID: 3090805475070565608, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3090805475070565608, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
