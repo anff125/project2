@@ -6,6 +6,7 @@ public class Grass : MonoBehaviour, IDamageable
 {
     private Rigidbody playerRigidbody;
     private bool isPlayerOnGrass;
+    [SerializeField] private ParticleSystem windParticles;
 
     [Header("Updraft Settings")]
     public float updraftDuration; // Duration of the updraft in seconds
@@ -20,12 +21,14 @@ public class Grass : MonoBehaviour, IDamageable
     private void Start()
     {
         playerRigidbody = Player.Instance.GetComponent<Rigidbody>();
+        windParticles.Stop();
     }
 
     public void TakeDamage(IDamageable.Damage damage)
     {
         if (updraftCoroutine == null && damage.ElementType == ElementType.Fire)
         {
+            windParticles.Play();
             isOnFire = true;
             updraftCoroutine = StartCoroutine(UpdraftCoroutine());
         }

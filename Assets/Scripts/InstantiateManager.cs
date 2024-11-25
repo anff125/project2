@@ -22,8 +22,7 @@ public class InstantiateManager : MonoBehaviour
     private readonly int maxLavaBallCount = 20;
 
     private readonly List<GameObject> activeGrass = new List<GameObject>();
-
-
+    
     private void Awake()
     {
         if (Instance == null)

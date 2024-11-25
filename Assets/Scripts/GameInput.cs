@@ -17,6 +17,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnMainSkillCancelled;
     public event EventHandler OnShield;
     public event EventHandler OnDash;
+    public event EventHandler OnInteract;
     private PlayerControl _playerInputActions;
     private void Awake()
     {
@@ -43,6 +44,8 @@ public class GameInput : MonoBehaviour
         _playerInputActions.Player.MainSkill.started += MainSkill_started;
         _playerInputActions.Player.MainSkill.canceled += MainSkill_cancelled;
         _playerInputActions.Player.Dash.performed += Dash_performed;
+        
+        _playerInputActions.Player.Interact.performed += ctx => OnInteract?.Invoke(this, EventArgs.Empty);
     }
 
 

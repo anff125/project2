@@ -44,8 +44,8 @@ public class EnemyBossLaserAttackState : EnemyState
             _laserLines[i].endWidth = INITIAL_LASER_WIDTH;
 
             // Set color to black initially
-            _laserLines[i].startColor = Color.black;
-            _laserLines[i].endColor = Color.black;
+            _laserLines[i].startColor = Color.cyan;
+            _laserLines[i].endColor = Color.cyan;
             _laserLines[i].material = new Material(Shader.Find("Sprites/Default")); // Choose a suitable material
         }
 
