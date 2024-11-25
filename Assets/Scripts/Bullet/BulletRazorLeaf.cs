@@ -70,14 +70,14 @@ public class BulletRazorLeaf : Bullet
         }
         base.Update();
     }
-
+    
     private void FollowTarget()
     {
         _movingDirection = direction;
         elapsedTime += Time.deltaTime;
         // Calculate the target direction toward the _target
         Vector3 targetDirection = !_target ? direction : (_target.position - transform.position).normalized;
-        if (targetDirection.y < 0) targetDirection.y = 0;
+        targetDirection.y = 0;
 
         // according to lifetime, increase the speed of the bullet
         float speedMultiplier = Mathf.Lerp(1f, 2f, elapsedTime * .75f);
@@ -90,7 +90,10 @@ public class BulletRazorLeaf : Bullet
     private bool hasReachedTargetPosition = false;
     [SerializeField] private float initialRotationSpeed = 5f;
 
-    private void FollowUntilPosition() { }
+    private void FollowUntilPosition()
+    {
+        
+    }
 
 
 

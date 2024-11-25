@@ -27,9 +27,9 @@ Transform:
   m_GameObject: {fileID: 2092300706283696628}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2640257805614741989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,7 +220,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.53, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2058074009437734913}
@@ -248,8 +248,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.5, y: 1.5, z: 1.5}
-  m_Center: {x: 0, y: 0.75, z: 0}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &2237148244232794412
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -272,10 +272,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!120 &8803367539567536311
 LineRenderer:
@@ -395,23 +395,23 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
   speed: 2
-  maxHealth: 3000
+  maxHealth: 1000
   maxFrozenAmount: 300
   frozenTime: 3
   moveDistance: 1
   collisionLayerMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 64
   attackRange: 10
   currentHealth: 0
   currentFrozenAmount: 0
   lineRenderer: {fileID: 8803367539567536311}
   timeSpace:
+  - 0.25
   - 0.333333
+  - 0.25
   - 0.333333
-  - 0.333333
-  - 0.333333
-  - 0.333333
+  - 0.25
   secondPhaseTimeSpace:
   - 0.3
   - 0.3
@@ -419,11 +419,8 @@ MonoBehaviour:
   - 0.2
   - 0.5
   - 0.2
-  damageIndicatorPrefab: {fileID: 351370313673496363}
   isSecondPhase: 0
   powderKegPrefab: {fileID: 653096076306477914, guid: 9e1394fe7bd3e3049a4d8d5e0fe515a7,
-    type: 3}
-  iceBlockPrefab: {fileID: 4857595760462498007, guid: 1aeca0c0f26ca494bbd6722aeee0a527,
     type: 3}
   bulletRazorLeafPrefab: {fileID: 5039823218128439911, guid: f60db5c94361b8048b9c297c1fff5530,
     type: 3}
@@ -656,7 +653,7 @@ PrefabInstance:
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}

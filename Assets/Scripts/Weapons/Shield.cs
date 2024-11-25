@@ -29,11 +29,7 @@ public class Shield : MonoBehaviour
 
             return;
         }
-        if (bullet.shooterLayerMask == playerLayerMask)
-        {
-            Debug.Log("Bullet from player");
-            return;
-        }
+        //if is razor leaf, destroy it
         OnBlockSuccess?.Invoke(this, EventArgs.Empty);
         bullet.SetShooterLayerMask(playerLayerMask);
         bullet.SetTextureForPlayer();

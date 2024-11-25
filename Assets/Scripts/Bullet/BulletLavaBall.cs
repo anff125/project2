@@ -34,8 +34,8 @@ public class BulletLavaBall : Bullet, IDamageable
         {
             frozenProgressNormalized = (float)currentFrozenAmount / maxFrozenAmount
         });
+
     }
-    
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
     public event EventHandler<IDamageable.OnFrozenProgressChangedEventArgs> OnFrozenProgressChange;
 }

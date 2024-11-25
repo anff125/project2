@@ -1,16 +1,17 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
     //set a layer mask to ignore the entity that shoots the bullet
-    [SerializeField]
-    public LayerMask shooterLayerMask;
+    [SerializeField] private LayerMask shooterLayerMask;
     [SerializeField] private Texture textureForPlayer;
     [SerializeField] private Texture textureForEnemy;
     [SerializeField] protected BulletProperty initProperty;
-    [SerializeField]private LayerMask thingsToHit;
+
     [System.Serializable]
-    
     protected class BulletProperty
     {
         public Vector3 direction;
@@ -36,7 +37,7 @@ public class Bullet : MonoBehaviour
     private float _speed = 10;
     public float Speed => _speed;
 
-    private int _damage = 1;
+    private int _damage = 10;
     public int Damage => _damage;
     public void SetShooterLayerMask(LayerMask layerMask)
     {
@@ -83,13 +84,7 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-        //check if is thingsToHit
-        if (thingsToHit != (thingsToHit | (1 << collision.gameObject.layer)))
-        {
-            return;
-        }
         
-        //Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
         

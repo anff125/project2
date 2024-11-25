@@ -8,7 +8,6 @@ TagManager:
   - BulletHiHat
   - BulletDrum
   - Water
-  - PowderKeg
   layers:
   - Default
   - TransparentFX
@@ -21,9 +20,9 @@ TagManager:
   - Enemy
   - Bullet
   - 'PhysicalInteractable '
-  - Wall
-  - Turret
-  - Wire
+  - 
+  - 
+  - 
   - 
   - 
   - 

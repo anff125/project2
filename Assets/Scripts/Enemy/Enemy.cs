@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
+    public static List<Enemy> ActiveEnemies = new List<Enemy>();
+    public bool IsAlliedWithPlayer { get; private set; }
     [SerializeField] public Transform exclamationMark;
     [SerializeField] public Transform bulletPrefab;
     [SerializeField] public float speed = 5f;
@@ -22,6 +24,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public float currentFrozenAmount;
 
     private bool _isFrozen;
+    public bool IsFrozen => _isFrozen;
     private Coroutine _freezeCoroutine;
 
     public event Action<GameObject> OnEnemyDestroyed;
@@ -108,6 +111,7 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHealth = maxHealth;
         currentFrozenAmount = 0;
         _isFrozen = false;
+        ActiveEnemies.Add(this);
     }
     protected virtual void Start() { }
     protected virtual void Update()
@@ -122,6 +126,7 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return null;
 
         OnEnemyDestroyed?.Invoke(gameObject);
+        ActiveEnemies.Remove(this);
 
         Destroy(gameObject);
     }
@@ -187,5 +192,10 @@ public class Enemy : MonoBehaviour, IDamageable
         float angle = Random.Range(0f, 360f);
         Vector3 randomPosition = Player.Instance.transform.position + new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * range;
         return randomPosition;
+    }
+
+    public void SetIsAlliedWithPlayer(bool IsAllied)
+    {
+        IsAlliedWithPlayer = IsAllied;
     }
 }

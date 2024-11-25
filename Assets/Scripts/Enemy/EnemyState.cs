@@ -9,14 +9,13 @@ public class EnemyState
     {
         EnemyStateMachine = enemyStateMachine;
     }
-    protected float TimeInCurrentState;
+    
     private float _stateChangeCooldownTimer = 0f; // Cooldown timer
     public bool CanExit => _stateChangeCooldownTimer <= 0;
 
     public virtual void Enter()
     {
-        //Debug.Log("Entered state: " + this);
-        TimeInCurrentState = 0f;
+        Debug.Log("Entered state: " + this);
     }
 
     public virtual void Update()
@@ -25,7 +24,6 @@ public class EnemyState
         {
             _stateChangeCooldownTimer -= Time.deltaTime;
         }
-        TimeInCurrentState += Time.deltaTime;
     }
 
     public virtual void Exit() { }

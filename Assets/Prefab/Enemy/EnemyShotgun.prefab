@@ -97,14 +97,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationMark: {fileID: 2068558350584745163}
-  bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
-    type: 3}
-  waterPrefab: {fileID: 3949445710372248976, guid: b5d4951722f7d6649b965f692030c9a0,
+  bulletPrefab: {fileID: 5039823218128439911, guid: fd244db2ad4d3be42b6db60a427482b2,
     type: 3}
   speed: 5
   maxHealth: 100
   maxFrozenAmount: 50
   frozenTime: 3
+  moveDistance: 0
+  collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
+  attackRange: 10
   currentHealth: 0
   currentFrozenAmount: 0
 --- !u!1 &7154621293354503424
