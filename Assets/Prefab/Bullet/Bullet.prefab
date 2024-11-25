@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shooterLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 128
   textureForPlayer: {fileID: 0}
   textureForEnemy: {fileID: 2800000, guid: 266e639e72d7f4c03aad0c2590d6c799, type: 3}
   initProperty:
