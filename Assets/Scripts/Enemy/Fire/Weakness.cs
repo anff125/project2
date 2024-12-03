@@ -9,7 +9,7 @@ public class Weakness : MonoBehaviour, IDamageable
     [SerializeField] private float explosionRadius = 50f; // 攻擊範圍半徑
     [SerializeField] private int explosionDamage = 40; // 火屬性傷害
     // [SerializeField] private LayerMask targetLayerMask;
-
+    [SerializeField] private float attackAngleThreshold = 180f; // 攻擊角度範圍
     private bool hasBeenHit = false;
 
     private void Awake()
@@ -23,12 +23,33 @@ public class Weakness : MonoBehaviour, IDamageable
         }
     }
 
+    private Vector3 GetFireAttackDirection()
+    {
+        // 假設攻擊來源位置是從玩家到弱點的方向
+        Vector3 attackPosition = Player.Instance.transform.position;
+        return (attackPosition - transform.position).normalized;
+    }
+
     // IDamageable 介面中的 TakeDamage 方法
     public void TakeDamage(float damage, ElementType elementType = ElementType.Physical)
     {
         if (hasBeenHit) return;
+
         else if (enemyFire != null && elementType == ElementType.Fire)
         {   
+            // 檢查火屬性攻擊來向
+            Vector3 attackDirection = GetFireAttackDirection();  // 攻擊方向
+            Vector3 backDirection = -enemyFire.transform.forward; // 反方向，即背後方向
+
+            // 計算攻擊方向和背後方向的夾角
+            float angle = Vector3.Angle(attackDirection, backDirection);
+
+            if (angle > attackAngleThreshold)
+            {
+                enemyFire.TakeDamage(damage, elementType);
+                return;
+            }
+
             Debug.Log("Weakness Attacked");
 
             hasBeenHit = true;

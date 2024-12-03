@@ -134,7 +134,11 @@ public class Player : MonoBehaviour, IDamageable
     private void OnMainAttack(object sender, EventArgs e) { }
     private void OnSecondaryAttack(object sender, EventArgs e) { }
 
-    private void OnMainAttackStarted(object sender, EventArgs e) { StartAttacking(mainAttackParameters); }
+    private void OnMainAttackStarted(object sender, EventArgs e) 
+    { 
+        // attackDirection = (GetCursorPointOnGround() - transform.position).normalized;
+        StartAttacking(mainAttackParameters); 
+    }
     private void OnMainAttackCancelled(object sender, EventArgs e) { StopAttacking(mainAttackParameters); }
 
     private void OnSecondaryAttackStarted(object sender, EventArgs e) { StartAttacking(secondaryAttackParameters); }
@@ -326,7 +330,7 @@ public class Player : MonoBehaviour, IDamageable
         var moveDistance = (moveSpeed * Time.deltaTime);
         float playerRadius = 0.7f;
         float collisionOffset = 0.1f; // 碰撞檢測的偏移量
-        
+
         bool canMove = !Physics.BoxCast(transform.position, 
             Vector3.one * playerRadius,
             moveDir,
