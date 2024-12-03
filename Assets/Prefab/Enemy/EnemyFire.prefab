@@ -324,6 +324,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4715665451142076468, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7663835465460077492, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: hasProgressGameObject
@@ -338,6 +343,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8823789788219525902, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}

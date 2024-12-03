@@ -325,8 +325,14 @@ public class Player : MonoBehaviour, IDamageable
 
         var moveDistance = (moveSpeed * Time.deltaTime);
         float playerRadius = 0.7f;
-        bool canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius,
-            moveDir, Quaternion.identity, moveDistance, collisionLayerMask);
+        float collisionOffset = 0.1f; // 碰撞檢測的偏移量
+        
+        bool canMove = !Physics.BoxCast(transform.position, 
+            Vector3.one * playerRadius,
+            moveDir,
+            Quaternion.identity, 
+            moveDistance, 
+            collisionLayerMask);
 
         if (!canMove)
         {

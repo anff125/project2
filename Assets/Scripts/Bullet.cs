@@ -63,6 +63,12 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
+
+        if (collision.CompareTag("Wall"))
+        {
+            Destroy(gameObject); // 子彈碰到牆壁時銷毀
+            return;
+        }
       
         // Debug.Log("Bullet Hit: " + collision.name);
         IDamageable damageable = collision.GetComponent<IDamageable>();

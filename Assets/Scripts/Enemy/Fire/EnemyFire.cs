@@ -6,7 +6,7 @@ public class EnemyFire : Enemy
 {
     #region States
 
-//make track player state and shoot state
+// make track player state and shoot state
     public EnemyFireTrackPlayerState TrackPlayerState { get; private set; }
     public EnemyFireShootState ShootState { get; private set; }
 

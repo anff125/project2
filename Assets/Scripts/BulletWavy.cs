@@ -80,6 +80,12 @@ public class BulletWavy : MonoBehaviour
             return;
         }
 
+        if (collision.CompareTag("Wall"))
+        {
+            Destroy(gameObject); // 子彈碰到牆壁時銷毀
+            return;
+        }
+
         IDamageable damageable = collision.GetComponent<IDamageable>();
         if (damageable == null) return;
         damageable.TakeDamage(_damage);

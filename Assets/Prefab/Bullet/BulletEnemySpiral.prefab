@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 149813993064236962}
   - component: {fileID: 9051237412281907205}
   - component: {fileID: 3676759646489526206}
+  - component: {fileID: -198319294078553884}
   m_Layer: 9
   m_Name: BulletEnemySpiral
   m_TagString: Bullet
@@ -123,3 +124,30 @@ MonoBehaviour:
     m_Bits: 256
   textureForPlayer: {fileID: 2800000, guid: ee12d2bc9f5c8554d97d5beb9dc4b275, type: 3}
   textureForEnemy: {fileID: 2800000, guid: 3d6064e2e1cd7214e9f67f3a68f494fb, type: 3}
+--- !u!54 &-198319294078553884
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5327640104729220138}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1

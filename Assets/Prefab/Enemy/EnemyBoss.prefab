@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5490864853737561606}
   - component: {fileID: 2729649442568053156}
   - component: {fileID: 9132117389633251806}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Lazer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,10 +290,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exclamationMark: {fileID: 2041771477433241246}
+  bulletPrefab: {fileID: 0}
   speed: 5
   maxHealth: 600
-  bulletPrefab: {fileID: 0}
+  maxFrozenAmount: 50
+  frozenTime: 3
   currentHealth: 0
+  currentFrozenAmount: 0
   lineRenderer: {fileID: 8803367539567536311}
   secondPhaseLaserPrefab: {fileID: 6209892401945732545}
   meleePrefab: {fileID: 0}
@@ -412,7 +415,7 @@ GameObject:
   - component: {fileID: 685871131180146215}
   - component: {fileID: 7592428438050120319}
   - component: {fileID: 902118170929303843}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Smash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,6 +538,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4715665451142076468, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7319124445299081485, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_Layer
@@ -545,6 +553,11 @@ PrefabInstance:
       propertyPath: hasProgressGameObject
       value: 
       objectReference: {fileID: 5200515940572212749}
+    - target: {fileID: 8823789788219525902, guid: 845177d32682cb94080f53bf4af8c8c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 9143917486267527178, guid: 845177d32682cb94080f53bf4af8c8c0,
         type: 3}
       propertyPath: m_Pivot.x
