@@ -395,7 +395,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
   speed: 2
-  maxHealth: 3000
+  maxHealth: 2000
   maxFrozenAmount: 300
   frozenTime: 3
   moveDistance: 1

@@ -18,7 +18,6 @@ public class Player : MonoBehaviour, IDamageable
 
     [SerializeField] private SkillUI skillCooldownUI;
     [SerializeField] private SkillUI dashCooldownUI;
-
     private Camera _camera;
 
     private float skillTimer;
@@ -330,6 +329,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private AttackParameters mainAttackParameters;
     [SerializeField] private AttackParameters secondaryAttackParameters;
     [SerializeField] private AttackParameters createWaterParameters;
+    [SerializeField] private AnimationControlScript animationControlScript;
 
     //make a variable to present if only left mouse button is pressed or right mouse button is pressed or both
     private enum AttackButtonState
@@ -408,6 +408,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void StartAttacking()
     {
+        animationControlScript.SetAimingLayerWeight(1f);
         if (buttonState == AttackButtonState.Both)
         {
             StopAttacking();
@@ -458,6 +459,7 @@ public class Player : MonoBehaviour, IDamageable
             secondaryAttackParameters.effect.Stop();
             mainAttackParameters.effect.Stop();
             currentAttackCoroutine = null;
+            animationControlScript.SetAimingLayerWeight(0f);
         }
         else if (buttonState == AttackButtonState.Left)
         {
@@ -514,9 +516,9 @@ public class Player : MonoBehaviour, IDamageable
             Vector3 moveDir = new Vector3(move.x, 0, move.y);
 
             RaycastHit hitInfo;
-            bool canDash = !Physics.BoxCast(transform.position, Vector3.one * playerRadius, moveDir,
+            bool canDash = !Physics.BoxCast(transform.position + Vector3.up, Vector3.one * 0.5f, moveDir,
                 out hitInfo, Quaternion.identity, dashDistance, collisionLayerMask);
-
+            Debug.Log("Can dash: " + canDash);
             Vector3 dashTarget;
             if (canDash)
             {
@@ -552,9 +554,8 @@ public class Player : MonoBehaviour, IDamageable
 
         var moveDistance = (moveSpeed * Time.deltaTime);
         float playerRadius = 0.7f;
-        bool canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius,
-            moveDir, Quaternion.identity, moveDistance, collisionLayerMask);
-
+        bool canMove = !Physics.BoxCast(transform.position + Vector3.up, Vector3.one * .5f,
+            moveDir, Quaternion.identity, playerRadius, collisionLayerMask);
         if (!canMove)
         {
             // Check if we can move forward
