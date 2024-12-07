@@ -621,11 +621,20 @@ public class Player : MonoBehaviour, IDamageable
                 Vector3 closestPoint = hit.ClosestPoint(attacker.position);
                 //check if y difference is less than 3
                 if (Mathf.Abs(closestPoint.y - attacker.position.y) > 3) continue;
-                closestPoint.y = 0;
                 Vector3 directionToTarget = (closestPoint - attacker.position).normalized;
-                float angleToTarget = Vector3.Angle(attacker.forward, directionToTarget);
+                // Project the attacker's forward direction onto the XZ plane
+                Vector3 attackerForwardXZ = new Vector3(attacker.forward.x, 0, attacker.forward.z).normalized;
 
-                if (angleToTarget <= parameters.angle)
+// Project the direction to the target onto the XZ plane
+                Vector3 directionToTargetXZ = new Vector3(directionToTarget.x, 0, directionToTarget.z).normalized;
+
+// Calculate the angle on the XZ plane
+                float angleToTargetXZ = Vector3.Angle(attackerForwardXZ, directionToTargetXZ);
+
+                Debug.Log("angleToTargetXZ: " + angleToTargetXZ);
+
+
+                if (angleToTargetXZ <= parameters.angle)
                 {
                     IDamageable.Damage damage = new IDamageable.Damage(parameters.damage, parameters.elementType, Instance.transform);
                     target.TakeDamage(damage);

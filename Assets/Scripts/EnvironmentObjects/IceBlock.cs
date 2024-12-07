@@ -7,13 +7,16 @@ public class IceBlock : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
+    [SerializeField] private bool hasLifeTime = true;
     private void Start()
     {
-        Destroy(gameObject, 5f);
+        if (hasLifeTime)
+            Destroy(gameObject, 5f);
     }
 
     public void TakeDamage(IDamageable.Damage damage)
     {
+        Debug.Log("IceBlock TakeDamage");
         ElementType elementType = damage.ElementType;
         if (elementType == ElementType.Fire)
         {

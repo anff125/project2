@@ -22,7 +22,7 @@ public class InstantiateManager : MonoBehaviour
     private readonly int maxLavaBallCount = 20;
 
     private readonly List<GameObject> activeGrass = new List<GameObject>();
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -48,7 +48,7 @@ public class InstantiateManager : MonoBehaviour
     {
         Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
     }
-    
+
     public void StartSpawnGrass()
     {
         StartCoroutine(InstantiateGrass());
@@ -93,6 +93,13 @@ public class InstantiateManager : MonoBehaviour
         GameManager.Instance.mainCamera.gameObject.SetActive(true);
         //StartSpawnGrass();
         turret.gameObject.SetActive(true);
+    }
+    public void SpawnLavaBall()
+    {
+        //spawn from lavaBallSpawnPoints[0]
+        GameObject newLavaBall = Instantiate(aSetOfLavaBallPrefab, lavaBallSpawnPoints[0].position, lavaBallSpawnPoints[0].rotation).gameObject;
+        activeLavaBalls.Add(newLavaBall);
+        
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)
