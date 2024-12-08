@@ -9,7 +9,7 @@ public class EnemyFort : Enemy
     public EnemyFortShootState ShootState { get; private set; }
     public LayerMask playerLayerMask;
     public LayerMask enemyLayerMask;
-    private bool isActivated = false;
+    [SerializeField] private bool isActivated = false;
     public bool IsActivated => isActivated;
     
 

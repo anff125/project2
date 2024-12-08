@@ -111,7 +111,7 @@ public class BulletEmitter : MonoBehaviour
 
             Vector3 worldOffset = new Vector3(bulletPosX, 0, bulletPosZ);
             Vector3 offset = transform.rotation * worldOffset;
-            Vector3 fixOffset = enemyBoss.transform.rotation * worldOffset;
+            Vector3 fixOffset = enemyBoss != null ? enemyBoss.transform.rotation * worldOffset : transform.rotation * worldOffset;
             Vector3 bulletPosition = transform.position + fireRadius * offset;
 
             Transform bulletTransform = Instantiate(bulletPrefabs[bulletIndex], bulletPosition, transform.rotation);

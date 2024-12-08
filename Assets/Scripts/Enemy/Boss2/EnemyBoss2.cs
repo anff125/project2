@@ -10,6 +10,7 @@ public class EnemyBoss2 : Enemy
     public List<WeightedState> weightedStatesPhase2 = new List<WeightedState>();
     public Transform fortEnemyPrefab;
     public Transform waveBulletPrefab;
+    public Transform straightBulletPrefab;
     public Transform handPoint;
     public Transform melee;
     public bool beenParried;
@@ -37,6 +38,8 @@ public class EnemyBoss2 : Enemy
     public EnemyBoss2DanmokuWaveState DanmokuWaveState { get; private set; }
     public EnemyBoss2SpawnFortState DanmokuSpawnFortState { get; private set; }
     public EnemyBoss2FinalInitState FinalInitState { get; private set; }
+    public EnemyBoss2Last1State Last1State { get; private set; }
+    public EnemyBoss2Last2State Last2State { get; private set; }
 
     #endregion
 
@@ -63,6 +66,8 @@ public class EnemyBoss2 : Enemy
         DanmokuWaveState = new EnemyBoss2DanmokuWaveState(EnemyStateMachine);
         DanmokuSpawnFortState = new EnemyBoss2SpawnFortState(EnemyStateMachine);
         FinalInitState = new EnemyBoss2FinalInitState(EnemyStateMachine);
+        Last1State = new EnemyBoss2Last1State(EnemyStateMachine);
+        Last2State = new EnemyBoss2Last2State(EnemyStateMachine);
         beenParried = false;
         
         // weightedStates.Add(new WeightedState(MeleeState, 5f));
@@ -75,9 +80,10 @@ public class EnemyBoss2 : Enemy
         weightedStatesPhase1.Add(new WeightedState(DanmokuWaveState, 5f));
         weightedStatesPhase1.Add(new WeightedState(DanmokuSpawnFortState, 4f));
 
+        weightedStatesPhase2.Add(new WeightedState(Danmoku0State, 4f));
         weightedStatesPhase2.Add(new WeightedState(Danmoku1State, 5f));
         weightedStatesPhase2.Add(new WeightedState(Danmoku3State, 4f));
-        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 2f));
+        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 4f));
         weightedStatesPhase2.Add(new WeightedState(DanmokuWaveState, 5f));
         weightedStatesPhase2.Add(new WeightedState(DanmokuSpawnFortState, 4f));
     }

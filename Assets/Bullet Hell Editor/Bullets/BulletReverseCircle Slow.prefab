@@ -121,6 +121,9 @@ MonoBehaviour:
   shooterLayerMask:
     serializedVersion: 2
     m_Bits: 768
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
   crashEffectPrefab: {fileID: 400000, guid: 790d49b0020979340bc202bd80048693, type: 3}
   patterns0: []
   patterns1:

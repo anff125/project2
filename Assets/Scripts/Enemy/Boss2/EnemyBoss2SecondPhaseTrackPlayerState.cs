@@ -87,7 +87,7 @@ public class EnemyBoss2SecondPhaseTrackPlayerState : EnemyState
         float totalWeight = 0f;
 
         // Calculate total weight
-        foreach (var ws in _bossEnemy.weightedStatesPhase1)
+        foreach (var ws in _bossEnemy.weightedStatesPhase2)
         {
             totalWeight += ws.Weight;
         }
@@ -96,7 +96,7 @@ public class EnemyBoss2SecondPhaseTrackPlayerState : EnemyState
         float randomValue = Random.Range(0, totalWeight);
 
         // Iterate through the list and select the corresponding state
-        foreach (var ws in _bossEnemy.weightedStatesPhase1)
+        foreach (var ws in _bossEnemy.weightedStatesPhase2)
         {
             if (ws.Weight > 0 && randomValue <= ws.Weight)
             {
