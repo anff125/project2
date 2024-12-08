@@ -133,7 +133,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   canBeReflected: 0
-  maxFrozenAmount: 40
+  maxFrozenAmount: 30
   currentFrozenAmount: 0
 --- !u!1001 &869284383829032890
 PrefabInstance:

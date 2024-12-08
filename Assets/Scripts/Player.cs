@@ -530,7 +530,6 @@ public class Player : MonoBehaviour, IDamageable
                 // Obstacle detected, dash to the hit point
                 dashTarget = hitInfo.point - moveDir.normalized * playerRadius * 1.5f;
             }
-            dashTarget.y = 0;
             transform.position = dashTarget;
             dashOnCooldown = true;
             dashTimer = dashCooldown;
@@ -625,15 +624,11 @@ public class Player : MonoBehaviour, IDamageable
                 // Project the attacker's forward direction onto the XZ plane
                 Vector3 attackerForwardXZ = new Vector3(attacker.forward.x, 0, attacker.forward.z).normalized;
 
-// Project the direction to the target onto the XZ plane
+                // Project the direction to the target onto the XZ plane
                 Vector3 directionToTargetXZ = new Vector3(directionToTarget.x, 0, directionToTarget.z).normalized;
 
-// Calculate the angle on the XZ plane
+                // Calculate the angle on the XZ plane
                 float angleToTargetXZ = Vector3.Angle(attackerForwardXZ, directionToTargetXZ);
-
-                Debug.Log("angleToTargetXZ: " + angleToTargetXZ);
-
-
                 if (angleToTargetXZ <= parameters.angle)
                 {
                     IDamageable.Damage damage = new IDamageable.Damage(parameters.damage, parameters.elementType, Instance.transform);

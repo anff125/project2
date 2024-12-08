@@ -36,8 +36,15 @@ public class BarUI : MonoBehaviour
 
     private void HasIDamageableOnHealthChanged(object sender, IDamageable.OnHealthChangedEventArgs e)
     {
+        if (e.healthNormalized > 0)
+        {
+            Show();
+        }
         healthBarImage.fillAmount = e.healthNormalized;
-        
+        if (e.healthNormalized <= 0)
+        {
+            Hide();
+        }
     }
 
     private void Show()

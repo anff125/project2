@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
+    [SerializeField] public Animator animator;
     public static List<Enemy> ActiveEnemies = new List<Enemy>();
     public bool IsAlliedWithPlayer { get; private set; }
     [SerializeField] public Transform exclamationMark;
@@ -26,7 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private bool _isFrozen;
     public bool IsFrozen => _isFrozen;
     private Coroutine _freezeCoroutine;
-
+    private Coroutine _dieCoroutine;
     public event Action<GameObject> OnEnemyDestroyed;
 
     public event EventHandler<IDamageable.OnHealthChangedEventArgs> OnHealthChange;
@@ -42,6 +43,15 @@ public class Enemy : MonoBehaviour, IDamageable
         ElementType elementType = damage.ElementType;
 
         // If the enemy is frozen and takes fire damage, unfreeze and reset frozen amount
+        // Check if health drops to zero or below
+        if (currentHealth <= 0)
+        {
+            if (_dieCoroutine == null)
+            {
+                _dieCoroutine = StartCoroutine(Die());
+            }
+            return;
+        }
         if (_isFrozen && elementType == ElementType.Fire)
         {
             if (_freezeCoroutine != null) StopCoroutine(_freezeCoroutine);
@@ -68,11 +78,6 @@ public class Enemy : MonoBehaviour, IDamageable
             healthNormalized = (float)currentHealth / maxHealth
         });
 
-        // Check if health drops to zero or below
-        if (currentHealth <= 0)
-        {
-            StartCoroutine(Die());
-        }
     }
 
     private void TakeFrozenProgress(float frozenProgress)
@@ -124,10 +129,15 @@ public class Enemy : MonoBehaviour, IDamageable
     private IEnumerator Die()
     {
         yield return null;
-
         OnEnemyDestroyed?.Invoke(gameObject);
         ActiveEnemies.Remove(this);
-        
+        _isFrozen = true;
+        Debug.Log("Enemy destroyed");
+        if (animator != null)
+        {
+            animator.SetBool("isDead", true);
+            yield return new WaitForSeconds(1f);
+        }
         Destroy(gameObject);
     }
 
