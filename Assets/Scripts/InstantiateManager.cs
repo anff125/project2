@@ -49,25 +49,18 @@ public class InstantiateManager : MonoBehaviour
         Instantiate(waterPrefab, spawnPoint, Quaternion.identity);
     }
 
-    public void StartSpawnGrass()
+    public Transform StartSpawnGrass(Vector3 spawnPoint)
     {
-        StartCoroutine(InstantiateGrass());
+        return Instantiate(grassPrefab, spawnPoint, Quaternion.identity);
     }
+
 
     public void StartLavaBallStage()
     {
         StartCoroutine(InstantiateLavaBall());
     }
 
-    private IEnumerator InstantiateGrass()
-    {
-        while (true)
-        {
-            Vector3 randomPosition = new Vector3(Random.Range(-fieldBoundaryX, fieldBoundaryX), 0, Random.Range(-fieldBoundaryY, fieldBoundaryY));
-            Instantiate(grassPrefab, randomPosition, Quaternion.identity);
-            yield return new WaitForSeconds(3f);
-        }
-    }
+
 
     private IEnumerator InstantiateLavaBall()
     {
@@ -99,7 +92,7 @@ public class InstantiateManager : MonoBehaviour
         //spawn from lavaBallSpawnPoints[0]
         GameObject newLavaBall = Instantiate(aSetOfLavaBallPrefab, lavaBallSpawnPoints[0].position, lavaBallSpawnPoints[0].rotation).gameObject;
         activeLavaBalls.Add(newLavaBall);
-        
+
     }
 
     private List<Transform> GetRandomSpawnPoints(int count)

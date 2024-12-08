@@ -11,6 +11,7 @@ public class EnemyShotgunShootState : EnemyState
         base.Enter();
         SetStateChangeCooldown(.3f);
         // Activate the exclamation mark image 0.1 seconds before shooting
+        EnemyStateMachine.Enemy.animator.SetBool("isAttack", true);
         EnemyStateMachine.Enemy.exclamationMark.gameObject.SetActive(true);
         EnemyStateMachine.Enemy.StartCoroutine(ShootWithDelay(0.3f));
     }
@@ -31,6 +32,7 @@ public class EnemyShotgunShootState : EnemyState
             Vector3 bulletDirection = Quaternion.Euler(0, -30 + i * 15, 0) * direction;
             bullet.GetComponent<Bullet>().SetBulletProperty(bulletDirection, 10, 1f);
         }
+        EnemyStateMachine.Enemy.animator.SetBool("isAttack", false);
     }
 
     public override void Update()

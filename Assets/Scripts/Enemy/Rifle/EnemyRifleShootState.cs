@@ -8,7 +8,7 @@ public class EnemyRifleShootState : EnemyState
     private float _shootingTimer = 0f; // Cooldown timer
     private readonly float _shootingInterval; // Interval between shots
     private bool CanShoot => _shootingTimer <= 0;
-
+    EnemyRifle rifleEnemy;
     // Add the shooting interval as a parameter in the constructor
     public EnemyRifleShootState(EnemyStateMachine enemyStateMachine, float shootingInterval = 0.2f) : base(enemyStateMachine)
     {
@@ -18,13 +18,15 @@ public class EnemyRifleShootState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        rifleEnemy = EnemyStateMachine.Enemy as EnemyRifle;
+        if (rifleEnemy != null)
+            rifleEnemy.animator.SetBool("isAttack", true);
         _bulletsToShoot = 5;
     }
 
     public override void Update()
     {
         base.Update();
-        EnemyRifle rifleEnemy = EnemyStateMachine.Enemy as EnemyRifle;
         if (_bulletsToShoot <= 0 && rifleEnemy != null)
         {
             EnemyStateMachine.ChangeState(rifleEnemy.TrackPlayerState);
@@ -54,5 +56,6 @@ public class EnemyRifleShootState : EnemyState
     public override void Exit()
     {
         base.Exit();
+        rifleEnemy.animator.SetBool("isAttack", false);
     }
 }
