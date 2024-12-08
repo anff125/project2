@@ -39,7 +39,11 @@ public class EnemyBoss2Danmoku3State : EnemyState
         base.Update();
 
         if (EnemyStateMachine.EnemyBoss2 != null){
-            if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
+            if (EnemyStateMachine.EnemyBoss2.InThirdPhase)
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.ThirdPhaseTrackPlayerState);
+            }
+            else if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
             {
                 EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.SecondPhaseTrackPlayerState);
             }

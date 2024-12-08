@@ -312,11 +312,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3641ace00e2bf1c41b98947f9a6e1bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   exclamationMark: {fileID: 4342037442645072547}
   bulletPrefab: {fileID: 6426461843540707049, guid: 9d744cbc1218ef7489e02deb6f802831,
     type: 3}
   speed: 5
-  maxHealth: 4000
+  maxHealth: 3500
   maxFrozenAmount: 100
   frozenTime: 3
   moveDistance: 1

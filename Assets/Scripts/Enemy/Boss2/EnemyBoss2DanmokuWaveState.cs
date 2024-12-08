@@ -12,8 +12,8 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
     private const float bulletSpawnRate = 0.2f; // Time between bullet spawns within a wave
     private const float waveDuration = 3f; // Duration for which each wave spawns bullets
     private const float waveOffsetZ = 5f; // Offset between each wave's Z position
-    private const float startZ = 25f; // Starting Z position
-    private const float minZ = -25f; // Minimum Z position before stopping
+    private const float startZ = 20f; // Starting Z position
+    private const float minZ = -20f; // Minimum Z position before stopping
 
 
 
@@ -51,8 +51,8 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
         while (currentZ >= minZ)
         {
             // Start a new wave
-            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(25, 0, currentZ), new Vector3(-1, 0, 0)));
-            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(-currentZ, 0, -25), new Vector3(0, 0, 1)));
+            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(20, 0.5f, currentZ), new Vector3(-1, 0, 0)));
+            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(-currentZ, 0.5f, -20), new Vector3(0, 0, 1)));
 
             // Update position for the next wave
             currentZ -= waveOffsetZ;
@@ -63,7 +63,11 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
         yield return new WaitForSeconds(endingWaitSeconds);
 
         if (EnemyStateMachine.EnemyBoss2 != null){
-            if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
+            if (EnemyStateMachine.EnemyBoss2.InThirdPhase)
+            {
+                EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.ThirdPhaseTrackPlayerState);
+            }
+            else if (EnemyStateMachine.EnemyBoss2.InSecondPhase)
             {
                 EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.SecondPhaseTrackPlayerState);
             }

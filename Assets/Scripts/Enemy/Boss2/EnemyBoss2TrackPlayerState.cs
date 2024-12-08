@@ -69,12 +69,12 @@ public class EnemyBoss2TrackPlayerState : EnemyState
         // Circle around at a distance of 4 units
         CircleAroundPlayer(playerPosition, 4f);  
         
-        if (_bossEnemy.currentHealth <= _bossEnemy.maxHealth / 2)
+        if (_bossEnemy.currentHealth <= _bossEnemy.maxHealth * 0.67)
         {
             _bossEnemy.TurnToSecondPhase();
             var position = new Vector3(0, 0, 0);
             // _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.SecondPhaseInitState);
-            _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.FinalInitState);
+            _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.Danmoku5State);
             EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
             return;
         }

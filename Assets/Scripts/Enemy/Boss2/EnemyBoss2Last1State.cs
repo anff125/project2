@@ -57,7 +57,7 @@ public class EnemyBoss2Last1State : EnemyState
 
         if (!isPlaying)
         {
-            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.Last2State);
+            EnemyStateMachine.ChangeState(EnemyStateMachine.EnemyBoss2.ThirdPhaseTrackPlayerState);
         }
     }
 

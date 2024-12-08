@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBoss2SecondPhaseTrackPlayerState : EnemyState
+public class EnemyBoss2ThirdPhaseTrackPlayerState : EnemyState
 {
-    public EnemyBoss2SecondPhaseTrackPlayerState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
+    public EnemyBoss2ThirdPhaseTrackPlayerState(EnemyStateMachine enemyStateMachine) : base(enemyStateMachine) { }
     private EnemyBoss2 _bossEnemy;
     private float timeTrackingPlayer;
     private float circleAngle = 0f;
@@ -68,16 +68,6 @@ public class EnemyBoss2SecondPhaseTrackPlayerState : EnemyState
 
         // Circle around at a distance of 4 units
         CircleAroundPlayer(playerPosition, 4f);  
-        
-        if (_bossEnemy.currentHealth <= _bossEnemy.maxHealth * 0.33)
-        {
-            _bossEnemy.TurnToThirdPhase();
-            var position = new Vector3(0, 0, 0);
-            // _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.SecondPhaseInitState);
-            _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.Last0State);
-            EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
-            return;
-        }
 
         if (randomState != null)
         {

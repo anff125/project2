@@ -8,8 +8,8 @@ public class EnemyBoss2Last2State : EnemyState
     private EnemyBoss2 _bossEnemy;
     private const float BULLET_SPAWN_INTERVAL = 0.05f; // Time delay between bullet spawns
     private const float BULLET_SPEED = 30f; // Bullet movement speed
-    private const int WALL_START_Z = 20;
-    private const int WALL_END_Z = -20;
+    private const int WALL_START_Z = 18;
+    private const int WALL_END_Z = -18;
 
     public override void Enter()
     {
@@ -36,10 +36,10 @@ public class EnemyBoss2Last2State : EnemyState
         {
             for (int z = WALL_START_Z; z >= WALL_END_Z; z--)
             {
-                Vector3 spawnPosition1 = new Vector3(20, 0, z);
-                Vector3 spawnPosition2 = new Vector3(-20, 0, -z);
-                Vector3 spawnPosition3 = new Vector3(-z, 0, 20);
-                Vector3 spawnPosition4 = new Vector3(z, 0, -20);
+                Vector3 spawnPosition1 = new Vector3(WALL_START_Z, 0, z);
+                Vector3 spawnPosition2 = new Vector3(-WALL_START_Z, 0, -z);
+                Vector3 spawnPosition3 = new Vector3(-z, 0, WALL_START_Z);
+                Vector3 spawnPosition4 = new Vector3(z, 0, -WALL_START_Z);
                 Vector3 direction1 = spawnPosition2.normalized;
                 Vector3 direction2 = spawnPosition1.normalized;
                 Vector3 direction3 = spawnPosition4.normalized;
@@ -66,6 +66,6 @@ public class EnemyBoss2Last2State : EnemyState
             }
         }
         // After all bullets are spawned, return to another state
-        EnemyStateMachine.ChangeState(_bossEnemy.SecondPhaseTrackPlayerState);
+        EnemyStateMachine.ChangeState(_bossEnemy.Last1State);
     }    
 }
