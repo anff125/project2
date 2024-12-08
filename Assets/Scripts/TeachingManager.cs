@@ -11,6 +11,8 @@ public class TeachingManager : MonoBehaviour
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private Transform grass;
     [SerializeField] private Transform grassSpawnPoint;
+    [SerializeField] private Transform image1;
+    [SerializeField] private Transform image2;
     private bool isBlockTaught;
     private bool isMoveTaught;
     private bool isMainAttackTaught;
@@ -21,6 +23,8 @@ public class TeachingManager : MonoBehaviour
 
     private void Start()
     {
+        //pause the game
+        Time.timeScale = 0;
         StartCoroutine(SpawnLavaBall());
     }
 
@@ -65,5 +69,9 @@ public class TeachingManager : MonoBehaviour
     public void respawnPlayer()
     {
         player.position = respawnPoint.position;
+    }
+    public void StartGame()
+    {
+        Time.timeScale = 1;
     }
 }
