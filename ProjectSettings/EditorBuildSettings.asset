@@ -6,11 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Anff125_InitScene.unity
-    guid: 886b6c122ad729747a2cddb1799d409f
+    path: Assets/Scenes/Anff125_InitScene2.unity
+    guid: 9bb174bd12ec7404eb57d5d53a0a7243
+  - enabled: 1
+    path: Assets/Scenes/Anff125_level1.unity
+    guid: 4534e83d35b26764286a99bda61a0a5c
+  - enabled: 1
+    path: Assets/Scenes/Anff125_level2.unity
+    guid: 70328c5f0d9b30346a4a498db4f5b9b2
   - enabled: 1
     path: Assets/Scenes/Anff125_BossScene.unity
     guid: 20bb76cf9cff13d45a818dd9b3d049c5
+  - enabled: 1
+    path: Assets/Scenes/Anff125_InitScene.unity
+    guid: 886b6c122ad729747a2cddb1799d409f
   - enabled: 1
     path: Assets/Scenes/Anff125_PlayGroundScene.unity
     guid: 888904a447bace34191d87683ab6f4df

@@ -20,6 +20,8 @@ public class EnemyElementalBossShootState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        _bossEnemy.animator.SetBool("isNormalAttack", true);
+
         // float angle = Random.Range(0f, 360f);
         // Vector3 randomPosition = Player.Instance.transform.position + new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * 10f;
         //_enemyElementalBoss.StartCoroutine(_enemyElementalBoss.MoveToPosition(randomPosition));
@@ -129,6 +131,7 @@ public class EnemyElementalBossShootState : EnemyState
     public override void Exit()
     {
         base.Exit();
+        _bossEnemy.animator.SetBool("isNormalAttack", false);
         EnemyStateMachine.EnemyElementalBoss.meleeCount = 0;
 
     }
