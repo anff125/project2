@@ -38,17 +38,34 @@ public class EnemyElementalBossMoveToState : EnemyState
 
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             _bossEnemy.transform.rotation = Quaternion.Slerp(_bossEnemy.transform.rotation, lookRotation, Time.deltaTime * 5f);
-            bool canMove = !Physics.BoxCast(
+
+            // Calculate intended movement
+            Vector3 nextPosition = Vector3.Lerp(startPosition, _targetPosition, elapsedTime / TIME);
+            Vector3 movementDelta = nextPosition - _bossEnemy.transform.position;
+
+            // Check for collision along the movement path
+            RaycastHit hitInfo;
+            bool hit = Physics.BoxCast(
                 _bossEnemy.transform.position,
-                Vector3.one,
-                direction,
+                _bossEnemy.transform.localScale * 1.5f / 2, // Adjust size to fit enemy's collider
+                movementDelta.normalized,
+                out hitInfo,
                 Quaternion.identity,
-                _bossEnemy.moveDistance,
+                movementDelta.magnitude,
                 _bossEnemy.collisionLayerMask);
 
-            if (canMove)
+            if (hit)
             {
-                _bossEnemy.transform.position = Vector3.Lerp(startPosition, _targetPosition, elapsedTime / TIME);
+                Debug.Log("Hit detected");
+                // If a hit is detected, move only to the collision point
+                //_bossEnemy.transform.position = hitInfo.point - movementDelta.normalized; // Offset to avoid overlap
+                EnemyStateMachine.ChangeState(_nextState);
+                return;
+            }
+            else
+            {
+                // If no collision, move normally
+                _bossEnemy.transform.position = nextPosition;
             }
             elapsedTime += Time.deltaTime;
 

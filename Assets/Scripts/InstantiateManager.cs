@@ -85,7 +85,7 @@ public class InstantiateManager : MonoBehaviour
         }
         GameManager.Instance.mainCamera.gameObject.SetActive(true);
         //StartSpawnGrass();
-        turret.gameObject.SetActive(true);
+        //turret.gameObject.SetActive(true);
     }
     public void SpawnLavaBall()
     {

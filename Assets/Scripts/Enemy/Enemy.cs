@@ -126,7 +126,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
 
-    private IEnumerator Die()
+    public IEnumerator Die()
     {
         yield return null;
         OnEnemyDestroyed?.Invoke(gameObject);

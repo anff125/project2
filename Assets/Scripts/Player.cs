@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IDamageable
 {
+    [FormerlySerializedAs("footstepController"), SerializeField]
+    private AudioManager audioManager;
     [SerializeField] private LayerMask collisionLayerMask;
     [SerializeField] private int maxHealth;
 
@@ -46,7 +48,13 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (isInvincible) return; // Ignore damage if already invincible
 
-        _currentHealth -= damage.Amount;
+        float damageAmount = damage.Amount;
+        if (damage.ElementType == ElementType.Fire)
+        {
+            damageAmount *= .1f;
+        }
+        _currentHealth -= damageAmount;
+
         OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangedEventArgs
         {
             healthNormalized = _currentHealth / maxHealth
@@ -411,6 +419,7 @@ public class Player : MonoBehaviour, IDamageable
         animationControlScript.SetAimingLayerWeight(1f);
         if (buttonState == AttackButtonState.Both)
         {
+            audioManager.PlayAttack(3);
             StopAttacking();
             createWaterParameters.effect.Play();
             _createWaterCooldown = 1f;
@@ -418,6 +427,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         else if (buttonState == AttackButtonState.Left)
         {
+            audioManager.PlayAttack(1);
             isAttacking = true;
             moveSpeed = maxMoveSpeed * .25f;
             AdjustAttackEffect(mainAttackParameters);
@@ -426,6 +436,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         else if (buttonState == AttackButtonState.Right)
         {
+            audioManager.PlayAttack(2);
             isAttacking = true;
             moveSpeed = maxMoveSpeed * .25f;
             AdjustAttackEffect(secondaryAttackParameters);
@@ -453,6 +464,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (buttonState == AttackButtonState.None)
         {
+            audioManager.StopAttack();
             isAttacking = false;
             moveSpeed = maxMoveSpeed;
             StopCoroutine(currentAttackCoroutine);
@@ -550,7 +562,14 @@ public class Player : MonoBehaviour, IDamageable
     {
         Vector2 move = GameInput.Instance.GetMovementVector();
         Vector3 moveDir = new Vector3(move.x, 0, move.y);
-
+        if (moveDir != Vector3.zero)
+        {
+            audioManager.StartWalking();
+        }
+        else
+        {
+            audioManager.StopWalking();
+        }
         var moveDistance = (moveSpeed * Time.deltaTime);
         float playerRadius = 0.7f;
         bool canMove = !Physics.BoxCast(transform.position + Vector3.up, Vector3.one * .5f,

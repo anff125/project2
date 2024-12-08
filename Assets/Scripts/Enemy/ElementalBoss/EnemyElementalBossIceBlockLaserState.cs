@@ -26,7 +26,7 @@ public class EnemyElementalBossIceBlockLaserState : EnemyState
     {
         base.Enter();
         SetStateChangeCooldown(_laserDuration);
-
+        _bossEnemy.animator.SetBool("isSpecialAttack", true);
         // Instantiate the IceBlock at the player's position, facing the boss
         Vector3 playerPosition = Player.Instance.GetPlayerPositionOnPlane();
         Vector3 directionToBoss = (_bossEnemy.transform.position - playerPosition).normalized;
@@ -121,6 +121,7 @@ public class EnemyElementalBossIceBlockLaserState : EnemyState
     public override void Exit()
     {
         base.Exit();
+        _bossEnemy.animator.SetBool("isSpecialAttack", false);
         EnemyStateMachine.EnemyElementalBoss.meleeCount = 0;
         // Clean up the laser and ice block
         if (_laserLine != null) GameObject.Destroy(_laserLine.gameObject);

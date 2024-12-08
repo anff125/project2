@@ -13,9 +13,10 @@ public class EnemyElementalBossMeleeState : EnemyState
     public override void Enter()
     {
         base.Enter();
-
+        
         SetStateChangeCooldown(delay + .1f);
         _bossEnemy = EnemyStateMachine.Enemy as EnemyElementalBoss;
+        _bossEnemy.animator.SetBool("isNormalAttack", true);
         EnemyStateMachine.EnemyElementalBoss.exclamationMark.gameObject.SetActive(true);
         EnemyStateMachine.EnemyElementalBoss.StartCoroutine(ShootWithDelay());
         EnemyStateMachine.EnemyElementalBoss.meleeCount++;
@@ -63,5 +64,7 @@ public class EnemyElementalBossMeleeState : EnemyState
     public override void Exit()
     {
         base.Exit();
+        _bossEnemy.animator.SetBool("isNormalAttack", false);
+
     }
 }

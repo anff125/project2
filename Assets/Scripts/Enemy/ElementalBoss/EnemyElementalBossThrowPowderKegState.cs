@@ -14,6 +14,8 @@ public class EnemyElementalBossThrowPowderKegState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        _bossEnemy.animator.SetBool("isSpecialAttack", true);
+
     }
 
     public override void Update()
@@ -30,6 +32,7 @@ public class EnemyElementalBossThrowPowderKegState : EnemyState
     public override void Exit()
     {
         base.Exit();
+        _bossEnemy.animator.SetBool("isSpecialAttack", false);
 
 
     }

@@ -9,7 +9,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
     [SerializeField] private ParticleSystem explosionParticleSystem;
     [SerializeField] private Transform visual;
     [SerializeField] private Transform damageVisualSupport;
-
+    private float _dealDamage = 20f;
     public void TakeDamage(IDamageable.Damage damage)
     {
         ElementType elementType = damage.ElementType;
@@ -85,7 +85,7 @@ public class PowderKeg : MonoBehaviour, IDamageable
             IDamageable damageable = colliderTMP.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                IDamageable.Damage damage = new IDamageable.Damage(10, ElementType.Fire, transform);
+                IDamageable.Damage damage = new IDamageable.Damage(_dealDamage, ElementType.Fire, transform);
                 damageable.TakeDamage(damage);
             }
         }
