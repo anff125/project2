@@ -51,8 +51,8 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
         while (currentZ >= minZ)
         {
             // Start a new wave
-            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(20, 0.5f, currentZ), new Vector3(-1, 0, 0)));
-            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(-currentZ, 0.5f, -20), new Vector3(0, 0, 1)));
+            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(20, 0, currentZ), new Vector3(-1, 0, 0)));
+            _bossEnemy.StartCoroutine(SpawnBulletsAtPosition(new Vector3(-currentZ, 0, -20), new Vector3(0, 0, 1)));
 
             // Update position for the next wave
             currentZ -= waveOffsetZ;

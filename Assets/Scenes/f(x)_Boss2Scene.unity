@@ -7168,7 +7168,7 @@ PrefabInstance:
     - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
         type: 3}
       propertyPath: shieldDuration
-      value: 2
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
         type: 3}
