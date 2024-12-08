@@ -6,7 +6,9 @@ public class BossFightManager : MonoBehaviour
 {
     [SerializeField] private Transform Boss;
     [SerializeField] private Transform Ending;
-    [SerializeField]private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private bool forNextLevel;
+    [SerializeField] private string level;
     private bool Endingshow = false;
     // Start is called before the first frame update
     void Start() { }
@@ -16,7 +18,15 @@ public class BossFightManager : MonoBehaviour
     {
         if (Boss == null && Endingshow == false)
         {
-            StartCoroutine(ShowEnding());
+            if (forNextLevel)
+            {
+                //load next level
+                SceneLoader.Instance.LoadLevel(level);
+            }
+            else
+            {
+                StartCoroutine(ShowEnding());
+            }
         }
     }
     

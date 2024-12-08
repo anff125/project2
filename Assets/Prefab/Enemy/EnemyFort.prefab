@@ -179,13 +179,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08bfce2a4ea4ad4397778403c1d9358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   exclamationMark: {fileID: 8152834549754732145}
   bulletPrefab: {fileID: 5039823218128439911, guid: 546cf5d3cac4a354487a4ebca96d0c6d,
     type: 3}
-  _bulletWhenAllied: {fileID: 5039823218128439911, guid: fd244db2ad4d3be42b6db60a427482b2,
-    type: 3}
   speed: 5
-  maxHealth: 250
+  maxHealth: 150
   maxFrozenAmount: 500
   frozenTime: 3
   moveDistance: 0
@@ -201,6 +200,7 @@ MonoBehaviour:
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  isActivated: 0
 --- !u!1001 &2782929719124881966
 PrefabInstance:
   m_ObjectHideFlags: 0
