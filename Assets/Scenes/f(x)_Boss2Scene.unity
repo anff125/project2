@@ -8291,6 +8291,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
         type: 3}
+      propertyPath: maxHealth
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
+        type: 3}
       propertyPath: dashCooldownUI
       value: 
       objectReference: {fileID: 521742134}
@@ -18518,7 +18523,7 @@ PrefabInstance:
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}
       propertyPath: maxHealth
-      value: 3000
+      value: 2500
       objectReference: {fileID: 0}
     - target: {fileID: 2260764569587024048, guid: 852577939d0cd9945968006e62648eac,
         type: 3}

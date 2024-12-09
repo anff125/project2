@@ -111,9 +111,9 @@ public class EnemyBoss2 : Enemy
         weightedStatesPhase2.Add(new WeightedState(Danmoku1State, 3f));
         weightedStatesPhase1.Add(new WeightedState(Danmoku2State, 4f));
         weightedStatesPhase2.Add(new WeightedState(Danmoku3State, 3f));
-        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 3f));
+        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 2f));
         weightedStatesPhase2.Add(new WeightedState(DanmokuWaveState, 4f));
-        weightedStatesPhase2.Add(new WeightedState(DanmokuSpawnFortState, 4f));
+        weightedStatesPhase2.Add(new WeightedState(DanmokuSpawnFortState, 3f));
     }
     protected override void Start()
     {

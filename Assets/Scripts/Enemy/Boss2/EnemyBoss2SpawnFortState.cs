@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyBoss2SpawnFortState : EnemyState
 {
     private EnemyBoss2 _bossEnemy;
-    private float spawnRange = 8f;
+    private float spawnRange = 7f;
     private int numberOfEnemies = 2;
     private float throwDuration = 1f; // Duration for the throw
     private Vector3[] targetPositions;
@@ -24,6 +24,10 @@ public class EnemyBoss2SpawnFortState : EnemyState
             float offsetX = Random.Range(-spawnRange, spawnRange);
             float offsetZ = Random.Range(-spawnRange, spawnRange);
             targetPositions[i] = _bossEnemy.transform.position + new Vector3(offsetX, 0, offsetZ);
+            if (targetPositions[i].x <= -18)    targetPositions[i].x = -18;
+            if (targetPositions[i].x >=  18)    targetPositions[i].x =  18;
+            if (targetPositions[i].y <= -18)    targetPositions[i].y = -18;
+            if (targetPositions[i].y >=  18)    targetPositions[i].y =  18;
         }
 
         // Start the throwing process
