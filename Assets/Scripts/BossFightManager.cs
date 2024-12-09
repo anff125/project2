@@ -6,9 +6,9 @@ public class BossFightManager : MonoBehaviour
 {
     [SerializeField] private Transform Boss;
     [SerializeField] private Transform Ending;
+    [SerializeField] private Transform Victory;
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private bool forNextLevel;
-    [SerializeField] private string level;
+    public List<Transform> spawnedEnemies = new List<Transform>();
     private bool Endingshow = false;
     // Start is called before the first frame update
     void Start() { }
@@ -18,16 +18,28 @@ public class BossFightManager : MonoBehaviour
     {
         if (Boss == null && Endingshow == false)
         {
-            if (forNextLevel)
+            for (int i = 0; i < spawnedEnemies.Count; i++)
             {
-                //load next level
-                SceneLoader.Instance.LoadLevel(level);
+                if (spawnedEnemies[i] != null)
+                {
+                    spawnedEnemies[i].gameObject.SetActive(false);
+                }
             }
-            else
+
+            StartCoroutine(ShowVictory());
+        }
+    }
+
+    public void TrackSpawnedEnemies(Transform enemy)
+    {
+        for (int i = 0; i < spawnedEnemies.Count; i++)
+        {
+            if (spawnedEnemies[i] == null)
             {
-                StartCoroutine(ShowEnding());
+                spawnedEnemies.RemoveAt(i);
             }
         }
+        spawnedEnemies.Add(enemy);
     }
     
     IEnumerator ShowEnding()
@@ -35,6 +47,14 @@ public class BossFightManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         Endingshow = true;
         Ending.gameObject.SetActive(true);
+        audioSource.Stop();
+    }
+
+    IEnumerator ShowVictory()
+    {
+        yield return new WaitForSeconds(2);
+        Endingshow = true;
+        Victory.gameObject.SetActive(true);
         audioSource.Stop();
     }
 }

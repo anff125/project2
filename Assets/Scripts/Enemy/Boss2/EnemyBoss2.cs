@@ -8,9 +8,11 @@ public class EnemyBoss2 : Enemy
     public List<BulletEmitter> bulletEmitters = new List<BulletEmitter>();
     public List<WeightedState> weightedStatesPhase1 = new List<WeightedState>();
     public List<WeightedState> weightedStatesPhase2 = new List<WeightedState>();
+    public BossFightManager bossFightManager;
     public Transform fortEnemyPrefab;
     public Transform waveBulletPrefab;
     public Transform straightBulletPrefab;
+    public Transform sphereShield;
     public Transform handPoint;
     public Transform melee;
     public bool beenParried;
@@ -22,6 +24,8 @@ public class EnemyBoss2 : Enemy
     private bool inThirdPhase = false;
     public bool InSecondPhase => inSecondPhase;
     public bool InThirdPhase => inThirdPhase;
+    private bool isInvincible = false;
+    public bool IsInvincible => isInvincible;
 
     #region States
 
@@ -53,7 +57,20 @@ public class EnemyBoss2 : Enemy
     }
      public void TurnToThirdPhase()
     {
+        inSecondPhase = false;
         inThirdPhase = true;
+    }
+    public void SetInvincibility(bool invincible)
+    {
+        isInvincible = invincible;
+        if (invincible)
+        {
+            sphereShield.gameObject.SetActive(true);
+        }
+        else
+        {
+            sphereShield.gameObject.SetActive(false);
+        }
     }
 
     protected override void Awake()
@@ -88,13 +105,13 @@ public class EnemyBoss2 : Enemy
         weightedStatesPhase1.Add(new WeightedState(Danmoku2State, 4f));
         weightedStatesPhase1.Add(new WeightedState(Danmoku3State, 2f));
         weightedStatesPhase1.Add(new WeightedState(DanmokuWaveState, 4f));
-        weightedStatesPhase1.Add(new WeightedState(DanmokuSpawnFortState, 5f));
+        weightedStatesPhase1.Add(new WeightedState(DanmokuSpawnFortState, 3f));
 
         weightedStatesPhase2.Add(new WeightedState(Danmoku0State, 3f));
         weightedStatesPhase2.Add(new WeightedState(Danmoku1State, 3f));
-        weightedStatesPhase1.Add(new WeightedState(Danmoku2State, 3f));
+        weightedStatesPhase1.Add(new WeightedState(Danmoku2State, 4f));
         weightedStatesPhase2.Add(new WeightedState(Danmoku3State, 3f));
-        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 4f));
+        weightedStatesPhase2.Add(new WeightedState(Danmoku5State, 3f));
         weightedStatesPhase2.Add(new WeightedState(DanmokuWaveState, 4f));
         weightedStatesPhase2.Add(new WeightedState(DanmokuSpawnFortState, 4f));
     }
@@ -121,5 +138,17 @@ public class EnemyBoss2 : Enemy
             return;
         }
         EnemyStateMachine.CurrentEnemyState.Update();
+    }
+
+    public override void TakeDamage(IDamageable.Damage damage)
+    {
+        if (isInvincible)
+            return;
+
+        if (currentHealth <= 0)
+        {
+
+        }
+        base.TakeDamage(damage);
     }
 }

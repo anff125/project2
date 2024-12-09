@@ -71,6 +71,7 @@ public class EnemyBoss2SecondPhaseTrackPlayerState : EnemyState
         
         if (_bossEnemy.currentHealth <= _bossEnemy.maxHealth * 0.33)
         {
+            ResetWeightedStates();
             _bossEnemy.TurnToThirdPhase();
             var position = new Vector3(0, 0, 0);
             // _bossEnemy.MoveToState.SetupMoveToState(position, _bossEnemy.SecondPhaseInitState);

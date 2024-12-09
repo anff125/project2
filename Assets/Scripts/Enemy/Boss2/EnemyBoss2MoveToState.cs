@@ -17,6 +17,7 @@ public class EnemyBoss2MoveToState : EnemyState
         SetStateChangeCooldown(TIME);
         _bossEnemy = EnemyStateMachine.Enemy as EnemyBoss2;
         elapsedTime = 0f;
+        _bossEnemy.animator.SetBool("isShift", true);
     }
 
     public override void Update()
@@ -45,6 +46,7 @@ public class EnemyBoss2MoveToState : EnemyState
         }
         else
         {
+            _bossEnemy.animator.SetBool("isShift", false);
             EnemyStateMachine.ChangeState(_nextState);
         }
     }

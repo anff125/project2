@@ -9,7 +9,6 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] public Animator animator;
-    public static List<Enemy> ActiveEnemies = new List<Enemy>();
     public bool IsAlliedWithPlayer { get; private set; }
     [SerializeField] public Transform exclamationMark;
     [SerializeField] public Transform bulletPrefab;
@@ -116,12 +115,11 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHealth = maxHealth;
         currentFrozenAmount = 0;
         _isFrozen = false;
-        ActiveEnemies.Add(this);
     }
     protected virtual void Start() { }
     protected virtual void Update()
     {
-        if (_isFrozen) return;
+        if (_isFrozen || EnemyStateMachine == null) return;
         EnemyStateMachine.CurrentEnemyState.Update();
     }
 
@@ -130,7 +128,6 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         yield return null;
         OnEnemyDestroyed?.Invoke(gameObject);
-        ActiveEnemies.Remove(this);
         _isFrozen = true;
         Debug.Log("Enemy destroyed");
         if (animator != null)

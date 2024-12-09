@@ -26,6 +26,7 @@ public class EnemyBoss2Last1State : EnemyState
         // Play the animation without delay
         EnemyStateMachine.EnemyBoss2.bulletEmitters[0].animator.Play("AnimationDanmoku4");
         EnemyStateMachine.EnemyBoss2.bulletEmitters[1].animator.Play("AnimationDanmoku4_3");
+        _bossEnemy.animator.SetBool("isAttack", true);
 
         // Wait for the exact duration of the animation before starting the next iteration
         yield return new WaitForSeconds(clipLength);
@@ -64,6 +65,9 @@ public class EnemyBoss2Last1State : EnemyState
     public override void Exit()
     {
         base.Exit();
+
+        _bossEnemy.animator.SetBool("isAttack", false);
+        _bossEnemy.SetInvincibility(false);
 
         // foreach (var emitter in EnemyStateMachine.EnemyBoss2.bulletEmitters)
         // {

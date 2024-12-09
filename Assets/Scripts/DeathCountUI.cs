@@ -7,6 +7,7 @@ using UnityEngine;
 public class DeathCountUI : MonoBehaviour
 {
     [SerializeField] TMP_Text deathCountText;
+    [SerializeField] private Transform retry;
     private int deathCount = 0;
     private void Start()
     {
@@ -14,8 +15,11 @@ public class DeathCountUI : MonoBehaviour
     }
     private void OnDeathCountChanged(object sender, EventArgs e)
     {
-        deathCountText.text = "Death Count: " + deathCount++;
-
+        // deathCountText.text = "Death Count: " + deathCount++;
+        if (retry != null)
+        {
+            retry.gameObject.SetActive(true);
+        }
     }
 
 }

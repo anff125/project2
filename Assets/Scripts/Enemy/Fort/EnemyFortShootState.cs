@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyFortShootState : EnemyState
 {
+    
     private EnemyFort fortEnemy;
     private int _bulletsPerShoot = 3;
     private float _shootingTimer = 0f; // Cooldown timer
@@ -99,10 +100,10 @@ public class EnemyFortShootState : EnemyState
 
     private Enemy DetectAndChooseEnemy(EnemyFort fortEnemy)
     {
-        foreach (var enemy in Enemy.ActiveEnemies)
+        foreach (var enemy in fortEnemy.trackEnemies)
         {
-            Debug.Log(enemy.name + "in the list");
-            if (enemy != fortEnemy && enemy.IsAlliedWithPlayer == false)
+            // Debug.Log(enemy.name + "in the list");
+            if (enemy != null && enemy != fortEnemy && enemy.IsAlliedWithPlayer == false)
             {
                 return enemy;
             }

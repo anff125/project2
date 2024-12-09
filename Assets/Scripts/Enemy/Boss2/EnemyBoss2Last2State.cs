@@ -18,6 +18,7 @@ public class EnemyBoss2Last2State : EnemyState
         SetStateChangeCooldown(1f);
         _bossEnemy.StartCoroutine(SpawnBulletsAlongWall());
         _bossEnemy.StartCoroutine(PlayAnimationRoutine());
+        _bossEnemy.animator.SetBool("isAttack", true);
     }
     private IEnumerator PlayAnimationRoutine()
     {
@@ -68,4 +69,16 @@ public class EnemyBoss2Last2State : EnemyState
         // After all bullets are spawned, return to another state
         EnemyStateMachine.ChangeState(_bossEnemy.Last1State);
     }    
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        _bossEnemy.animator.SetBool("isAttack", false);
+
+        // foreach (var emitter in EnemyStateMachine.EnemyBoss2.bulletEmitters)
+        // {
+        //     emitter.SetRotationIdentity();
+        // }
+    }
 }

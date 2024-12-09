@@ -42,6 +42,8 @@ public class EnemyBoss2SpawnFortState : EnemyState
                 _bossEnemy.transform.position + Vector3.up, 
                 Quaternion.identity
             );
+            _bossEnemy.bossFightManager.TrackSpawnedEnemies(spawnedEnemies[i]);
+            spawnedEnemies[i].GetComponent<EnemyFort>().trackEnemies.Add(_bossEnemy);
         }
 
         float elapsedTime = 0f;

@@ -32,6 +32,7 @@ public class EnemyBoss2Danmoku0State : EnemyState
         
         EnemyStateMachine.EnemyBoss2.bulletEmitters[0].PlayAnimationMultipleTimes(0, 1, out float clipLength);
         SetStateChangeCooldown(clipLength - 0.4f);
+        EnemyStateMachine.EnemyBoss2.animator.SetBool("isAttack", true);
     }
 
     public override void Update()
@@ -57,6 +58,8 @@ public class EnemyBoss2Danmoku0State : EnemyState
     public override void Exit()
     {
         base.Exit();
+
+        EnemyStateMachine.EnemyBoss2.animator.SetBool("isAttack", false);
 
         // foreach (var emitter in EnemyStateMachine.EnemyBoss2.bulletEmitters)
         // {

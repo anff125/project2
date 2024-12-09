@@ -6,6 +6,7 @@ public class EnemyFort : Enemy
 {
     #region States
 
+    [SerializeField] public List<Enemy> trackEnemies = new List<Enemy>();
     public EnemyFortShootState ShootState { get; private set; }
     public LayerMask playerLayerMask;
     public LayerMask enemyLayerMask;

@@ -32,6 +32,8 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
     public override void Exit()
     {
         base.Exit();
+
+        EnemyStateMachine.EnemyBoss2.animator.SetBool("isAttack", false);
     }
 
     private IEnumerator SpawnWaves()
@@ -45,6 +47,8 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
             elapsed += blinkInterval;
         }
         EnemyStateMachine.EnemyBoss2.exclamationMark.gameObject.SetActive(false);
+
+        EnemyStateMachine.EnemyBoss2.animator.SetBool("isAttack", true);
 
         float currentZ = startZ;
 
@@ -100,4 +104,5 @@ public class EnemyBoss2DanmokuWaveState : EnemyState
         bullet.GetComponent<BulletNew>().SetBulletProperty(position, position, Quaternion.LookRotation(direction),
                     direction, 10, 6, 270f, 0f, 0f); // Bullets move left
     }
+    
 }

@@ -16,6 +16,7 @@ public class EnemyBoss2Last0State : EnemyState
         _bossEnemy = EnemyStateMachine.Enemy as EnemyBoss2;
         SetStateChangeCooldown(3f);
         isPlaying = true;
+        _bossEnemy.SetInvincibility(true);
         _bossEnemy.StartCoroutine(PlayAnimationRoutine());
     }
     private IEnumerator PlayAnimationRoutine()
@@ -23,6 +24,7 @@ public class EnemyBoss2Last0State : EnemyState
         // Play the animation without delay
         EnemyStateMachine.EnemyBoss2.bulletEmitters[0].PlayAnimationMultipleTimes(6, 3, out float clipLength);
         SetStateChangeCooldown(clipLength);
+        _bossEnemy.animator.SetBool("isAttack", true);
 
         // Wait for the exact duration of the animation before starting the next iteration
         yield return new WaitForSeconds(clipLength);
@@ -61,6 +63,8 @@ public class EnemyBoss2Last0State : EnemyState
     public override void Exit()
     {
         base.Exit();
+
+        _bossEnemy.animator.SetBool("isAttack", false);
 
         // foreach (var emitter in EnemyStateMachine.EnemyBoss2.bulletEmitters)
         // {

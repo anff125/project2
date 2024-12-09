@@ -19,7 +19,7 @@ public class EnemyBoss2TrackPlayerState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        float cooldown = Random.Range(.3f, .7f);
+        float cooldown = Random.Range(.5f, .1f);
         SetStateChangeCooldown(cooldown);
         _bossEnemy = EnemyStateMachine.Enemy as EnemyBoss2;
         timeTrackingPlayer = 0f;
@@ -82,6 +82,7 @@ public class EnemyBoss2TrackPlayerState : EnemyState
         if (randomState != null)
         {
             var position = _bossEnemy.GetFixedDistancePositionAroundPlayer(7f);
+            Debug.Log(position);
             _bossEnemy.MoveToState.SetupMoveToState(position, randomState.State);
             EnemyStateMachine.ChangeState(_bossEnemy.MoveToState);
         }
