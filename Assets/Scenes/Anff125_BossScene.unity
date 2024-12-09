@@ -3171,7 +3171,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 66b315e37ecf3f942bc1cb0e59c775b7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -9646,6 +9646,21 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 226131720}
+    - target: {fileID: 2949395734716525871, guid: 29f5ad49cd809104fb8517db5598c59c,
+        type: 3}
+      propertyPath: maxHealth
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2949395734716525871, guid: 29f5ad49cd809104fb8517db5598c59c,
+        type: 3}
+      propertyPath: frozenTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2949395734716525871, guid: 29f5ad49cd809104fb8517db5598c59c,
+        type: 3}
+      propertyPath: maxFrozenAmount
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 5200515940572212749, guid: 29f5ad49cd809104fb8517db5598c59c,
         type: 3}
       propertyPath: m_Name
@@ -13674,6 +13689,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290572841555355171, guid: 1ab3432577de2b44a993b79e2b30ad08,
+        type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
+        type: 3}
+      propertyPath: maxHealth
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 5979117676254728839, guid: 1ab3432577de2b44a993b79e2b30ad08,
         type: 3}

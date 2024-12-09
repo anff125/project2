@@ -58,11 +58,11 @@ public class EnemyElementalBoss : Enemy
         {
             if (damage.Source.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                return damage.Amount * 0.1f;
+                return damage.Amount * 0.3f;
             }
             else
             {
-                return damage.Amount * 5;
+                return damage.Amount * 4;
             }
         }
         else

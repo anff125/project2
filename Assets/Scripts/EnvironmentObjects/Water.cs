@@ -26,13 +26,16 @@ public class Water : MonoBehaviour, IDamageable
                 if (colliderOut.CompareTag("Water") || colliderOut.gameObject.layer == LayerMask.NameToLayer("Wire"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
-                    damageable.TakeDamage(damage);
+                    //change transform of damage to be the water object
+                    IDamageable.Damage newDamage = new IDamageable.Damage(damage.Amount, damage.ElementType, transform);
+                    damageable.TakeDamage(newDamage);
                 }
 
                 else if (colliderOut.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     IDamageable damageable = colliderOut.GetComponent<IDamageable>();
-                    damageable.TakeDamage(damage);
+                    IDamageable.Damage newDamage = new IDamageable.Damage(damage.Amount, damage.ElementType, transform);
+                    damageable.TakeDamage(newDamage);
                 }
 
 
